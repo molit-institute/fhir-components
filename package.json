@@ -1,0 +1,57 @@
+{
+  "name": "@molit/fhir-components",
+  "version": "1.0.0",
+  "private": false,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --target lib --name @molit/fhir-components src/library-entry.js",
+    "build:wc": "vue-cli-service build --target wc --name molit src/components/*.vue",
+    "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "cross-env E2E=cypress vue-cli-service test:e2e",
+    "test:e2e:docker": "cross-env E2E=cypress vue-cli-service test:e2e --headless"
+  },
+  "dependencies": {
+    "@molit/fhir-api": "^1.0.8",
+    "@molit/fhir-util": "^1.0.7",
+    "debounce": "^1.2.0",
+    "moment-timezone": "^0.5.25",
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.6",
+    "vue-simple-spinner": "^1.2.8"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.7.0",
+    "@vue/cli-plugin-e2e-cypress": "^3.7.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
+    "@vue/cli-plugin-pwa": "^3.7.0",
+    "@vue/cli-plugin-unit-jest": "^3.7.0",
+    "@vue/cli-service": "^3.7.0",
+    "@vue/eslint-config-prettier": "^4.0.1",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "bootstrap": "^4.3.1",
+    "chai": "^4.2.0",
+    "cross-env": "^5.2.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "repository": "github:molitinstitute/fhir-components",
+  "keywords": [
+    "FHIR",
+    "Components",
+    "Vue"
+  ],
+  "license": "Apache-2.0",
+  "files": [
+    "/dist/*",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "main": "./dist/@molit/fhir-components.umd.min.js",
+  "module": "dist/@molit/fhir-components.common.js",
+  "author": "MOLIT Insitut gGmbH"
+}

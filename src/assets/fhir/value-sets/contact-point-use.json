@@ -1,0 +1,49 @@
+{
+  "resourceType": "ValueSet",
+  "status": "active",
+  "compose": {
+    "include": [
+      {
+        "system": "http://hl7.org/fhir/contact-point-use"
+      }
+    ]
+  },
+  "expansion": {
+    "identifier": "urn:uuid:2ecfdd41-340c-4005-940f-4df95a61b887",
+    "timestamp": "2018-09-19T15:42:13+02:00",
+    "total": 5,
+    "parameter": [
+      {
+        "name": "version",
+        "valueUri": "http://hl7.org/fhir/contact-point-use|3.0.1"
+      }
+    ],
+    "contains": [
+      {
+        "system": "http://hl7.org/fhir/contact-point-use",
+        "code": "home",
+        "display": "Home"
+      },
+      {
+        "system": "http://hl7.org/fhir/contact-point-use",
+        "code": "work",
+        "display": "Work"
+      },
+      {
+        "system": "http://hl7.org/fhir/contact-point-use",
+        "code": "temp",
+        "display": "Temp"
+      },
+      {
+        "system": "http://hl7.org/fhir/contact-point-use",
+        "code": "old",
+        "display": "Old"
+      },
+      {
+        "system": "http://hl7.org/fhir/contact-point-use",
+        "code": "mobile",
+        "display": "Mobile"
+      }
+    ]
+  }
+}
