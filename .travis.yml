@@ -30,7 +30,7 @@ jobs:
     - stage: doc
       name: vuese
       before_script: npm i -g vuese
-      script: vuese gen
+      script: vuese gen && cp README.md doc/
       deploy:
         provider: pages
         skip_cleanup: true
