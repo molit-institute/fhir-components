@@ -17,7 +17,7 @@ jobs:
     - name: jest
       script: npm run test:unit
     - stage: build
-      name: babel
+      name: lib
       script: npm run build:lib
       deploy:
         provider: npm
