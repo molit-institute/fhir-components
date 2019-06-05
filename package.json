@@ -41,6 +41,7 @@
     "vue-template-compiler": "^2.6.10"
   },
   "repository": "github:molitinstitute/fhir-components",
+  "homepage": "https://docs.molit.eu/fhir-components/",
   "keywords": [
     "FHIR",
     "Components",

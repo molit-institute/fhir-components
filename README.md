@@ -25,3 +25,6 @@ import { PatientList } from "@molit/fhir-components";
 ```html
 <patient-list fhirBaseUrl="https://fhir.molit.eu/r4"></patient-list>
 ```
+### Documentation
+
+See full documentation here: https://docs.molit.eu/fhir-components/
