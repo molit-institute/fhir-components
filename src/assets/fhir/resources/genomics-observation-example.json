@@ -1,0 +1,285 @@
+{
+  "resourceType": "Observation",
+  "meta": {
+    "profile": ["http://hl7.org/fhir/uv/genomics-reporting/StructureDefinition/obs-variant"]
+  },
+  "performer": [
+    {
+      "reference": "Organization/Musterlab"
+    }
+  ],
+  "status": "final",
+  "method": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "display": "Sequencing",
+        "code": "LA26398-0"
+      }
+    ]
+  },
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+          "code": "laboratory"
+        }
+      ]
+    }
+  ],
+  "specimen": {
+    "Identifier": {
+      "system": "http://slk-kliniken.de/fhir/namingSystem/tissueID",
+      "value": "V123/45"
+    }
+  },
+  "component": [
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "https://www.genenames.org",
+            "display": "PIK3CA",
+            "code": "HGNC:8975"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Gene studied [ID]",
+            "code": "48018-6"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/sid/chromloc",
+            "display": "chr9",
+            "code": "chr9"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Cytogenetic (chromosome) location",
+            "code": "48001-2"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "GRCh37 entspricht hg19",
+            "code": "LA14029-5"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Human reference sequence assembly version",
+            "code": "62374-4"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/ValueSet/hgvs",
+            "display": "c.(353G>A)",
+            "code": "c.(353G>A)"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "DNA Change - Transcript (cHGVS)",
+            "code": "48004-6"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Substitution",
+            "code": "LA6690-7"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "DNA change type",
+            "code": "48019-4"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Somatic",
+            "code": "LA6684-0"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Genomic source class",
+            "code": "48002-0"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/ValueSet/hgvs",
+            "display": "p.(Gly118Asp)",
+            "code": "p.(Gly118Asp)"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Amino acid change (pHGVS)",
+            "code": "48005-3"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Missense",
+            "code": "LA6698-0"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Amino acid change type",
+            "code": "48006-1"
+          }
+        ]
+      }
+    },
+    {
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.ncbi.nlm.nih.gov/refseq/",
+            "display": "NM_006218.3",
+            "code": "NM_006218.3"
+          }
+        ]
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Transcript reference sequence [ID]",
+            "code": "51958-7"
+          }
+        ]
+      }
+    },
+    {
+      "valueQuantity": {
+        "value": 0.46000000000000002
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Allelic frequency [NFr]",
+            "code": "81258-6"
+          }
+        ]
+      }
+    },
+    {
+      "valueQuantity": {
+        "code": "1",
+        "value": 144
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Allelic read depth",
+            "code": "82121-5"
+          }
+        ]
+      }
+    },
+    {
+      "valueRange": {
+        "low": {
+          "value": 178917478
+        }
+      },
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "display": "Genomic allele start-end",
+            "code": "81254-5"
+          }
+        ]
+      }
+    }
+  ],
+  "subject": {
+    "reference": "Patient/54836"
+  },
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "display": "Present",
+        "code": "LA9633-4"
+      }
+    ]
+  },
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "display": "Genetic variant assessment",
+        "code": "69548-6"
+      }
+    ]
+  }
+}

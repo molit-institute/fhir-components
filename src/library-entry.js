@@ -1,6 +1,7 @@
 import PaginatedList from "./components/PaginatedList";
 import ListView from "./components/ListView";
 import PatientList from "./components/PatientList";
+import QuestionnaireRenderer from "./components/QuestionnaireRenderer";
 import QuestionnaireList from "./components/QuestionnaireList";
 import PatientDeBase from "./components/resources/Patient-de-basis";
 import DtAddressDeBase from "./components/data-types/complex/DtAddress-de-basis";
@@ -26,6 +27,7 @@ export {
   PaginatedList,
   ListView,
   PatientList,
+  QuestionnaireRenderer,
   QuestionnaireList,
   PatientDeBase,
   DtAddressDeBase,
