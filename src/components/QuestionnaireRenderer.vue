@@ -394,6 +394,9 @@ export default {
       }
     },
 
+    /**
+     * 
+     */
     handleStartQuestion() {
       if (this.startCount) {
         this.currentStartCount = this.startCount;
@@ -402,7 +405,12 @@ export default {
         this.currentStartCount = itemList.indexOf(this.startQuestion);
       }
     },
+    /**
+     * 
+     */
+    handleLogic(){
 
+    },
     /**
      * Emits an Event wich includes the finished Questionnaire Response
      */

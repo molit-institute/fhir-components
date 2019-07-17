@@ -5,7 +5,7 @@
     </nav>
     <div class="container-fluid">
       <molecular-report :resource="exampleReport" />
-      <!-- <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer> -->
+      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer>
     </div>
   </div>
 </template>
@@ -55,37 +55,44 @@ export default {
             type: "display"
           },
           {
+            linkId: "17",
+            prefix: "17.",
+            text: "Boolean",
+            type: "boolean"
+          },
+          {
             linkId: "4",
             prefix: "4.",
             text: "Text Required",
             type: "text",
+            enableWhen: [
+              {
+                question: "17",
+                operator: "exists",
+                answerBoolean: true
+              }
+            ],
             required: true
           },
           {
-            linkId: "2",
-            text: "In den folgenden Fragen geht es um Tätigkeiten, die Sie vielleicht im Laufe eines normalen Tages ausüben.",
-            type: "group",
-            item: [
-              {
-                linkId: "2.1",
-                prefix: "2.1",
-                text: "Url",
-                type: "url"
-              },
-              {
-                linkId: "2.2",
-                prefix: "2.2",
-                text: "Url Required",
-                type: "url",
-                required: true
-              }
-            ]
+            linkId: "18",
+            prefix: "18.",
+            text: "Boolean Required",
+            type: "boolean",
+            required: true
           },
           {
             linkId: "3",
             prefix: "3.",
             text: "Text",
-            type: "text"
+            type: "text",
+            enableWhen: [
+              {
+                question: "18",
+                operator: "exists",
+                answerBoolean: true
+              }
+            ],
           },
           {
             linkId: "5",
@@ -153,6 +160,26 @@ export default {
             required: true
           },
           {
+            linkId: "2",
+            text: "In den folgenden Fragen geht es um Tätigkeiten, die Sie vielleicht im Laufe eines normalen Tages ausüben.",
+            type: "group",
+            item: [
+              {
+                linkId: "2.1",
+                prefix: "2.1",
+                text: "Url",
+                type: "url"
+              },
+              {
+                linkId: "2.2",
+                prefix: "2.2",
+                text: "Url Required",
+                type: "url",
+                required: true
+              }
+            ]
+          },
+          {
             linkId: "15",
             prefix: "15.",
             text: "DateTime",
@@ -163,19 +190,6 @@ export default {
             prefix: "16.",
             text: "DateTime Required",
             type: "dateTime",
-            required: true
-          },
-          {
-            linkId: "17",
-            prefix: "17.",
-            text: "Boolean",
-            type: "boolean"
-          },
-          {
-            linkId: "18",
-            prefix: "18.",
-            text: "Boolean Required",
-            type: "boolean",
             required: true
           },
           {

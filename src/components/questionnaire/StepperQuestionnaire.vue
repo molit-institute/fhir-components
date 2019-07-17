@@ -160,6 +160,7 @@ import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
 import displayQuestion from "./../../components/questions/DisplayQuestion.vue";
 import questionnaireResponseController from "./../../util/questionnaireResponseController";
+import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
   props: {
@@ -255,6 +256,7 @@ export default {
     return {
       count: 0,
       itemList: [],
+      filteredItemList: [],
       questionCount: 0,
       disabled: false
     };
@@ -286,8 +288,8 @@ export default {
      */
     numberOfRequiredQuestions() {
       let totalNumber = 0;
-      for (let i = 0; i < this.itemList.length; i++) {
-        if (this.itemList[i].required) {
+      for (let i = 0; i < this.filteredItemList.length; i++) {
+        if (this.filteredItemList[i].required) {
           totalNumber++;
         }
       }
@@ -306,9 +308,9 @@ export default {
      */
     numberOfQuestions() {
       let number = 0;
-      if (this.itemList) {
-        for (let i = 0; i < this.itemList.length; i++) {
-          if (this.itemList[i].type !== "group") {
+      if (this.filteredItemList) {
+        for (let i = 0; i < this.filteredItemList.length; i++) {
+          if (this.filteredItemList[i].type !== "group") {
             number++;
           }
         }
@@ -352,7 +354,7 @@ export default {
      * Returns a Question from the itemList
      */
     getQuestionFromItemList() {
-      return this.itemList[this.count];
+      return this.filteredItemList[this.count];
     },
 
     /**
@@ -361,7 +363,7 @@ export default {
     getQuestionPositionNumber() {
       let positionnumber = 1;
       for (let i = 0; i < this.count; i++) {
-        if (this.itemList[i].type !== "group") {
+        if (this.filteredItemList[i].type !== "group") {
           positionnumber++;
         }
       }
@@ -372,12 +374,12 @@ export default {
      * Counts up the Question-Number
      */
     countUp() {
-      if (this.count < this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+      if (this.count < this.filteredItemList.length - 1 && !this.disabled && this.startCount === null) {
         this.count++;
-        if (this.itemList[this.count].type !== "group") {
+        if (this.filteredItemList[this.count].type !== "group") {
           this.questionCount = this.getQuestionPositionNumber();
         }
-      } else if (this.count === this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+      } else if (this.count === this.filteredItemList.length - 1 && !this.disabled && this.startCount === null) {
         this.$emit("finished");
       } else if (this.startCount !== null) {
         this.$emit("finished");
@@ -392,9 +394,9 @@ export default {
       if (this.count > 0 && this.startCount === null) {
         this.count--;
         //update questionPositionNumber
-        if (this.itemList[this.count].type !== "group") {
+        if (this.filteredItemList[this.count].type !== "group") {
           this.questionCount = this.getQuestionPositionNumber();
-        } else if (this.itemList[this.count].type === "group" && this.questionCount === 1) {
+        } else if (this.filteredItemList[this.count].type === "group" && this.questionCount === 1) {
           this.questionCount = 0;
         }
         //if count = 0 go back to Metadata
@@ -431,6 +433,9 @@ export default {
     },
     count() {
       this.setDisabled();
+      if (this.questionnaireResponse && this.itemList) {
+      this.filteredItemList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
+      }
     },
     requiredQuestionList() {
       this.setDisabled();
@@ -442,13 +447,16 @@ export default {
 
   created() {
     this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
+    if (this.questionnaireResponse && this.itemList) {
+      this.filteredItemList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
+    }
     //sets count if startcount was given from the summarypage through the questionnaire.view
     if (this.startCount) {
       this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
     }
     if (this.getLastQuestion) {
-      this.count = this.itemList.length - 1;
+      this.count = this.filteredItemList.length - 1;
       this.questionCount = this.getQuestionPositionNumber();
     }
 
