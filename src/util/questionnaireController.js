@@ -72,25 +72,24 @@ async function getValueSetOptions(reference, valueSets) {
  * Handles enable-when in questions by taking the current QuestionnaireResponse and logicList and check if any Question that is referenced in the logic-list has been answered.
  * If the logic returns true, the logic-question will be added to the current Itemlist.
  * @param {Array} currentQuestionnaireResponse The current QuestionnaireResponse
- * @param {Array} itemList
- * @param {Array} logicList
+ * @param {Array} itemList original unflattened items of the questionnaire
  *
  * @returns itemList
  */
 function handleEnableWhen(currentQuestionnaireResponse, itemList) {
   let newItemList = [];
-  console.log("cQR: ", currentQuestionnaireResponse);
-  console.log(itemList);
   let answersList = questionnaireResponseController.createItemList(currentQuestionnaireResponse);
-  //logicListe durchgehen und mit questionnaireResponse vergleichen
+  addItemToList(answersList, itemList, newItemList);
+  return newItemList;
+}
+
+function addItemToList(answersList, itemList, newItemList) {
+  //itemlist durchgehen und mit questionnaireResponse vergleichen
   for (let i = 0; i < itemList.length; i++) {
     if (itemList[i].enableWhen) {
-      console.log("question:", itemList[i]);
       // Für jede Logik Frage
       // hole für jedes Enable-when die Answer
       for (let x = 0; x < itemList[i].enableWhen.length; x++) {
-        console.log(x);
-        console.log(itemList[i].enableWhen[x]);
         let item = answersList.find(function(element) {
           return element.linkId === itemList[i].enableWhen[x].question;
         });
@@ -99,32 +98,19 @@ function handleEnableWhen(currentQuestionnaireResponse, itemList) {
           // bei Antwort Logik laufen lassen
           if (handleEnableWhenLogic(item, itemList[i].enableWhen[x])) {
             newItemList.push(itemList[i]);
-          } else {
-            // wenn false oder null question aus itemList removen falls in itemList vorhanden
-            // newItemList = removeLogicQuestion(itemList[i], newItemList);
+            if (itemList[i].type === "group") {
+              addItemToList(answersList, itemList[i].item, newItemList);
+            }
           }
-        } else {
-          // question aus itemList entfernen falls drin
-          // newItemList = removeLogicQuestion(itemList[i], newItemList);
-          // newItemList.push(itemList[i]);
         }
       }
     } else {
       newItemList.push(itemList[i]);
+      if (itemList[i].type === "group") {
+        addItemToList(answersList, itemList[i].item, newItemList);
+      }
     }
   }
-  return newItemList;
-}
-
-/**
- * Removes a LogicQuestion from the given ItemList
- * @param {Object} logicQuestion Question to be removed
- * @param {Array} itemList List of Questions
- */
-function removeLogicQuestion(logicQuestion, itemList) {
-  let index = itemList.findIndex(element => element.linkId === logicQuestion.linkId);
-  itemList.splice(index, 1);
-  return itemList;
 }
 
 /**
@@ -136,7 +122,6 @@ function removeLogicQuestion(logicQuestion, itemList) {
 function handleEnableWhenLogic(item, enableWhen) {
   let result = false;
   //check all the answers
-  console.log(item, item.answer, item.answer.length);
   for (let i = 0; i < item.answer.length; i++) {
     //check operator
     switch (enableWhen.operator) {
@@ -144,32 +129,32 @@ function handleEnableWhenLogic(item, enableWhen) {
         result = true;
         break;
       case "=":
-        if (handleEnableWhenValueType(item.answer[i]) === handleEnableWhenValueType(enableWhen)) {
+        if (handleEnableWhenValueType(item.answer[i]) === handleEnableWhenAnswerType(enableWhen)) {
           result = true;
         }
         break;
       case "!=":
-        if (handleEnableWhenValueType(item.answer[i]) !== handleEnableWhenValueType(enableWhen)) {
+        if (handleEnableWhenValueType(item.answer[i]) !== handleEnableWhenAnswerType(enableWhen)) {
           result = true;
         }
         break;
       case ">":
-        if (handleEnableWhenValueType(item.answer[i]) > handleEnableWhenValueType(enableWhen)) {
+        if (handleEnableWhenValueType(item.answer[i]) > handleEnableWhenAnswerType(enableWhen)) {
           result = true;
         }
         break;
       case "<":
-        if (handleEnableWhenValueType(item.answer[i]) < handleEnableWhenValueType(enableWhen)) {
+        if (handleEnableWhenValueType(item.answer[i]) < handleEnableWhenAnswerType(enableWhen)) {
           result = true;
         }
         break;
       case ">=":
-        if (handleEnableWhenValueType(item.answer[i]) >= handleEnableWhenValueType(enableWhen)) {
+        if (handleEnableWhenValueType(item.answer[i]) >= handleEnableWhenAnswerType(enableWhen)) {
           result = true;
         }
         break;
       case "<=":
-        if (handleEnableWhenValueType(item.answer[i]) <= handleEnableWhenValueType(enableWhen)) {
+        if (handleEnableWhenValueType(item.answer[i]) <= handleEnableWhenAnswerType(enableWhen)) {
           result = true;
         }
         break;
@@ -187,7 +172,7 @@ function handleEnableWhenLogic(item, enableWhen) {
  */
 function handleEnableWhenValueType(value) {
   if (value.valueBoolean || value.valueBoolean === false) {
-    return value.valueBoolean.toString();
+    return value.valueBoolean;
   } else if (value.valueDecimal) {
     return value.valueDecimal;
   } else if (value.valueInteger) {
@@ -208,6 +193,38 @@ function handleEnableWhenValueType(value) {
     return value.valueCoding.display;
   } else if (value.valueQuantity) {
     return value.valueQuantity;
+  } else {
+    return null;
+  }
+}
+
+/**
+ * Returns the value of the answer, by checking for every available type if the value is true or not.
+ * @param {*} value
+ */
+function handleEnableWhenAnswerType(value) {
+  if (value.answerBoolean || value.answerBoolean === false) {
+    return value.answerBoolean;
+  } else if (value.answerDecimal) {
+    return value.answerDecimal;
+  } else if (value.answerInteger) {
+    return value.answerInteger;
+  } else if (value.answerDate) {
+    return value.answerDate;
+  } else if (value.answerDateTime) {
+    return value.answerDateTime;
+  } else if (value.answerTime) {
+    return value.answerTime;
+  } else if (value.answerString) {
+    return value.answerString;
+  } else if (value.answerUri) {
+    return value.answerUri;
+  } else if (value.answerAttachment) {
+    return value.answerAttachment;
+  } else if (value.answerCoding) {
+    return value.answerCoding.display;
+  } else if (value.answerQuantity) {
+    return value.answerQuantity;
   } else {
     return null;
   }

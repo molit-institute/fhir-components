@@ -65,54 +65,78 @@ export default {
             prefix: "4.",
             text: "Text Required",
             type: "text",
+            required: true,
             enableWhen: [
               {
                 question: "17",
                 operator: "exists",
                 answerBoolean: true
               }
-            ],
-            required: true
+            ]
           },
           {
-            linkId: "18",
+            linkId: "18.1",
             prefix: "18.",
-            text: "Boolean Required",
-            type: "boolean",
-            required: true
-          },
-          {
-            linkId: "3",
-            prefix: "3.",
-            text: "Text",
-            type: "text",
+            text: "Group",
+            type: "group",
             enableWhen: [
               {
-                question: "18",
-                operator: "exists",
+                question: "17",
+                operator: "=",
                 answerBoolean: true
               }
             ],
+            item: [
+              {
+                linkId: "18",
+                prefix: "18.",
+                text: "Boolean Required",
+                type: "boolean",
+                required: true
+              },
+              {
+                linkId: "3",
+                prefix: "3.",
+                text: "Text",
+                type: "text",
+                enableWhen: [
+                  {
+                    question: "18",
+                    operator: "=",
+                    answerBoolean: true
+                  }
+                ]
+              },
+
+              {
+                linkId: "5",
+                prefix: "5.",
+                text: "String",
+                type: "string"
+              },
+              {
+                linkId: "6",
+                prefix: "6.",
+                text: "String Required",
+                type: "string",
+                required: true
+              },
+              {
+                linkId: "7",
+                prefix: "7.",
+                text: "Decimal",
+                type: "decimal",
+                enableWhen: [
+                  {
+                    question: "6",
+                    operator: "=",
+                    answerString: "huhu"
+                  }
+                ]
+              }
+            ]
           },
-          {
-            linkId: "5",
-            prefix: "5.",
-            text: "String",
-            type: "string"
-          },
-          {
-            linkId: "6",
-            prefix: "6.",
-            text: "String Required",
-            type: "string",
-            required: true
-          },
-          {
-            linkId: "7",
-            prefix: "7.",
-            text: "Decimal",
-            type: "decimal"
-          },
+
           {
             linkId: "8",
             prefix: "8.",

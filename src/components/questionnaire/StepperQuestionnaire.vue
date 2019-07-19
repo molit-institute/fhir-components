@@ -58,10 +58,10 @@
         </button>
         <!-- Button Next -->
         <span>
-          <button type="button" class="button btn-primary btn-lg" v-on:click="countUp" v-if="count <= itemList.length - 1 && !disabled && !this.editMode">
+          <button type="button" class="button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredItemList.length - 1 && !disabled && !this.editMode">
             {{ language.next }}
           </button>
-          <button type="button" class="button btn-secondary btn-lg" disabled v-if="count < itemList.length && disabled">
+          <button type="button" class="button btn-secondary btn-lg" disabled v-if="count < filteredItemList.length && disabled">
             {{ language.next }}
           </button>
           <button type="button" class="button btn-primary btn-lg" v-on:click="goToSummary()" v-if="this.editMode && !disabled">
@@ -159,7 +159,7 @@ import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
 import displayQuestion from "./../../components/questions/DisplayQuestion.vue";
-import questionnaireResponseController from "./../../util/questionnaireResponseController";
+// import questionnaireResponseController from "./../../util/questionnaireResponseController";
 import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
@@ -256,7 +256,6 @@ export default {
     return {
       count: 0,
       itemList: [],
-      filteredItemList: [],
       questionCount: 0,
       disabled: false
     };
@@ -266,7 +265,12 @@ export default {
      * Returns the Type of the current Question
      */
     getQuestionType() {
-      return this.getQuestionFromItemList().type + "Question";
+      let type = null;
+      if (this.getQuestionFromItemList()) {
+        type = this.getQuestionFromItemList().type + "Question";
+      }
+
+      return type;
     },
 
     /**
@@ -288,11 +292,14 @@ export default {
      */
     numberOfRequiredQuestions() {
       let totalNumber = 0;
-      for (let i = 0; i < this.filteredItemList.length; i++) {
-        if (this.filteredItemList[i].required) {
-          totalNumber++;
+      if (this.filteredItemList) {
+        for (let i = 0; i < this.filteredItemList.length; i++) {
+          if (this.filteredItemList[i].required) {
+            totalNumber++;
+          }
         }
       }
+
       return totalNumber;
     },
 
@@ -308,14 +315,20 @@ export default {
      */
     numberOfQuestions() {
       let number = 0;
-      if (this.filteredItemList) {
-        for (let i = 0; i < this.filteredItemList.length; i++) {
-          if (this.filteredItemList[i].type !== "group") {
-            number++;
-          }
+      for (let i = 0; i < this.filteredItemList.length; i++) {
+        if (this.filteredItemList[i].type !== "group") {
+          number++;
         }
       }
+
       return number;
+    },
+    filteredItemList() {
+      let newList = [];
+      if (this.questionnaireResponse && this.itemList) {
+        newList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.questionnaire.item);
+      }
+      return newList;
     }
   },
 
@@ -362,9 +375,11 @@ export default {
      */
     getQuestionPositionNumber() {
       let positionnumber = 1;
-      for (let i = 0; i < this.count; i++) {
-        if (this.filteredItemList[i].type !== "group") {
-          positionnumber++;
+      if (this.filteredItemList) {
+        for (let i = 0; i < this.count; i++) {
+          if (this.filteredItemList[i].type !== "group") {
+            positionnumber++;
+          }
         }
       }
       return positionnumber;
@@ -409,16 +424,22 @@ export default {
      *
      */
     setDisabled() {
-      this.disabled = false;
-      let currentQuestion = this.getQuestion;
-      if (currentQuestion.required) {
-        this.disabled = true;
-        for (let i = 0; i < this.requiredQuestionList.length; i++) {
-          if (
-            // this.requiredQuestionList[i] === currentQuestion
-            JSON.stringify(this.requiredQuestionList[i]) === JSON.stringify(currentQuestion)
-          ) {
-            this.disabled = false;
+      //Set questionCount to 1 if first Question is not a group
+      if (this.filteredItemList) {
+        if (this.filteredItemList[this.count] && this.filteredItemList[this.count].type !== "group" && this.count === 0) {
+          this.questionCount = 1;
+        }
+        this.disabled = false;
+        let currentQuestion = this.getQuestion;
+        if (currentQuestion && currentQuestion.required) {
+          this.disabled = true;
+          for (let i = 0; i < this.requiredQuestionList.length; i++) {
+            if (
+              // this.requiredQuestionList[i] === currentQuestion
+              JSON.stringify(this.requiredQuestionList[i]) === JSON.stringify(currentQuestion)
+            ) {
+              this.disabled = false;
+            }
           }
         }
       }
@@ -427,15 +448,15 @@ export default {
 
   watch: {
     questionnaire() {
-      this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
+      // this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
 
       this.count = 0;
     },
     count() {
       this.setDisabled();
-      if (this.questionnaireResponse && this.itemList) {
-      this.filteredItemList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
-      }
+      // if (this.questionnaireResponse && this.itemList) {
+      //   this.filteredItemList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
+      // }
     },
     requiredQuestionList() {
       this.setDisabled();
@@ -445,11 +466,11 @@ export default {
     }
   },
 
-  created() {
-    this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
-    if (this.questionnaireResponse && this.itemList) {
-      this.filteredItemList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
-    }
+  async created() {
+    // this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
+    // if (this.questionnaireResponse && this.itemList) {
+    //   this.filteredItemList = await questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
+    // }
     //sets count if startcount was given from the summarypage through the questionnaire.view
     if (this.startCount) {
       this.count = this.startCount;
@@ -459,14 +480,9 @@ export default {
       this.count = this.filteredItemList.length - 1;
       this.questionCount = this.getQuestionPositionNumber();
     }
-
     //Resetting Lists to avoid leftovers
     // this.RESET_REQUIRED_ANSWERED_QUESTIONS_LIST();
     this.setDisabled();
-    //Set questionCount to 1 if first Question is not a group
-    if (this.itemList[this.count].type !== "group" && this.count === 0) {
-      this.questionCount = 1;
-    }
   },
 
   components: {
