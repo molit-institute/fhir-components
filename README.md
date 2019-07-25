@@ -1,6 +1,6 @@
 ## FHIR Components
 
-[![Build Status](https://travis-ci.org/molitinstitute/fhir-components.svg?branch=master)](https://travis-ci.org/molitinstitute/fhir-components)
+[![Build Status](https://travis-ci.org/molit-institute/fhir-components.svg?branch=master)](https://travis-ci.org/molit-institute/fhir-components)
 ![npm](https://img.shields.io/npm/v/@molit/fhir-components.svg)
 ![NPM](https://img.shields.io/npm/l/@molit/fhir-components.svg)
 
