@@ -6,28 +6,30 @@
     </div>
     <!-- Question-Components -->
     <div v-if="!spinner.loading">
-      <div v-for="question in itemList" :key="question.linkId">
-        <div class="card card-basic-margins">
-          <div class="card-body" v-if="language">
-            <div class="" v-if="question.type !== 'group'">{{ language.question }} {{ getQuestionIndex(question) + 1 }} {{ language.of }} {{ questionsList.length }}</div>
-            <component
-              :is="question.type + 'Question'"
-              :question="question"
-              :questionnaireResponse="questionnaireResponse"
-              :questionnaire="questionnaire"
-              :valueSets="valueSets"
-              :baseUrl="baseUrl"
-              :primary="primary"
-              :secondary="secondary"
-              :danger="danger"
-              :language="language"
-              @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-              @addRequiredAnswer="addRequiredQuestionEvent($event)"
-              @answer="relayAnswer($event)"
-            ></component>
+      <transition-group name="list-complete" tag="p">
+        <span v-for="question in filteredItemList" :key="question.linkId" class="list-complete-item">
+          <div class="card card-basic-margins">
+            <div class="card-body" v-if="language">
+              <div v-if="question.type !== 'group'">{{ language.question }} {{ getQuestionIndex(question) + 1 }} {{ language.of }} {{ questionsList.length }}</div>
+              <component
+                :is="question.type + 'Question'"
+                :question="question"
+                :questionnaireResponse="questionnaireResponse"
+                :questionnaire="questionnaire"
+                :valueSets="valueSets"
+                :baseUrl="baseUrl"
+                :primary="primary"
+                :secondary="secondary"
+                :danger="danger"
+                :language="language"
+                @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
+                @addRequiredAnswer="addRequiredQuestionEvent($event)"
+                @answer="relayAnswer($event)"
+              ></component>
+            </div>
           </div>
-        </div>
-      </div>
+        </span>
+      </transition-group>
       <!-- BUTTONS -->
       <div class="card-margin-bottom">
         <div class="summary-button" v-if="language">
@@ -44,7 +46,27 @@
 </template>
 
 <style lang="scss" scoped>
+.list-complete-item {
+  transition: all 0.45s;
+  display: flex;
+}
+
+.list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-40px) cubic-bezier(0, 0, 0.2, 1);
+}
+
+.list-complete-leave-active {
+  opacity: 0;
+  transform: translateY(-40px) cubic-bezier(0, 0, 0.2, 1);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .card-basic-margins {
+  width: 100%;
   margin: 10px 0 10px;
 }
 
@@ -93,7 +115,7 @@ import ChoiceQuestion from "./../../components/questions/ChoiceQuestion.vue";
 import StringQuestion from "./../../components/questions/StringQuestion.vue";
 import BooleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import GroupQuestion from "./../../components/questions/GroupQuestion.vue";
-import questionnaireResponseController from "./../../util/questionnaireResponseController";
+import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
   name: "questionnaire",
@@ -160,7 +182,6 @@ export default {
   },
   data() {
     return {
-      itemList: [],
       disabled: true
     };
   },
@@ -171,8 +192,8 @@ export default {
      */
     numberOfRequiredQuestions() {
       let totalNumber = 0;
-      for (let i = 0; i < this.itemList.length; i++) {
-        if (this.itemList[i].required) {
+      for (let i = 0; i < this.filteredItemList.length; i++) {
+        if (this.filteredItemList[i].required) {
           totalNumber++;
         }
       }
@@ -190,7 +211,17 @@ export default {
      *
      */
     questionsList() {
-      return this.itemList.filter(question => question.type !== "group");
+      return this.filteredItemList.filter(question => question.type !== "group");
+    },
+    /**
+     *
+     */
+    filteredItemList() {
+      let newList = [];
+      if (this.questionnaireResponse && this.questionnaire) {
+        newList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.questionnaire.item);
+      }
+      return newList;
     }
   },
 
@@ -239,15 +270,6 @@ export default {
     }
   },
 
-  watch: {
-    questionnaire() {
-      this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
-    }
-  },
-
-  created() {
-    this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
-  },
   components: {
     Spinner,
     DisplayQuestion,

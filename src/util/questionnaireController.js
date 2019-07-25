@@ -77,9 +77,12 @@ async function getValueSetOptions(reference, valueSets) {
  * @returns itemList
  */
 function handleEnableWhen(currentQuestionnaireResponse, itemList) {
+  console.log("huhu", currentQuestionnaireResponse);
+  console.log("itemList", itemList);
   let newItemList = [];
   let answersList = questionnaireResponseController.createItemList(currentQuestionnaireResponse);
   addItemToList(answersList, itemList, newItemList);
+  console.log("itemListbeforeReturn", itemList);
   return newItemList;
 }
 

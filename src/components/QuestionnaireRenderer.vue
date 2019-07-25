@@ -316,14 +316,38 @@ export default {
     async handleQuestionnaire() {
       if (this.questionnaire) {
         this.currentQuestionnaire = this.questionnaire;
+        // Add Group-Ids to Questions in Groups
+        for (let i = 0; i < this.currentQuestionnaire.item.length; i++) {
+          if (this.currentQuestionnaire.item[i].type === "group") {
+            this.addGroupIdToItems(this.currentQuestionnaire.item[i].item, this.currentQuestionnaire.item[i].linkId);
+          }
+        }
       } else if (this.questionnaireUrl) {
         try {
           this.currentQuestionnaire = await fhirApi.fetchByUrl(this.questionnaireUrl);
+          // Add Group-Ids to Questions in Groups
+          for (let i = 0; i < this.currentQuestionnaire.item.length; i++) {
+            if (this.currentQuestionnaire.item[i].type === "group") {
+              this.addGroupIdToItems(this.currentQuestionnaire.item[i].item, this.currentQuestionnaire.item[i].linkId);
+            }
+          }
         } catch (error) {
           //TODO Errorhandling
         }
       } else {
         //TODO handle missing Questionnaire | Spinner, info ...
+      }
+    },
+
+    /**
+     * Adds GroupId to all Questions inside a Group.
+     */
+    addGroupIdToItems(item, linkId) {
+      for (let i = 0; i < item.length; i++) {
+        item[i].groupId = linkId;
+        if (item[i].type === "group") {
+          this.addGroupIdToItems(item[i].item, item[i].linkId);
+        }
       }
     },
 
@@ -395,7 +419,7 @@ export default {
     },
 
     /**
-     * 
+     *
      */
     handleStartQuestion() {
       if (this.startCount) {
@@ -406,11 +430,9 @@ export default {
       }
     },
     /**
-     * 
+     *
      */
-    handleLogic(){
-
-    },
+    handleLogic() {},
     /**
      * Emits an Event wich includes the finished Questionnaire Response
      */

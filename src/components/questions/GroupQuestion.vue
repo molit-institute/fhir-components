@@ -152,7 +152,6 @@ export default {
     ChoiceQuestion,
     BooleanQuestion
   },
-  computed: {},
   methods: {
     /**
      *

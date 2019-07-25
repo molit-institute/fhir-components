@@ -159,7 +159,6 @@ import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
 import displayQuestion from "./../../components/questions/DisplayQuestion.vue";
-// import questionnaireResponseController from "./../../util/questionnaireResponseController";
 import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
@@ -255,7 +254,6 @@ export default {
   data() {
     return {
       count: 0,
-      itemList: [],
       questionCount: 0,
       disabled: false
     };
@@ -325,7 +323,7 @@ export default {
     },
     filteredItemList() {
       let newList = [];
-      if (this.questionnaireResponse && this.itemList) {
+      if (this.questionnaireResponse && this.questionnaire) {
         newList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.questionnaire.item);
       }
       return newList;

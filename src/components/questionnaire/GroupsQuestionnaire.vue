@@ -66,7 +66,7 @@
         <div class="progress-counter small">{{ questionCount }} {{ language.of }} {{ numberOfQuestions }}</div>
         <!-- Button Next -->
         <span>
-          <button type="button" class="button button btn-primary btn-lg" v-on:click="countUp" v-if="count <= itemList.length - 1 && !disabled && !this.editMode">
+          <button type="button" class="button button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredList.length - 1 && !disabled && !this.editMode">
             {{ language.next }}
           </button>
           <button type="button" class="button btn-secondary btn-lg" disabled v-if="disabled">
@@ -78,6 +78,7 @@
         </span>
       </div>
     </div>
+    <pre>{{ questionnaire.item }}</pre>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -198,7 +199,8 @@ import choiceQuestion from "./../../components/questions/ChoiceQuestion.vue";
 import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
-import questionnaireResponseController from "./../../util/questionnaireResponseController";
+// import questionnaireResponseController from "./../../util/questionnaireResponseController";
+import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
   props: {
@@ -293,11 +295,52 @@ export default {
       itemList: [],
       questionCount: 0,
       disabled: false,
-      flatItemList: [],
       currentQuestion: Object
     };
   },
   computed: {
+    filteredList() {
+      let groupList = [];
+      let newItemList = [];
+      let lastMainGroupId = "";
+      let filteredFlatList = [];
+      // let flatList = this.questionnaireResponseController.createItemList(this.questionnaire.item);
+      if (this.questionnaire && this.questionnaire.item && this.questionnaireResponse) {
+        console.log("----------------------------------------------")
+        console.log("QR", this.questionnaireResponse);
+        filteredFlatList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.questionnaire.item);
+        console.log("liste", filteredFlatList);
+        //durch alle items erste ebene
+        for (let i = 0; i < filteredFlatList.length; i++) {
+          if (filteredFlatList[i].type === "group" && !filteredFlatList[i].groupId) {
+            //wenn item vom typ group ,dann group leeren und in groupliste abspeichern
+            filteredFlatList[i].item = [];
+            groupList.push(filteredFlatList[i]);
+            lastMainGroupId = filteredFlatList[i].linkId;
+            newItemList.push(filteredFlatList[i]);
+          } else if (!filteredFlatList[i].groupId) {
+            //no group no groupid
+            newItemList.push(filteredFlatList[i]);
+          } else if (filteredFlatList[i].groupId) {
+            //wenn item group id besitzt, groupliste durchsucnen,
+            let index = groupList.findIndex(item => item.linkId === lastMainGroupId);
+            if (index !== -1) {
+              groupList[index].item.push(filteredFlatList[i]);
+            }
+          }
+        }
+        //gruppen in liste suchen und items übertragen
+        for (let a = 0; a < groupList.length; a++) {
+          for (let b = 0; b < newItemList.length; b++) {
+            if (groupList[a].linkId === newItemList[b].linkId) {
+              newItemList[b].item = groupList[a].item;
+            }
+          }
+        }
+      }
+
+      return newItemList;
+    },
     /**
      *
      */
@@ -323,8 +366,8 @@ export default {
      */
     numberOfRequiredQuestions() {
       let totalNumber = 0;
-      for (let i = 0; i < this.flatItemList.length; i++) {
-        if (this.flatItemList[i].required) {
+      for (let i = 0; i < this.filteredList.length; i++) {
+        if (this.filteredList[i].required) {
           totalNumber++;
         }
       }
@@ -335,13 +378,13 @@ export default {
      * Counts all Questions from ItemList excluding Groups
      */
     numberOfQuestions() {
-      return this.itemList.length;
+      return this.filteredList.length;
     },
     /**
      * Checks if not all required Question have been completed
      */
     notAllRequiredQuestionsCompleted() {
-      return this.requiredQuestionList.length !== this.numberOfRequiredQuestions(this.flatItemList);
+      return this.requiredQuestionList.length !== this.numberOfRequiredQuestions(this.filteredList);
     }
   },
   methods: {
@@ -383,7 +426,7 @@ export default {
      * Returns the number of all required questions in the given list
      */
     numberOfRequiredQuestionsInItem(question) {
-      let flatList = questionnaireResponseController.createItemList(question);
+      let flatList = question.item;
       let totalNumber = 0;
       for (let i = 0; i < flatList.length; i++) {
         if (flatList[i].required) {
@@ -409,17 +452,17 @@ export default {
      * Returns a Question from the itemList
      */
     getQuestionFromItemList() {
-      return this.itemList[this.count];
+      return this.filteredList[this.count];
     },
 
     /**
      * Counts up the Question-Number
      */
     countUp() {
-      if (this.count < this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+      if (this.count < this.filteredList.length - 1 && !this.disabled && this.startCount === null) {
         this.count++;
         this.questionCount = this.getQuestionPositionNumber();
-      } else if (this.count === this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+      } else if (this.count === this.filteredList.length - 1 && !this.disabled && this.startCount === null) {
         this.$emit("finished");
       } else if (this.startCount !== null) {
         this.$emit("finished");
@@ -447,7 +490,7 @@ export default {
     setDisabled() {
       this.disabled = false;
       let currentQuestion = this.getQuestion;
-      if (currentQuestion.required || (currentQuestion.type === "group" && this.numberOfRequiredQuestionsInItem(currentQuestion) > 0)) {
+      if ((currentQuestion && currentQuestion.required) || (currentQuestion && currentQuestion.type === "group" && this.numberOfRequiredQuestionsInItem(currentQuestion) > 0)) {
         this.disabled = true;
       }
       for (let i = 0; i < this.requiredQuestionList.length; i++) {
@@ -468,8 +511,7 @@ export default {
   },
   watch: {
     questionnaire() {
-      this.itemList = this.questionnaire.item;
-
+      // console.log("watcher Questionnaire");
       this.count = 0;
     },
     count() {
@@ -484,15 +526,13 @@ export default {
   },
 
   created() {
-    this.itemList = this.questionnaire.item;
-    this.flatItemList = questionnaireResponseController.createItemList(this.questionnaire);
     //sets count if startcount was given from the summarypage through the questionnaire.view
     if (this.startCount) {
       this.count = this.startCount;
       this.questionCount = this.count;
     }
     if (this.getLastQuestion) {
-      this.count = this.itemList.length - 1;
+      this.count = this.filteredList.length - 1;
       this.questionCount = this.count;
     }
 

@@ -35,218 +35,49 @@ export default {
       baseUrl: "https://fhir.molit.eu/r4/",
       questionnaire: {
         resourceType: "Questionnaire",
-        identifier: [
-          {
-            system: "eu.molit.questionic",
-            value: "demo-questionnaire"
-          }
-        ],
-        title: "Test Fragebogen",
-        status: "active",
-        subjectType: ["Patient"],
-        date: "2019-04-26T00:00:00+02:00",
-        publisher: "MOLIT Institut",
-        description: "Dieser Fragebogen wurde zu Testzwecken erstellt und sollte nicht außerhalb der Testumgebung genutzt werden.",
+        id: "7854",
+        meta: {
+          versionId: "1",
+          lastUpdated: "2019-07-25T12:13:10.582+00:00"
+        },
+        title: "Hallo Welt",
+        status: "draft",
         item: [
           {
-            linkId: "1",
-            prefix: "1.",
-            text: "Hallo dies ist ein Test-Fragebogen und dies hier nur eine Frage vom Typ `Display`",
-            type: "display"
-          },
-          {
-            linkId: "17",
-            prefix: "17.",
-            text: "Boolean",
-            type: "boolean"
-          },
-          {
-            linkId: "4",
-            prefix: "4.",
-            text: "Text Required",
-            type: "text",
-            required: true,
-            enableWhen: [
+            linkId: "Frage1",
+            text: "Hallo, wie geht's?",
+            type: "choice",
+            answerOption: [
               {
-                question: "17",
-                operator: "exists",
-                answerBoolean: true
+                valueString: "gut."
+              },
+              {
+                valueString: "geht."
+              },
+              {
+                valueString: "muss."
               }
             ]
           },
           {
-            linkId: "18.1",
-            prefix: "18.",
-            text: "Group",
-            type: "group",
+            linkId: "Frage2",
+            text: "Was los?",
+            type: "choice",
             enableWhen: [
               {
-                question: "17",
+                question: "Frage1",
                 operator: "=",
-                answerBoolean: true
+                answerString: "muss."
               }
             ],
-            item: [
+            answerOption: [
               {
-                linkId: "18",
-                prefix: "18.",
-                text: "Boolean Required",
-                type: "boolean",
-                required: true
+                valueString: "nix."
               },
               {
-                linkId: "3",
-                prefix: "3.",
-                text: "Text",
-                type: "text",
-                enableWhen: [
-                  {
-                    question: "18",
-                    operator: "=",
-                    answerBoolean: true
-                  }
-                ]
-              },
-
-              {
-                linkId: "5",
-                prefix: "5.",
-                text: "String",
-                type: "string"
-              },
-              {
-                linkId: "6",
-                prefix: "6.",
-                text: "String Required",
-                type: "string",
-                required: true
-              },
-              {
-                linkId: "7",
-                prefix: "7.",
-                text: "Decimal",
-                type: "decimal",
-                enableWhen: [
-                  {
-                    question: "6",
-                    operator: "=",
-                    answerString: "huhu"
-                  }
-                ]
+                valueString: "frag nicht."
               }
             ]
-          },
-
-          {
-            linkId: "8",
-            prefix: "8.",
-            text: "Decimal Required",
-            type: "decimal",
-            required: true
-          },
-          {
-            linkId: "9",
-            prefix: "9.",
-            text: "Integer",
-            type: "integer"
-          },
-          {
-            linkId: "10",
-            prefix: "10.",
-            text: "Integer Required",
-            type: "integer",
-            required: true
-          },
-          {
-            linkId: "11",
-            prefix: "11.",
-            text: "Date",
-            type: "date"
-          },
-          {
-            linkId: "12",
-            prefix: "12.",
-            text: "Date Required",
-            type: "date",
-            required: true
-          },
-          {
-            linkId: "13",
-            prefix: "13.",
-            text: "Time",
-            type: "time"
-          },
-          {
-            linkId: "14",
-            prefix: "14.",
-            text: "Time Required",
-            type: "time",
-            required: true
-          },
-          {
-            linkId: "2",
-            text: "In den folgenden Fragen geht es um Tätigkeiten, die Sie vielleicht im Laufe eines normalen Tages ausüben.",
-            type: "group",
-            item: [
-              {
-                linkId: "2.1",
-                prefix: "2.1",
-                text: "Url",
-                type: "url"
-              },
-              {
-                linkId: "2.2",
-                prefix: "2.2",
-                text: "Url Required",
-                type: "url",
-                required: true
-              }
-            ]
-          },
-          {
-            linkId: "15",
-            prefix: "15.",
-            text: "DateTime",
-            type: "dateTime"
-          },
-          {
-            linkId: "16",
-            prefix: "16.",
-            text: "DateTime Required",
-            type: "dateTime",
-            required: true
-          },
-          {
-            linkId: "19",
-            prefix: "19.",
-            text: "Single-Choice",
-            type: "choice",
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers1"
-          },
-          {
-            linkId: "20",
-            prefix: "20.",
-            text: "Single-Choice Required",
-            type: "choice",
-            required: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers1"
-          },
-          {
-            linkId: "21",
-            prefix: "21.",
-            text: "Multiple-Choice?",
-            type: "choice",
-            repeats: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers2"
-          },
-          {
-            linkId: "22",
-            prefix: "22.",
-            text: "Multiple-Choice Required?",
-            type: "choice",
-            required: true,
-            repeats: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers2"
           }
         ]
       }
