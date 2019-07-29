@@ -200,10 +200,15 @@ import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
 // import questionnaireResponseController from "./../../util/questionnaireResponseController";
-import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
   props: {
+    /**
+     *
+     */
+    filteredItemList: {
+      type: Array
+    },
     /**
      *
      */
@@ -300,44 +305,43 @@ export default {
   },
   computed: {
     filteredList() {
-      let groupList = [];
+      // let groupList = [];
       let newItemList = [];
-      let lastMainGroupId = "";
-      let filteredFlatList = [];
+      // let lastMainGroupId = "";
+      // let filteredFlatList = [];
+      newItemList = this.filteredItemList;
       // let flatList = this.questionnaireResponseController.createItemList(this.questionnaire.item);
-      if (this.questionnaire && this.questionnaire.item && this.questionnaireResponse) {
-        console.log("----------------------------------------------")
-        console.log("QR", this.questionnaireResponse);
-        filteredFlatList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.questionnaire.item);
-        console.log("liste", filteredFlatList);
-        //durch alle items erste ebene
-        for (let i = 0; i < filteredFlatList.length; i++) {
-          if (filteredFlatList[i].type === "group" && !filteredFlatList[i].groupId) {
-            //wenn item vom typ group ,dann group leeren und in groupliste abspeichern
-            filteredFlatList[i].item = [];
-            groupList.push(filteredFlatList[i]);
-            lastMainGroupId = filteredFlatList[i].linkId;
-            newItemList.push(filteredFlatList[i]);
-          } else if (!filteredFlatList[i].groupId) {
-            //no group no groupid
-            newItemList.push(filteredFlatList[i]);
-          } else if (filteredFlatList[i].groupId) {
-            //wenn item group id besitzt, groupliste durchsucnen,
-            let index = groupList.findIndex(item => item.linkId === lastMainGroupId);
-            if (index !== -1) {
-              groupList[index].item.push(filteredFlatList[i]);
-            }
-          }
-        }
-        //gruppen in liste suchen und items übertragen
-        for (let a = 0; a < groupList.length; a++) {
-          for (let b = 0; b < newItemList.length; b++) {
-            if (groupList[a].linkId === newItemList[b].linkId) {
-              newItemList[b].item = groupList[a].item;
-            }
-          }
-        }
-      }
+      // if (this.questionnaire && this.questionnaire.item && this.questionnaireResponse) {
+      //   console.log("----------------------------------------------");
+      //   filteredFlatList = this.filteredItemList;
+      //   //durch alle items erste ebene
+      //   for (let i = 0; i < filteredFlatList.length; i++) {
+      //     if (filteredFlatList && filteredFlatList[i].type === "group" && !filteredFlatList[i].groupId) {
+      //       //wenn item vom typ group ,dann group leeren und in groupliste abspeichern
+      //       filteredFlatList[i].item = [];
+      //       groupList.push(filteredFlatList[i]);
+      //       lastMainGroupId = filteredFlatList[i].linkId;
+      //       newItemList.push(filteredFlatList[i]);
+      //     } else if (!filteredFlatList[i].groupId) {
+      //       //no group no groupid
+      //       newItemList.push(filteredFlatList[i]);
+      //     } else if (filteredFlatList[i].groupId) {
+      //       //wenn item group id besitzt, groupliste durchsucnen,
+      //       let index = groupList.findIndex(item => item.linkId === lastMainGroupId);
+      //       if (index !== -1) {
+      //         groupList[index].item.push(filteredFlatList[i]);
+      //       }
+      //     }
+      //   }
+      //   //gruppen in liste suchen und items übertragen
+      //   for (let a = 0; a < groupList.length; a++) {
+      //     for (let b = 0; b < newItemList.length; b++) {
+      //       if (groupList[a].linkId === newItemList[b].linkId) {
+      //         newItemList[b].item = groupList[a].item;
+      //       }
+      //     }
+      //   }
+      // }
 
       return newItemList;
     },

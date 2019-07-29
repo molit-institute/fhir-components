@@ -36,7 +36,7 @@
           <button type="button" class="btn button btn-outline-primary btn-lg" v-on:click="backToQuestionnaireList()">
             {{ language.back }}
           </button>
-          <button type="button" class="btn button btn-primary btn-lg" :disabled="notAllRequiredQuestionsCompleted" v-on:click="goToSummary">
+          <button type="button" class="btn button btn-primary btn-lg" :disabled="notAllRequiredQuestionsCompleted" v-on:click="goToSummary()">
             {{ language.next }}
           </button>
         </div>
@@ -54,12 +54,12 @@
 .list-complete-enter, .list-complete-leave-to
 /* .list-complete-leave-active below version 2.1.8 */ {
   opacity: 0;
-  transform: translateY(-40px) cubic-bezier(0, 0, 0.2, 1);
+  transform: translateY(-40px);
 }
 
 .list-complete-leave-active {
   opacity: 0;
-  transform: translateY(-40px) cubic-bezier(0, 0, 0.2, 1);
+  transform: translateY(-40px);
   position: absolute;
   width: 100%;
   height: 100%;
@@ -115,11 +115,16 @@ import ChoiceQuestion from "./../../components/questions/ChoiceQuestion.vue";
 import StringQuestion from "./../../components/questions/StringQuestion.vue";
 import BooleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import GroupQuestion from "./../../components/questions/GroupQuestion.vue";
-import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
   name: "questionnaire",
   props: {
+    /**
+     *
+     */
+    filteredItemList: {
+      type: Array
+    },
     /**
      *
      */
@@ -192,11 +197,14 @@ export default {
      */
     numberOfRequiredQuestions() {
       let totalNumber = 0;
-      for (let i = 0; i < this.filteredItemList.length; i++) {
-        if (this.filteredItemList[i].required) {
-          totalNumber++;
+      if (this.filteredItemList) {
+        for (let i = 0; i < this.filteredItemList.length; i++) {
+          if (this.filteredItemList[i].required) {
+            totalNumber++;
+          }
         }
       }
+
       return totalNumber;
     },
 
@@ -212,16 +220,6 @@ export default {
      */
     questionsList() {
       return this.filteredItemList.filter(question => question.type !== "group");
-    },
-    /**
-     *
-     */
-    filteredItemList() {
-      let newList = [];
-      if (this.questionnaireResponse && this.questionnaire) {
-        newList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.questionnaire.item);
-      }
-      return newList;
     }
   },
 
@@ -230,7 +228,7 @@ export default {
      *
      */
     goToSummary() {
-      this.$emit("summary");
+      this.$emit("finished");
     },
     /**
      * Relays the Event from the question-components to the top-component

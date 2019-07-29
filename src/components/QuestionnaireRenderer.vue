@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ answeredRequiredQuestionsList }}
     <component
       :questionnaireResponse="currentQuestionnaireResponse"
       :is="mode"
@@ -14,13 +15,12 @@
       :secondary="secondary"
       :danger="danger"
       :enableReturn="enableReturn"
+      :filteredItemList="filteredItemList"
       :language="language"
       :spinner="spinner"
       @summary="backToSummary()"
       @finished="finishQuestionnaire()"
       @return="leaveQuestionnaireRenderer()"
-      @removeRequiredAnswer="removeQuestionFromRequiredAnsweredQuestionsList($event)"
-      @addRequiredAnswer="addQuestionToRequiredAnsweredQuestionsList($event)"
       @answer="handleQuestionnaireResponseEvent($event)"
     ></component>
   </div>
@@ -33,6 +33,7 @@ import StepperQuestionnaire from "./questionnaire/StepperQuestionnaire";
 
 import * as fhirApi from "@molit/fhir-api";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
+import questionnaireController from "./../util/questionnaireController";
 import valueSetController from "./../util/valueSetController";
 import Spinner from "vue-simple-spinner";
 import de from "./../i18n/de";
@@ -167,6 +168,7 @@ export default {
       currentQuestionnaire: null,
       currentValueSets: [],
       currentStartCount: null,
+      filteredItemList: [],
       language: null,
       spinner: {
         loading: true,
@@ -204,16 +206,95 @@ export default {
       await this.handleQuestionnaireResponse();
     },
     answeredRequiredQuestionsList() {
-      this.handleAnsweredQuestionsList();
+      // this.handleAnsweredQuestionsList();
     },
     locale() {
       this.handlei18n();
     },
     currentQuestionnaireResponse() {
+      // this.handleAnsweredQuestionsList();
       this.$emit("updated", this.currentQuestionnaireResponse);
+    },
+    filteredItemList() {
+      this.handleAnsweredQuestionsList();
     }
   },
   methods: {
+    /**
+     * Adds and Removes Questions from the requiredAnswersList
+     */
+    handleAnsweredQuestionsList() {
+      console.log("-------------------------");
+      if (this.currentQuestionnaireResponse) {
+        let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
+        let aRQL = this.answeredRequiredQuestionsList;
+        //geh alle Answers durch
+        for (let i = 0; i < qr.length; i++) {
+          // check ob frage in filtereditemListe
+          let result = this.filteredItemList.find(function(element) {
+            return element.linkId === qr[i].linkId;
+          });
+          console.log("result", result);
+          if (result) {
+            // wenn ja check ob antwort vorhanden
+            // console.log("length", this.currentQuestionnaireResponse.item[i].answer.length, this.currentQuestionnaireResponse.item[i].answer.length >= 1);
+            if (qr[i].answer && qr[i].answer.length >= 1) {
+              // wenn ja hinzufügen
+              this.addQuestionToRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
+            } else {
+              // wenn nein entfernen
+              this.removeQuestionFromRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
+            }
+          } else {
+            // ist nicht in der Liste
+            // hol question per find über linkId aus liste raus
+            let questionToRemove = aRQL.find(function(element) {
+              return element.linkId === qr[i].linkId;
+            });
+            console.log(questionToRemove);
+            if (questionToRemove) {
+              // entferne question
+              console.log("remove this damn question already !!!!!!! ", questionToRemove);
+              this.removeQuestionFromRequiredAnsweredQuestionsList(questionToRemove);
+            }
+          }
+        }
+      }
+    },
+
+    /**
+     * Removes all Answers of Questions that are not triggered in the Questionnaire
+     */
+    removeUntriggeredAnswers() {
+      let qr = this.currentQuestionnaireResponse;
+      //alle answers durch
+      for (let i = 0; i < this.currentQuestionnaireResponse.item.length; i++) {
+        //bei jeder answer schaun ob frage noch in Liste
+        let result = this.filteredItemList.find(function(element) {
+          return element.linkId === qr.item[i].linkId;
+        });
+        if (!result) {
+          //wenn nein dann answer leeren
+          this.currentQuestionnaireResponse.item[i].answer = [];
+        }
+      }
+    },
+
+    /**
+     *
+     */
+    filterItemList() {
+      let newList = [];
+      // console.log(this.currentQuestionnaireResponse, this.questionnaire);
+      if (this.currentQuestionnaireResponse && this.questionnaire) {
+        newList = questionnaireController.handleEnableWhen(this.currentQuestionnaireResponse, this.currentQuestionnaire.item);
+      }
+      this.filteredItemList = newList;
+    },
+
+    /**
+     *
+     */
     handlei18n() {
       switch (this.locale) {
         case "en":
@@ -240,6 +321,7 @@ export default {
      */
     handleQuestionnaireResponseEvent(object) {
       this.currentQuestionnaireResponse = object;
+      this.filterItemList();
     },
 
     /**
@@ -352,20 +434,6 @@ export default {
     },
 
     /**
-     *
-     */
-    handleAnsweredQuestionsList() {
-      let itemList = questionnaireResponseController.createItemList(this.currentQuestionnaire);
-      if (this.currentQuestionnaireResponse) {
-        for (let i = 0; i < this.currentQuestionnaireResponse.item.length; i++) {
-          if (this.currentQuestionnaireResponse.item[i].answer.length === 1) {
-            this.addQuestionToRequiredAnsweredQuestionsList(itemList[i]);
-          }
-        }
-      }
-    },
-
-    /**
      *  Creates a new QuestionnaireResponse if no QuestionnaireResponse was given via props
      */
     handleQuestionnaireResponse() {
@@ -429,15 +497,14 @@ export default {
         this.currentStartCount = itemList.indexOf(this.startQuestion);
       }
     },
-    /**
-     *
-     */
-    handleLogic() {},
+
     /**
      * Emits an Event wich includes the finished Questionnaire Response
      */
-    finishQuestionnaire() {
+    async finishQuestionnaire() {
+      await this.removeUntriggeredAnswers();
       this.$emit("finished", this.currentQuestionnaireResponse);
+      console.log(this.currentQuestionnaireResponse);
     },
 
     /**
@@ -458,7 +525,8 @@ export default {
     this.spinner.message = this.language.loading.data;
     this.handleAnsweredQuestionsList();
     this.handleStartQuestion();
-    this.handleQuestionnaireResponse();
+    await this.handleQuestionnaireResponse();
+    this.filterItemList();
     setTimeout(() => {
       this.spinner.loading = false;
     }, 250);

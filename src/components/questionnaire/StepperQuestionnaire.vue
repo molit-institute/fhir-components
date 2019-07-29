@@ -159,10 +159,15 @@ import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
 import displayQuestion from "./../../components/questions/DisplayQuestion.vue";
-import questionnaireController from "./../../util/questionnaireController";
 import Spinner from "vue-simple-spinner";
 export default {
   props: {
+    /**
+     *
+     */
+    filteredItemList: {
+      type: Array
+    },
     /**
      *
      */
@@ -320,13 +325,6 @@ export default {
       }
 
       return number;
-    },
-    filteredItemList() {
-      let newList = [];
-      if (this.questionnaireResponse && this.questionnaire) {
-        newList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.questionnaire.item);
-      }
-      return newList;
     }
   },
 

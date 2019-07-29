@@ -99,12 +99,14 @@ export default {
       this.setSelected();
     },
     selected() {
+      let newQuestionnaireResponse = null;
       if (this.selected) {
-        let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "time");
         this.$emit("answer", newQuestionnaireResponse);
         this.filled = true;
       } else {
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "time");
+        this.$emit("answer", newQuestionnaireResponse);
         this.filled = false;
       }
     },

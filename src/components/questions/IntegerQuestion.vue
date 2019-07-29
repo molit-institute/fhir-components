@@ -139,6 +139,8 @@ export default {
         this.$emit("answer", newQuestionnaireResponse);
         this.filled = true;
       } else {
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "integer");
+        this.$emit("answer", newQuestionnaireResponse);
         this.filled = false;
       }
     },

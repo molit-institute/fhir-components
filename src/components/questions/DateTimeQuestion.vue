@@ -105,12 +105,14 @@ export default {
       this.dateTime = moment(this.date + "T" + this.time + ":00").format();
     },
     dateTime() {
+      let newQuestionnaireResponse = null;
       if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "") {
-        let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.dateTime], "dateTime");
         this.$emit("answer", newQuestionnaireResponse);
         this.filled = true;
       } else {
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "dateTime");
+        this.$emit("answer", newQuestionnaireResponse);
         this.filled = false;
       }
     },

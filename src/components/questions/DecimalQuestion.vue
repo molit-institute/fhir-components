@@ -125,17 +125,20 @@ export default {
     },
     selected() {
       var form = document.getElementById("decimal" + this.question.linkId);
+      let newQuestionnaireResponse = null;
       if (form) {
         form.classList.remove("was-validated");
       }
       if (!isNaN(parseFloat(this.selected))) {
         this.filled = true;
         form.classList.add("was-validated");
-        let newQuestionnaireResponse = null;
+
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "decimal");
         this.$emit("answer", newQuestionnaireResponse);
         this.started = true;
       } else {
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "decimal");
+        this.$emit("answer", newQuestionnaireResponse);
         this.filled = false;
       }
     },

@@ -178,7 +178,7 @@ export default {
         this.$emit("answer", newQuestionnaireResponse);
       } else {
         let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "url");
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "url");
         this.$emit("answer", newQuestionnaireResponse);
         this.filled = false;
       }
