@@ -6,19 +6,54 @@
  */
 export function getChoiceOptions(questionnaire, question, valueSets, FHIR_URL) {
   //check if reference or ValueSet
-  if (questionnaire && question && question.answerValueSet) {
-    let reference = question.answerValueSet;
-    if (reference.startsWith("#")) {
-      return getReferenceOptions(questionnaire, reference);
-    } else {
-      if (FHIR_URL && valueSets) {
-        return getValueSetOptions(reference, valueSets, FHIR_URL);
+  if (questionnaire && question) {
+    if (question.answerValueSet) {
+      let reference = question.answerValueSet;
+      if (reference.startsWith("#")) {
+        return getReferenceOptions(questionnaire, reference);
       } else {
-        throw new Error("The given FHIR_URL or ValueSets was null or undefined");
+        if (FHIR_URL && valueSets) {
+          return getValueSetOptions(reference, valueSets, FHIR_URL);
+        } else {
+          throw new Error("The given FHIR_URL or ValueSets was null or undefined");
+        }
       }
+    } else if (question.answerOption) {
+      let optionsList = [];
+      for (let i = 0; i < question.answerOption.length; i++) {
+        let count = i + 1;
+        let option = {
+          display: getAnswerOptionValue(question.answerOption[i]),
+          code: "A" + count
+        };
+        optionsList.push(option);
+      }
+      return optionsList;
     }
   } else {
     throw new Error("Getting Choice Options failed, because the given parameters were null, undefined or empty");
+  }
+}
+
+/**
+ * Return the value of the given answerOption
+ * @param {Array} answerOption
+ */
+function getAnswerOptionValue(answerOption) {
+  if (answerOption.valueInteger) {
+    return answerOption.valueInteger;
+  }
+  if (answerOption.valueDate) {
+    return answerOption.valueDate;
+  }
+  if (answerOption.valueTime) {
+    return answerOption.valueTime;
+  }
+  if (answerOption.valueString) {
+    return answerOption.valueString;
+  }
+  if (answerOption.valueCoding) {
+    return answerOption.valueCoding.display;
   }
 }
 
