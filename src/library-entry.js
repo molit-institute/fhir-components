@@ -22,6 +22,7 @@ import DtMarkdown from "./components/data-types/primitive/DtMarkdown";
 import DtString from "./components/data-types/primitive/DtString";
 import DtStringArray from "./components/data-types/primitive/DtStringArray";
 import DtUri from "./components/data-types/primitive/DtUri";
+import ResourceSelector from "./components/ResourceSelector";
 
 export {
   PaginatedList,
@@ -47,5 +48,6 @@ export {
   DtMarkdown,
   DtString,
   DtStringArray,
-  DtUri
+  DtUri,
+  ResourceSelector
 };
