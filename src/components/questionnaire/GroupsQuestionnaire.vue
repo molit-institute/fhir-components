@@ -18,8 +18,6 @@
         :secondary="secondary"
         :danger="danger"
         :language="language"
-        @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-        @addRequiredAnswer="addRequiredQuestionEvent($event)"
         @answer="relayAnswer($event)"
       ></component>
     </div>
@@ -38,8 +36,6 @@
             :secondary="secondary"
             :danger="danger"
             :language="language"
-            @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-            @addRequiredAnswer="addRequiredQuestionEvent($event)"
             @answer="relayAnswer($event)"
           ></component>
         </div>
@@ -78,7 +74,6 @@
         </span>
       </div>
     </div>
-    <pre>{{ questionnaire.item }}</pre>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -199,6 +194,7 @@ import choiceQuestion from "./../../components/questions/ChoiceQuestion.vue";
 import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
+import questionnaireResponse from "./../../util/questionnaireResponse";
 // import questionnaireResponseController from "./../../util/questionnaireResponseController";
 import Spinner from "vue-simple-spinner";
 export default {
@@ -305,44 +301,37 @@ export default {
   },
   computed: {
     filteredList() {
-      // let groupList = [];
       let newItemList = [];
-      // let lastMainGroupId = "";
-      // let filteredFlatList = [];
-      newItemList = this.filteredItemList;
-      // let flatList = this.questionnaireResponseController.createItemList(this.questionnaire.item);
-      // if (this.questionnaire && this.questionnaire.item && this.questionnaireResponse) {
-      //   console.log("----------------------------------------------");
-      //   filteredFlatList = this.filteredItemList;
-      //   //durch alle items erste ebene
-      //   for (let i = 0; i < filteredFlatList.length; i++) {
-      //     if (filteredFlatList && filteredFlatList[i].type === "group" && !filteredFlatList[i].groupId) {
-      //       //wenn item vom typ group ,dann group leeren und in groupliste abspeichern
-      //       filteredFlatList[i].item = [];
-      //       groupList.push(filteredFlatList[i]);
-      //       lastMainGroupId = filteredFlatList[i].linkId;
-      //       newItemList.push(filteredFlatList[i]);
-      //     } else if (!filteredFlatList[i].groupId) {
-      //       //no group no groupid
-      //       newItemList.push(filteredFlatList[i]);
-      //     } else if (filteredFlatList[i].groupId) {
-      //       //wenn item group id besitzt, groupliste durchsucnen,
-      //       let index = groupList.findIndex(item => item.linkId === lastMainGroupId);
-      //       if (index !== -1) {
-      //         groupList[index].item.push(filteredFlatList[i]);
-      //       }
-      //     }
-      //   }
-      //   //gruppen in liste suchen und items übertragen
-      //   for (let a = 0; a < groupList.length; a++) {
-      //     for (let b = 0; b < newItemList.length; b++) {
-      //       if (groupList[a].linkId === newItemList[b].linkId) {
-      //         newItemList[b].item = groupList[a].item;
-      //       }
-      //     }
-      //   }
-      // }
-
+      let lastMainGroupId = "";
+      // newItemList = this.filteredItemList;
+      if (this.questionnaire && this.questionnaire.item && this.questionnaireResponse) {
+        //console.log("----------------------------------------------");
+        //durch alle items erste ebene
+        for (let i = 0; i < this.filteredItemList.length; i++) {
+          if (this.filteredItemList && this.filteredItemList[i].type === "group" && !this.filteredItemList[i].groupId) {
+            //wenn item vom typ group ohne groupId,dann group leeren und in groupliste abspeichern
+            lastMainGroupId = this.filteredItemList[i].linkId;
+            //erstelle neues Object
+            let group = questionnaireResponse.Item.create();
+            //kopiere werte
+            group.linkId = this.filteredItemList[i].linkId;
+            group.definition = this.filteredItemList[i].definition;
+            group.text = this.filteredItemList[i].text;
+            group.type = "group";
+            newItemList.push(group);
+          } else if (!this.filteredItemList[i].groupId) {
+            //no group no groupid
+            newItemList.push(this.filteredItemList[i]);
+          } else if (this.filteredItemList[i].groupId) {
+            //wenn item group id besitzt in letzte mainGroup pushen,
+            //index der maingroupfinden
+            let result = newItemList.findIndex(item => item.linkId === lastMainGroupId);
+            if (result !== -1 && newItemList[result].item) {
+              newItemList[result].item.push(this.filteredItemList[i]);
+            }
+          }
+        }
+      }
       return newItemList;
     },
     /**
@@ -404,26 +393,6 @@ export default {
      */
     relayAnswer(object) {
       this.$emit("answer", object);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be removed from the List of answered Questions
-     */
-    removeRequiredQuestionEvent(question) {
-      this.$emit("removeRequiredAnswer", question);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be added to the List of answered Questions
-     */
-    addRequiredQuestionEvent(question) {
-      this.$emit("addRequiredAnswer", question);
-    },
-
-    scrollToTop() {
-      window.scrollTo(0, 0);
     },
 
     /**

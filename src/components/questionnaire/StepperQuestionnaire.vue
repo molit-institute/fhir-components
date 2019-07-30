@@ -42,8 +42,6 @@
           :danger="danger"
           :language="language"
           @next="countUp"
-          @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-          @addRequiredAnswer="addRequiredQuestionEvent($event)"
           @answer="relayAnswer($event)"
         ></component>
       </div>
@@ -344,22 +342,6 @@ export default {
     },
 
     /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be removed from the List of answered Questions
-     */
-    removeRequiredQuestionEvent(question) {
-      this.$emit("removeRequiredAnswer", question);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be added to the List of answered Questions
-     */
-    addRequiredQuestionEvent(question) {
-      this.$emit("addRequiredAnswer", question);
-    },
-
-    /**
      * Returns a Question from the itemList
      */
     getQuestionFromItemList() {
@@ -443,11 +425,6 @@ export default {
   },
 
   watch: {
-    questionnaire() {
-      // this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
-
-      this.count = 0;
-    },
     count() {
       this.setDisabled();
       // if (this.questionnaireResponse && this.itemList) {
@@ -459,6 +436,11 @@ export default {
     },
     questionnaireResponse() {
       this.setDisabled();
+    },
+    filteredItemList() {
+      if (this.filteredItemList[this.count].type !== "group" && this.count === 0) {
+        this.questionCount = 1;
+      }
     }
   },
 
@@ -476,8 +458,6 @@ export default {
       this.count = this.filteredItemList.length - 1;
       this.questionCount = this.getQuestionPositionNumber();
     }
-    //Resetting Lists to avoid leftovers
-    // this.RESET_REQUIRED_ANSWERED_QUESTIONS_LIST();
     this.setDisabled();
   },
 

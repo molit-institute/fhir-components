@@ -22,8 +22,6 @@
                 :secondary="secondary"
                 :danger="danger"
                 :language="language"
-                @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-                @addRequiredAnswer="addRequiredQuestionEvent($event)"
                 @answer="relayAnswer($event)"
               ></component>
             </div>
@@ -235,22 +233,6 @@ export default {
      */
     relayAnswer(object) {
       this.$emit("answer", object);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be removed from the List of answered Questions
-     */
-    removeRequiredQuestionEvent(question) {
-      this.$emit("removeRequiredAnswer", question);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be added to the List of answered Questions
-     */
-    addRequiredQuestionEvent(question) {
-      this.$emit("addRequiredAnswer", question);
     },
 
     /**

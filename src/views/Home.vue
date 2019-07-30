@@ -5,7 +5,7 @@
     </nav>
     <div class="container-fluid">
       <molecular-report :resource="exampleReport" />
-      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer>
+      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="FullQuestionnaire"></questionnaire-renderer>
     </div>
   </div>
 </template>
