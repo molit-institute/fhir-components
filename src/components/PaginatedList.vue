@@ -258,6 +258,7 @@ export default {
       try {
         this.bundle = (await fhirApi.fetchResources(this.fhirBaseUrl, this.resourceName, this.params, this.token)).data;
       } catch (e) {
+        this.$emit("error", e);
         throw new Error(e, "Could not load FHIR resources.");
       }
     },

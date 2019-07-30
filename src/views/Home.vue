@@ -1,8 +1,5 @@
 <template>
   <div>
-    <nav class="navbar navbar-light bg-light">
-      <span class="navbar-brand mb-0 h1">@molit/fhir-components</span>
-    </nav>
     <div class="container-fluid">
       <molecular-report :resource="exampleReport" />
       <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="FullQuestionnaire"></questionnaire-renderer>
