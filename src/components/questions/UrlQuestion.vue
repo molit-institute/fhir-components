@@ -65,8 +65,7 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
-      selected: "",
-      filled: false
+      selected: ""
     };
   },
 
@@ -163,7 +162,6 @@ export default {
       if (form) {
         form.classList.remove("was-validated");
       }
-      this.filled = true;
       if (this.selected) {
         if (!this.validateUrl()) {
           this.$emit("removeRequiredAnswer", this.question);
@@ -180,30 +178,10 @@ export default {
         let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "url");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = false;
       }
     },
     question() {
       this.setSelected();
-      if (this.selected) {
-        this.filled = true;
-      } else {
-        this.filled = false;
-      }
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled && this.validateUrl()) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
 

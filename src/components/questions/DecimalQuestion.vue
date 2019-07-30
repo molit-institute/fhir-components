@@ -53,7 +53,6 @@ export default {
   data: function() {
     return {
       selected: null,
-      filled: false,
       started: false
     };
   },
@@ -130,7 +129,6 @@ export default {
         form.classList.remove("was-validated");
       }
       if (!isNaN(parseFloat(this.selected))) {
-        this.filled = true;
         form.classList.add("was-validated");
 
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "decimal");
@@ -139,25 +137,10 @@ export default {
       } else {
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "decimal");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = false;
       }
     },
     question() {
       this.setSelected();
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
   updated() {

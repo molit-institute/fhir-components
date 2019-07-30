@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ answeredRequiredQuestionsList }}
     <component
       :questionnaireResponse="currentQuestionnaireResponse"
       :is="mode"
@@ -224,7 +223,6 @@ export default {
      * Adds and Removes Questions from the requiredAnswersList
      */
     handleAnsweredQuestionsList() {
-      console.log("-------------------------");
       if (this.currentQuestionnaireResponse) {
         let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
         let aRQL = this.answeredRequiredQuestionsList;
@@ -234,7 +232,6 @@ export default {
           let result = this.filteredItemList.find(function(element) {
             return element.linkId === qr[i].linkId;
           });
-          console.log("result", result);
           if (result) {
             // wenn ja check ob antwort vorhanden
             // console.log("length", this.currentQuestionnaireResponse.item[i].answer.length, this.currentQuestionnaireResponse.item[i].answer.length >= 1);
@@ -251,10 +248,8 @@ export default {
             let questionToRemove = aRQL.find(function(element) {
               return element.linkId === qr[i].linkId;
             });
-            console.log(questionToRemove);
             if (questionToRemove) {
               // entferne question
-              console.log("remove this damn question already !!!!!!! ", questionToRemove);
               this.removeQuestionFromRequiredAnsweredQuestionsList(questionToRemove);
             }
           }
@@ -266,16 +261,18 @@ export default {
      * Removes all Answers of Questions that are not triggered in the Questionnaire
      */
     removeUntriggeredAnswers() {
-      let qr = this.currentQuestionnaireResponse;
+      let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
       //alle answers durch
-      for (let i = 0; i < this.currentQuestionnaireResponse.item.length; i++) {
+      for (let i = 0; i < qr.length; i++) {
         //bei jeder answer schaun ob frage noch in Liste
         let result = this.filteredItemList.find(function(element) {
-          return element.linkId === qr.item[i].linkId;
+          return element.linkId === qr[i].linkId;
         });
         if (!result) {
           //wenn nein dann answer leeren
-          this.currentQuestionnaireResponse.item[i].answer = [];
+          if (qr[i].answer && qr[i].answer.length >= 1) {
+            qr[i].answer = [];
+          }
         }
       }
     },
@@ -501,10 +498,9 @@ export default {
     /**
      * Emits an Event wich includes the finished Questionnaire Response
      */
-    async finishQuestionnaire() {
-      await this.removeUntriggeredAnswers();
+    finishQuestionnaire() {
+      this.removeUntriggeredAnswers();
       this.$emit("finished", this.currentQuestionnaireResponse);
-      console.log(this.currentQuestionnaireResponse);
     },
 
     /**

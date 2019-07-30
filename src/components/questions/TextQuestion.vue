@@ -46,8 +46,7 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
-      selected: null,
-      filled: false
+      selected: null
     };
   },
 
@@ -120,30 +119,13 @@ export default {
       if (this.selected) {
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "text");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = true;
       } else {
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "text");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = false;
       }
     },
     question() {
       this.setSelected();
-      this.filled = false;
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
 

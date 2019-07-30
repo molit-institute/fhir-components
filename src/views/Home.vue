@@ -5,7 +5,7 @@
     </nav>
     <div class="container-fluid">
       <molecular-report :resource="exampleReport" />
-      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="FullQuestionnaire"></questionnaire-renderer>
+      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer>
     </div>
   </div>
 </template>
@@ -53,13 +53,6 @@ export default {
             prefix: "1.",
             text: "Hallo dies ist ein Test-Fragebogen und dies hier nur eine Frage vom Typ `Display`",
             type: "display"
-          },
-          {
-            linkId: "4",
-            prefix: "4.",
-            text: "Text Required",
-            type: "text",
-            required: true
           },
           {
             linkId: "17",
@@ -135,110 +128,6 @@ export default {
             text: "Decimal Required",
             type: "decimal",
             required: true
-          },
-          {
-            linkId: "9",
-            prefix: "9.",
-            text: "Integer",
-            type: "integer"
-          },
-          {
-            linkId: "10",
-            prefix: "10.",
-            text: "Integer Required",
-            type: "integer",
-            required: true
-          },
-          {
-            linkId: "11",
-            prefix: "11.",
-            text: "Date",
-            type: "date"
-          },
-          {
-            linkId: "12",
-            prefix: "12.",
-            text: "Date Required",
-            type: "date",
-            required: true
-          },
-          {
-            linkId: "13",
-            prefix: "13.",
-            text: "Time",
-            type: "time"
-          },
-          {
-            linkId: "14",
-            prefix: "14.",
-            text: "Time Required",
-            type: "time",
-            required: true
-          },
-          {
-            linkId: "2",
-            text: "In den folgenden Fragen geht es um Tätigkeiten, die Sie vielleicht im Laufe eines normalen Tages ausüben.",
-            type: "group",
-            item: [
-              {
-                linkId: "2.1",
-                prefix: "2.1",
-                text: "Url",
-                type: "url"
-              },
-              {
-                linkId: "2.2",
-                prefix: "2.2",
-                text: "Url Required",
-                type: "url",
-                required: true
-              }
-            ]
-          },
-          {
-            linkId: "15",
-            prefix: "15.",
-            text: "DateTime",
-            type: "dateTime"
-          },
-          {
-            linkId: "16",
-            prefix: "16.",
-            text: "DateTime Required",
-            type: "dateTime",
-            required: true
-          },
-          {
-            linkId: "19",
-            prefix: "19.",
-            text: "Single-Choice",
-            type: "choice",
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers1"
-          },
-          {
-            linkId: "20",
-            prefix: "20.",
-            text: "Single-Choice Required",
-            type: "choice",
-            required: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers1"
-          },
-          {
-            linkId: "21",
-            prefix: "21.",
-            text: "Multiple-Choice?",
-            type: "choice",
-            repeats: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers2"
-          },
-          {
-            linkId: "22",
-            prefix: "22.",
-            text: "Multiple-Choice Required?",
-            type: "choice",
-            required: true,
-            repeats: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers2"
           }
         ]
       }
