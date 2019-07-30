@@ -165,7 +165,7 @@ export default {
     },
 
     ok() {
-      this.$emit("update", this.resource);
+      this.$emit("update", this.selectedResource);
     },
 
     error(e) {
