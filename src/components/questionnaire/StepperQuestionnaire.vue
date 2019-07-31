@@ -427,9 +427,6 @@ export default {
   watch: {
     count() {
       this.setDisabled();
-      // if (this.questionnaireResponse && this.itemList) {
-      //   this.filteredItemList = questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
-      // }
     },
     requiredQuestionList() {
       this.setDisabled();
@@ -445,10 +442,6 @@ export default {
   },
 
   async created() {
-    // this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
-    // if (this.questionnaireResponse && this.itemList) {
-    //   this.filteredItemList = await questionnaireController.handleEnableWhen(this.questionnaireResponse, this.itemList);
-    // }
     //sets count if startcount was given from the summarypage through the questionnaire.view
     if (this.startCount) {
       this.count = this.startCount;

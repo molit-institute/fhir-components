@@ -303,28 +303,19 @@ export default {
     filteredList() {
       let newItemList = [];
       let lastMainGroupId = "";
-      // newItemList = this.filteredItemList;
       if (this.questionnaire && this.questionnaire.item && this.questionnaireResponse) {
-        //console.log("----------------------------------------------");
-        //durch alle items erste ebene
         for (let i = 0; i < this.filteredItemList.length; i++) {
           if (this.filteredItemList && this.filteredItemList[i].type === "group" && !this.filteredItemList[i].groupId) {
-            //wenn item vom typ group ohne groupId,dann group leeren und in groupliste abspeichern
             lastMainGroupId = this.filteredItemList[i].linkId;
-            //erstelle neues Object
             let group = questionnaireResponse.Item.create();
-            //kopiere werte
             group.linkId = this.filteredItemList[i].linkId;
             group.definition = this.filteredItemList[i].definition;
             group.text = this.filteredItemList[i].text;
             group.type = "group";
             newItemList.push(group);
           } else if (!this.filteredItemList[i].groupId) {
-            //no group no groupid
             newItemList.push(this.filteredItemList[i]);
           } else if (this.filteredItemList[i].groupId) {
-            //wenn item group id besitzt in letzte mainGroup pushen,
-            //index der maingroupfinden
             let result = newItemList.findIndex(item => item.linkId === lastMainGroupId);
             if (result !== -1 && newItemList[result].item) {
               newItemList[result].item.push(this.filteredItemList[i]);

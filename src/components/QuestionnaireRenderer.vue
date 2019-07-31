@@ -226,30 +226,21 @@ export default {
       if (this.currentQuestionnaireResponse) {
         let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
         let aRQL = this.answeredRequiredQuestionsList;
-        //geh alle Answers durch
         for (let i = 0; i < qr.length; i++) {
-          // check ob frage in filtereditemListe
           let result = this.filteredItemList.find(function(element) {
             return element.linkId === qr[i].linkId;
           });
           if (result) {
-            // wenn ja check ob antwort vorhanden
-            // console.log("length", this.currentQuestionnaireResponse.item[i].answer.length, this.currentQuestionnaireResponse.item[i].answer.length >= 1);
             if (qr[i].answer && qr[i].answer.length >= 1) {
-              // wenn ja hinzufügen
               this.addQuestionToRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
             } else {
-              // wenn nein entfernen
               this.removeQuestionFromRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
             }
           } else {
-            // ist nicht in der Liste
-            // hol question per find über linkId aus liste raus
             let questionToRemove = aRQL.find(function(element) {
               return element.linkId === qr[i].linkId;
             });
             if (questionToRemove) {
-              // entferne question
               this.removeQuestionFromRequiredAnsweredQuestionsList(questionToRemove);
             }
           }
@@ -262,14 +253,11 @@ export default {
      */
     removeUntriggeredAnswers() {
       let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
-      //alle answers durch
       for (let i = 0; i < qr.length; i++) {
-        //bei jeder answer schaun ob frage noch in Liste
         let result = this.filteredItemList.find(function(element) {
           return element.linkId === qr[i].linkId;
         });
         if (!result) {
-          //wenn nein dann answer leeren
           if (qr[i].answer && qr[i].answer.length >= 1) {
             qr[i].answer = [];
           }
@@ -282,7 +270,6 @@ export default {
      */
     filterItemList() {
       let newList = [];
-      // console.log(this.currentQuestionnaireResponse, this.questionnaire);
       if (this.currentQuestionnaireResponse && this.questionnaire) {
         newList = questionnaireController.handleEnableWhen(this.currentQuestionnaireResponse, this.currentQuestionnaire.item);
       }
