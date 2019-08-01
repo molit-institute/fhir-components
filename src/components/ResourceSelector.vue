@@ -13,6 +13,8 @@
             :searchAttributes="searchAttributes"
             :searchParams="queryParams"
             :showPagination="false"
+            :token="token"
+            :searchInputPlaceholder="searchInputPlaceholder"
             @update="bundleUpdated"
             @error="error"
             class="paginated-list"
@@ -21,14 +23,15 @@
               <a
                 href="javascript:void(0);"
                 @click="setResource(entry.resource)"
+                @dblclick="onDoubleClick"
                 :class="['list-group-item', 'list-group-item-action', 'flex-column', 'align-items-start', { active: selectedResource === entry.resource }]"
                 v-for="entry in bundle.entry"
                 :key="entry.resource.id"
               >
                 <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">{{ getAttribute(entry.resource, titleAttribute.value, titleAttribute.type) }}</h5>
+                  <h6 class="mb-0">{{ getAttribute(entry.resource, titleAttribute.value, titleAttribute.type) }}</h6>
                 </div>
-                <p class="mb-1">
+                <p class="mb-0">
                   <span v-for="(attribute, index) in subtitleAttributes" :key="attribute.value">
                     <span v-if="attribute.value && attribute.value !== ''">
                       <span>{{ attribute.name }}: </span>
@@ -45,8 +48,8 @@
           </paginated-list>
         </div>
         <div :class="[{ 'molit-modal-dialog-footer': modalDialog }]">
-          <button @click="cancel" type="button" class="btn btn-secondary">Cancel</button>
-          <button @click="ok" type="button" class="btn btn-primary" :disabled="!selectedResource">OK</button>
+          <button @click="cancel" type="button" class="btn btn-secondary">{{ cancelText }}</button>
+          <button @click="ok" type="button" class="btn btn-primary" :disabled="!selectedResource">{{ okText }}</button>
         </div>
       </div>
     </div>
@@ -71,10 +74,6 @@ export default {
     modalDialog: {
       type: Boolean,
       default: true
-    },
-    title: {
-      type: String,
-      default: "Choose..."
     },
     queryParams: {
       type: Object,
@@ -106,6 +105,26 @@ export default {
       default() {
         return [];
       }
+    },
+    token: {
+      type: String,
+      default: null
+    },
+    title: {
+      type: String,
+      default: "Choose..."
+    },
+    cancelText: {
+      type: String,
+      default: "Cancel"
+    },
+    okText: {
+      type: String,
+      default: "OK"
+    },
+    searchInputPlaceholder: {
+      type: String,
+      default: "Search.."
     }
   },
 
@@ -119,6 +138,12 @@ export default {
   methods: {
     bundleUpdated(bundle) {
       this.bundle = bundle;
+    },
+
+    onDoubleClick() {
+      if (this.selectedResource) {
+        this.ok();
+      }
     },
 
     setResource(resource) {
@@ -148,6 +173,10 @@ export default {
       }
 
       let attribute = this.byString(resource, attributeName);
+
+      if (!attribute) {
+        return "-";
+      }
 
       switch (attributeType) {
         case "HumanName":
