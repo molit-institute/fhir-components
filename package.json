@@ -14,7 +14,7 @@
     "test:e2e:docker": "cross-env E2E=cypress vue-cli-service test:e2e --headless"
   },
   "dependencies": {
-    "@molit/fhir-api": "^1.0.12",
+    "@molit/fhir-api": "^1.0.13",
     "@molit/fhir-util": "^1.0.9",
     "debounce": "^1.2.0",
     "moment-timezone": "^0.5.26",
@@ -23,12 +23,12 @@
     "vue-simple-spinner": "^1.2.8"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.9.2",
-    "@vue/cli-plugin-e2e-cypress": "^3.9.0",
-    "@vue/cli-plugin-eslint": "^3.9.2",
-    "@vue/cli-plugin-pwa": "^3.9.0",
-    "@vue/cli-plugin-unit-jest": "^3.9.0",
-    "@vue/cli-service": "^3.8.4",
+    "@vue/cli-plugin-babel": "^3.10.0",
+    "@vue/cli-plugin-e2e-cypress": "^3.10.0",
+    "@vue/cli-plugin-eslint": "^3.10.0",
+    "@vue/cli-plugin-pwa": "^3.10.0",
+    "@vue/cli-plugin-unit-jest": "^3.10.0",
+    "@vue/cli-service": "^3.10.0",
     "@vue/eslint-config-prettier": "^3.0.5",
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-core": "7.0.0-bridge.0",
