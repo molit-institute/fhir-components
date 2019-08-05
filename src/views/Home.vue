@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container-fluid">
-      <molecular-report :resource="exampleReport" />
+      <molecular-report :resources="exampleReport" />
       <!-- <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer> -->
     </div>
   </div>
@@ -13,6 +13,7 @@ import PatientList from "@/components/PatientList";
 import Patient from "@/components/resources/Patient-de-basis";
 import examplePatient from "@/assets/fhir/resources/patient-example.json";
 import exampleReport from "@/assets/fhir/resources/genomics-observation-example.json";
+import exampleReport2 from "@/assets/fhir/resources/genomics-observation-example-2.json";
 import MolecularReport from "@/components/MolecularReport";
 import QuestionnaireList from "@/components/QuestionnaireList";
 import QuestionnaireResponseList from "@/components/QuestionnaireResponseList";
@@ -24,7 +25,7 @@ export default {
     },
 
     exampleReport() {
-      return exampleReport;
+      return [exampleReport, exampleReport2];
     }
   },
   data() {

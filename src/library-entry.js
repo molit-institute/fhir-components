@@ -23,6 +23,7 @@ import DtString from "./components/data-types/primitive/DtString";
 import DtStringArray from "./components/data-types/primitive/DtStringArray";
 import DtUri from "./components/data-types/primitive/DtUri";
 import ResourceSelector from "./components/ResourceSelector";
+import MolecularReport from "./components/MolecularReport";
 
 export {
   PaginatedList,
@@ -49,5 +50,6 @@ export {
   DtString,
   DtStringArray,
   DtUri,
-  ResourceSelector
+  ResourceSelector,
+  MolecularReport
 };
