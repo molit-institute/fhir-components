@@ -12,32 +12,179 @@
   "specimen": { "identifier": { "system": "http://molit.eu/fhir/genomics/NamingSystem/cegat/tissueID", "value": "UNKNOWN" } },
   "component": [
     {
-      "code": { "coding": [{ "system": "http://loinc.org", "code": "48002-0", "display": "Genomic source class" }] },
-      "valueCodeableConcept": { "coding": [{ "system": "http://loinc.org", "code": "LA6684-0", "display": "Somatic" }] }
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "48002-0",
+            "display": "Genomic source class"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "LA6684-0",
+            "display": "Somatic"
+          }
+        ]
+      }
     },
     {
-      "code": { "coding": [{ "system": "http://loinc.org", "code": "82155-3", "display": "Genomic structural variant copy number" }] },
-      "valueQuantity": { "value": 4, "system": "http://unitsofmeasure.org", "code": "1" }
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "82155-3",
+            "display": "Genomic structural variant copy number"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 7.0,
+        "system": "http://unitsofmeasure.org",
+        "code": "1"
+      }
     },
     {
-      "code": { "coding": [{ "system": "http://loinc.org", "code": "48001-2", "display": "Cytogenetic (chromosome) location" }] },
-      "valueCodeableConcept": { "coding": [{ "system": "http://hl7.org/fhir/sid/chromloc", "code": "chr4", "display": "chr4" }] }
+      "code": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/LOINC-TBD",
+            "code": "variant-type",
+            "display": "variant-type"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/ValueSet/LOINC-LL-TBD-variant-types",
+            "code": "CNV",
+            "display": "CNV"
+          }
+        ]
+      }
     },
     {
-      "code": { "coding": [{ "system": "http://loinc.org", "code": "62374-4", "display": "Human reference sequence assembly version" }] },
-      "valueCodeableConcept": { "coding": [{ "system": "http://loinc.org", "code": "LA14029-5", "display": "GRCh37" }] }
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "48001-2",
+            "display": "Cytogenetic (chromosome) location"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/sid/chromloc",
+            "code": "chr1",
+            "display": "chr1"
+          }
+        ]
+      }
     },
     {
-      "code": { "coding": [{ "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/LOINC-TBD", "code": "cnv-size", "display": "CNV Size" }] },
-      "valueCodeableConcept": { "coding": [{ "system": "http://molit.eu/fhir/genomics/cnv-size", "code": "partial p-arm", "display": "partial p-arm" }] }
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "62374-4",
+            "display": "Human reference sequence assembly version"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "LA14029-5",
+            "display": "GRCh37"
+          }
+        ]
+      }
     },
     {
-      "code": { "coding": [{ "system": "http://loinc.org", "code": "81254-5", "display": "Genomic allele start-end" }] },
-      "valueRange": { "low": { "value": 25469754 }, "high": { "value": 25469754 } }
+      "code": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/LOINC-TBD",
+            "code": "cnv-size",
+            "display": "CNV Size"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://molit.eu/fhir/genomics/cnv-size",
+            "code": "partial q-arm",
+            "display": "partial q-arm"
+          }
+        ]
+      }
     },
     {
-      "code": { "coding": [{ "system": "http://loinc.org", "code": "48002-0", "display": "Genomic source class" }] },
-      "valueCodeableConcept": { "coding": [{ "system": "http://loinc.org", "code": "LA6684-0", "display": "Somatic" }] }
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "81254-5",
+            "display": "Genomic allele start-end"
+          }
+        ]
+      },
+      "valueRange": {
+        "low": {
+          "value": 150547027
+        },
+        "high": {
+          "value": 150547027
+        }
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "48002-0",
+            "display": "Genomic source class"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "LA6684-0",
+            "display": "Somatic"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/LOINC-TBD",
+            "code": "effect",
+            "display": "effect"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/ValueSet/LOINC-LL-TBD-effect",
+            "code": "ambigious",
+            "display": "ambigious"
+          }
+        ]
+      }
     }
   ]
 }

@@ -17,6 +17,10 @@
         <input class="form-check-input" type="checkbox" v-model="showRegion" />
         <label class="form-check-label">Chromosomale Region</label>
       </div>
+      <div class="form-check form-check-inline" v-if="variantType === 'CNV'">
+        <input class="form-check-input" type="checkbox" v-model="showEffect" />
+        <label class="form-check-label">Effekt</label>
+      </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" v-model="showReference" />
         <label class="form-check-label">Referenz</label>
@@ -29,7 +33,7 @@
         <input class="form-check-input" type="checkbox" v-model="showSource" />
         <label class="form-check-label">Source</label>
       </div>
-      <div class="form-check form-check-inline">
+      <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showFunctionalClass" />
         <label class="form-check-label">Funkt. Klasse</label>
       </div>
@@ -65,10 +69,11 @@
           <th v-if="showGene && variantType === 'SNV'">Gen</th>
           <th v-if="showLocation && variantType === 'CNV'">Lokation</th>
           <th v-if="showRegion && variantType === 'CNV'">Chromosomale Region</th>
+          <th v-if="showEffect && variantType === 'CNV'">Effekt</th>
           <th v-if="showReference">Referenz</th>
           <th v-if="showType && variantType === 'SNV'">Typ</th>
           <th v-if="showSource">Source</th>
-          <th v-if="showFunctionalClass">Funkt. Klasse</th>
+          <th v-if="showFunctionalClass && variantType === 'SNV'">Funkt. Klasse</th>
           <th v-if="showVariant && variantType === 'SNV'">Variante</th>
           <th v-if="showTranscript && variantType === 'SNV'">Transkript</th>
           <th v-if="showNaf && variantType === 'SNV'">NAF</th>
@@ -88,10 +93,11 @@
           </td>
           <td v-if="showLocation && variantType === 'CNV'">{{ getValueByLoincCode(resource.component, "48001-2") }}</td>
           <td v-if="showRegion && variantType === 'CNV'">{{ getValueByLoincCode(resource.component, "81254-5") }}</td>
+          <td v-if="showEffect && variantType === 'CNV'">{{ getValueByLoincCode(resource.component, "effect") }}</td>
           <td v-if="showReference">{{ getValueByLoincCode(resource.component, "62374-4") }}</td>
           <td v-if="showType && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "48019-4") }}</td>
           <td v-if="showSource">{{ getValueByLoincCode(resource.component, "48002-0") }}</td>
-          <td v-if="showFunctionalClass">{{ getValueByLoincCode(resource.component, "functional-annotation") }}</td>
+          <td v-if="showFunctionalClass && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "functional-annotation") }}</td>
           <td v-if="showVariant && variantType === 'SNV'">
             {{ getValueByLoincCode(resource.component, "48004-6") }}<span v-if="getValueByLoincCode(resource.component, '48005-3')">;</span> {{ getValueByLoincCode(resource.component, "48005-3") }}
           </td>
@@ -150,6 +156,11 @@ export default {
     },
 
     hideRegion: {
+      type: Boolean,
+      default: false
+    },
+
+    hideEffect: {
       type: Boolean,
       default: false
     },
@@ -222,6 +233,7 @@ export default {
       showGene: true,
       showLocation: true,
       showRegion: true,
+      showEffect: true,
       showReference: true,
       showType: true,
       showSource: true,
