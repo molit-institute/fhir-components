@@ -61,6 +61,10 @@
         <input class="form-check-input" type="checkbox" v-model="showCopyNumber" />
         <label class="form-check-label">Kopienzahl</label>
       </div>
+      <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
+        <input class="form-check-input" type="checkbox" v-model="showLinks" />
+        <label class="form-check-label">Links</label>
+      </div>
     </div>
     <table class="table snv-table">
       <thead>
@@ -80,6 +84,7 @@
           <th v-if="showReadDepth && variantType === 'SNV'">Read Depth</th>
           <th v-if="showCnvSize && variantType === 'CNV'">Variante</th>
           <th v-if="showCopyNumber && variantType === 'CNV'">Kopienzahl</th>
+          <th v-if="showLinks && variantType === 'SNV'">Links</th>
         </tr>
       </thead>
       <tbody>
@@ -101,11 +106,24 @@
           <td v-if="showVariant && variantType === 'SNV'">
             {{ getValueByLoincCode(resource.component, "48004-6") }}<span v-if="getValueByLoincCode(resource.component, '48005-3')">;</span> {{ getValueByLoincCode(resource.component, "48005-3") }}
           </td>
-          <td v-if="showTranscript && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "51958-7") }}</td>
+          <td v-if="showTranscript && variantType === 'SNV'">
+            <a v-if="showNCBILinks" :href="`https://www.ncbi.nlm.nih.gov/nuccore/${getValueByLoincCode(resource.component, '51958-7')}`" target="_blank">{{
+              getValueByLoincCode(resource.component, "51958-7")
+            }}</a>
+            <span v-else>{{ getValueByLoincCode(resource.component, "51958-7") }}</span>
+          </td>
           <td v-if="showNaf && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "81258-6") ? getValueByLoincCode(resource.component, "81258-6").toFixed(nafDecimalPlaces) : "" }}</td>
           <td v-if="showReadDepth && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "82121-5") }}</td>
           <td v-if="showCnvSize && variantType === 'CNV'">{{ getValueByLoincCode(resource.component, "cnv-size") }}</td>
           <td v-if="showCopyNumber && variantType === 'CNV'">{{ getValueByLoincCode(resource.component, "82155-3") }}</td>
+          <td v-if="showLinks && variantType === 'SNV'">
+            <a
+              v-if="showOncoKBLinks"
+              :href="`https://www.cbioportal.org/results/cancerTypesSummary?case_set_id=all&gene_list=${getValueByLoincCode(resource.component, '48018-6')}&cancer_study_list=5c8a7d55e4b046111fee2296`"
+              target="_blank"
+              >cBioPortal</a
+            >
+          </td>
         </tr>
       </tbody>
     </table>
@@ -215,7 +233,17 @@ export default {
       default: false
     },
 
+    hideLinks: {
+      type: Boolean,
+      default: false
+    },
+
     showOncoKBLinks: {
+      type: Boolean,
+      default: true
+    },
+
+    showNCBILinks: {
       type: Boolean,
       default: true
     },
@@ -243,7 +271,8 @@ export default {
       showNaf: true,
       showReadDepth: true,
       showCnvSize: true,
-      showCopyNumber: true
+      showCopyNumber: true,
+      showLinks: true
     };
   },
 
@@ -269,6 +298,7 @@ export default {
     this.showReadDepth = !this.hideReadDepth;
     this.showCnvSize = !this.hideCnvSize;
     this.showCopyNumber = !this.hideCopyNumber;
+    this.showLinks = !this.hideLinks;
   }
 };
 </script>
