@@ -1,6 +1,10 @@
 <template>
   <div>
     <div :class="['column-hide-options', { right: columnHideOptionsRight }]" v-if="showColumnHideOptions">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" v-model="showId" />
+        <label class="form-check-label">Id</label>
+      </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showGene" />
         <label class="form-check-label">Gen</label>
@@ -57,6 +61,7 @@
     <table class="table snv-table">
       <thead>
         <tr>
+          <th v-if="showId">Id</th>
           <th v-if="showGene && variantType === 'SNV'">Gen</th>
           <th v-if="showLocation && variantType === 'CNV'">Lokation</th>
           <th v-if="showRegion && variantType === 'CNV'">Chromosomale Region</th>
@@ -74,6 +79,7 @@
       </thead>
       <tbody>
         <tr v-for="resource in resources" :key="resource.id">
+          <td v-if="showId">{{ resource.id }}</td>
           <td v-if="showGene && variantType === 'SNV'">
             <a v-if="showOncoKBLinks" :href="`https://oncokb.org/gene/${getValueByLoincCode(resource.component, '48018-6')}`" target="_blank">{{
               getValueByLoincCode(resource.component, "48018-6")
@@ -126,6 +132,11 @@ export default {
     columnHideOptionsRight: {
       type: Boolean,
       default: true
+    },
+
+    hideId: {
+      type: Boolean,
+      default: false
     },
 
     hideGene: {
@@ -202,6 +213,7 @@ export default {
   data() {
     return {
       columns: [],
+      showId: true,
       showGene: true,
       showLocation: true,
       showRegion: true,
