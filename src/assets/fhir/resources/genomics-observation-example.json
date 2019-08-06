@@ -220,6 +220,23 @@
         "coding": [
           {
             "system": "http://loinc.org",
+            "code": "81258-6",
+            "display": "Allelic frequency [NFr]"
+          }
+        ]
+      },
+      "valueQuantity": {
+        "value": 0.27009967359050445,
+        "unit": "relative frequency of a particular allele in the specimen",
+        "system": "http://unitsofmeasure.org",
+        "code": "1"
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
             "code": "69547-8",
             "display": "Genomic ref allele [ID]"
           }

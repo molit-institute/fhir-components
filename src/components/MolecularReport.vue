@@ -93,10 +93,10 @@
           <td v-if="showSource">{{ getValueByLoincCode(resource.component, "48002-0") }}</td>
           <td v-if="showFunctionalClass">{{ getValueByLoincCode(resource.component, "functional-annotation") }}</td>
           <td v-if="showVariant && variantType === 'SNV'">
-            {{ getValueByLoincCode(resource.component, "48004-6") }}<span v-if="getValueByLoincCode(resource.component, '48004-6')">;</span> {{ getValueByLoincCode(resource.component, "48005-3") }}
+            {{ getValueByLoincCode(resource.component, "48004-6") }}<span v-if="getValueByLoincCode(resource.component, '48005-3')">;</span> {{ getValueByLoincCode(resource.component, "48005-3") }}
           </td>
           <td v-if="showTranscript && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "51958-7") }}</td>
-          <td v-if="showNaf && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "81258-6") }}</td>
+          <td v-if="showNaf && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "81258-6") ? getValueByLoincCode(resource.component, "81258-6").toFixed(nafDecimalPlaces) : "" }}</td>
           <td v-if="showReadDepth && variantType === 'SNV'">{{ getValueByLoincCode(resource.component, "82121-5") }}</td>
           <td v-if="showCnvSize && variantType === 'CNV'">{{ getValueByLoincCode(resource.component, "cnv-size") }}</td>
           <td v-if="showCopyNumber && variantType === 'CNV'">{{ getValueByLoincCode(resource.component, "82155-3") }}</td>
@@ -207,6 +207,11 @@ export default {
     showOncoKBLinks: {
       type: Boolean,
       default: true
+    },
+
+    nafDecimalPlaces: {
+      type: Number,
+      default: 4
     }
   },
 
