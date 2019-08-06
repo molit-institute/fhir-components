@@ -5,8 +5,8 @@
   "status": "final",
   "category": [{ "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/observation-category", "code": "laboratory" }] }],
   "code": { "coding": [{ "system": "http://loinc.org", "code": "69548-6", "display": "Genetic variant assessment" }] },
-  "subject": { "reference": "Patient/4721" },
-  "performer": [{ "reference": "Organization/4764" }],
+  "subject": { "reference": "Patient/4761" },
+  "performer": [{ "reference": "Organization/4762" }],
   "valueCodeableConcept": { "coding": [{ "system": "http://loinc.org", "code": "LA9633-4", "display": "Present" }] },
   "method": { "coding": [{ "system": "http://loinc.org", "code": "LA26398-0", "display": "Sequencing" }] },
   "specimen": { "identifier": { "system": "http://molit.eu/fhir/genomics/NamingSystem/cegat/tissueID", "value": "UNKNOWN" } },
@@ -17,11 +17,11 @@
     },
     {
       "code": { "coding": [{ "system": "http://loinc.org", "code": "82155-3", "display": "Genomic structural variant copy number" }] },
-      "valueQuantity": { "value": 1, "system": "http://unitsofmeasure.org", "code": "1" }
+      "valueQuantity": { "value": 4, "system": "http://unitsofmeasure.org", "code": "1" }
     },
     {
       "code": { "coding": [{ "system": "http://loinc.org", "code": "48001-2", "display": "Cytogenetic (chromosome) location" }] },
-      "valueCodeableConcept": { "coding": [{ "system": "http://hl7.org/fhir/sid/chromloc", "code": "chr3", "display": "chr3" }] }
+      "valueCodeableConcept": { "coding": [{ "system": "http://hl7.org/fhir/sid/chromloc", "code": "chr4", "display": "chr4" }] }
     },
     {
       "code": { "coding": [{ "system": "http://loinc.org", "code": "62374-4", "display": "Human reference sequence assembly version" }] },

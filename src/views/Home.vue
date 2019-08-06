@@ -2,6 +2,7 @@
   <div>
     <div class="container-fluid">
       <molecular-report :resources="exampleReport" />
+      <molecular-report :resources="exampleReport" variantType="CNV" />
       <!-- <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer> -->
     </div>
   </div>

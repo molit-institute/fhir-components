@@ -36,231 +36,216 @@
   },
   "component": [
     {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "48002-0",
+            "display": "Genomic source class"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "LA6684-0",
+            "display": "Somatic"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/LOINC-TBD",
+            "code": "variant-type",
+            "display": "variant-type"
+          }
+        ]
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/ValueSet/LOINC-LL-TBD-variant-types",
+            "code": "SNV",
+            "display": "SNV"
+          }
+        ]
+      }
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "48018-6",
+            "display": "Gene studied [ID]"
+          }
+        ]
+      },
       "valueCodeableConcept": {
         "coding": [
           {
             "system": "https://www.genenames.org",
-            "display": "PIK3CA",
-            "code": "HGNC:8975"
-          }
-        ]
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Gene studied [ID]",
-            "code": "48018-6"
+            "code": "HGNC:5021",
+            "display": "FOXA1"
           }
         ]
       }
     },
     {
-      "valueCodeableConcept": {
-        "coding": [
-          {
-            "system": "http://hl7.org/fhir/sid/chromloc",
-            "display": "chr9",
-            "code": "chr9"
-          }
-        ]
-      },
       "code": {
         "coding": [
           {
             "system": "http://loinc.org",
-            "display": "Cytogenetic (chromosome) location",
-            "code": "48001-2"
+            "code": "62374-4",
+            "display": "Human reference sequence assembly version"
           }
         ]
-      }
-    },
-    {
+      },
       "valueCodeableConcept": {
         "coding": [
           {
             "system": "http://loinc.org",
-            "display": "GRCh37 entspricht hg19",
-            "code": "LA14029-5"
-          }
-        ]
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Human reference sequence assembly version",
-            "code": "62374-4"
+            "code": "LA14029-5",
+            "display": "GRCh37"
           }
         ]
       }
     },
     {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "48004-6",
+            "display": "DNA change (c.HGVS)"
+          }
+        ]
+      },
       "valueCodeableConcept": {
         "coding": [
           {
-            "system": "http://hl7.org/fhir/uv/genomics-reporting/ValueSet/hgvs",
-            "display": "c.(353G>A)",
-            "code": "c.(353G>A)"
-          }
-        ]
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "DNA Change - Transcript (cHGVS)",
-            "code": "48004-6"
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/hgvs",
+            "code": "c.1205_1207delTCA",
+            "display": "c.1205_1207delTCA"
           }
         ]
       }
     },
     {
-      "valueCodeableConcept": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Substitution",
-            "code": "LA6690-7"
-          }
-        ]
-      },
       "code": {
         "coding": [
           {
             "system": "http://loinc.org",
-            "display": "DNA change type",
-            "code": "48019-4"
+            "code": "48019-4",
+            "display": "DNA change type"
           }
         ]
-      }
-    },
-    {
+      },
       "valueCodeableConcept": {
         "coding": [
           {
             "system": "http://loinc.org",
-            "display": "Somatic",
-            "code": "LA6684-0"
-          }
-        ]
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Genomic source class",
-            "code": "48002-0"
+            "code": "LA6692-3",
+            "display": "Deletion"
           }
         ]
       }
     },
     {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "48005-3",
+            "display": "Amino acid change (pHGVS)"
+          }
+        ]
+      },
       "valueCodeableConcept": {
         "coding": [
           {
-            "system": "http://hl7.org/fhir/uv/genomics-reporting/ValueSet/hgvs",
-            "display": "p.(Gly118Asp)",
-            "code": "p.(Gly118Asp)"
-          }
-        ]
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Amino acid change (pHGVS)",
-            "code": "48005-3"
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/hgvs",
+            "code": "p.I402del",
+            "display": "p.I402del"
           }
         ]
       }
     },
     {
+      "code": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/uv/genomics-reporting/CodeSystem/LOINC-TBD",
+            "code": "functional-annotation",
+            "display": "Functional Annotation"
+          }
+        ]
+      },
       "valueCodeableConcept": {
         "coding": [
           {
-            "system": "http://loinc.org",
-            "display": "Missense",
-            "code": "LA6698-0"
-          }
-        ]
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Amino acid change type",
-            "code": "48006-1"
+            "system": "http://www.sequenceontology.org",
+            "code": "SO:0001650",
+            "display": "inframe_variant"
           }
         ]
       }
     },
     {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "51958-7",
+            "display": "Transcript reference sequence [ID]"
+          }
+        ]
+      },
       "valueCodeableConcept": {
         "coding": [
           {
             "system": "http://www.ncbi.nlm.nih.gov/refseq/",
-            "display": "NM_006218.3",
-            "code": "NM_006218.3"
-          }
-        ]
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Transcript reference sequence [ID]",
-            "code": "51958-7"
+            "code": "NM_004496.3",
+            "display": "NM_004496.3"
           }
         ]
       }
     },
     {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "69547-8",
+            "display": "Genomic ref allele [ID]"
+          }
+        ]
+      },
+      "valueString": "TTGA"
+    },
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "82121-5",
+            "display": "Allelic read depth"
+          }
+        ]
+      },
       "valueQuantity": {
-        "value": 0.46000000000000002
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Allelic frequency [NFr]",
-            "code": "81258-6"
-          }
-        ]
-      }
-    },
-    {
-      "valueQuantity": {
-        "code": "1",
-        "value": 144
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Allelic read depth",
-            "code": "82121-5"
-          }
-        ]
-      }
-    },
-    {
-      "valueRange": {
-        "low": {
-          "value": 178917478
-        }
-      },
-      "code": {
-        "coding": [
-          {
-            "system": "http://loinc.org",
-            "display": "Genomic allele start-end",
-            "code": "81254-5"
-          }
-        ]
+        "value": 378.0,
+        "unit": "reads per base pair",
+        "system": "http://unitsofmeasure.org",
+        "code": "{reads}/{base}"
       }
     }
-  ],
+  ]
+  ,
   "subject": {
     "reference": "Patient/54836"
   },
