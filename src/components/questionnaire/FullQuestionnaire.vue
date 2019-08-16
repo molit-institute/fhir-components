@@ -11,6 +11,9 @@
           <div class="card card-basic-margins">
             <div class="card-body" v-if="language">
               <div v-if="question.type !== 'group'">{{ language.question }} {{ getQuestionIndex(question) + 1 }} {{ language.of }} {{ questionsList.length }}</div>
+              <div v-if="question.groupId && !question.item" class="question-group-text">
+                {{ getGroupText(question) }}
+              </div>
               <component
                 :is="question.type + 'Question'"
                 :question="question"
@@ -44,6 +47,12 @@
 </template>
 
 <style lang="scss" scoped>
+.question-group-text {
+  font-size: 1.4em;
+  font-weight: 600;
+  margin: 15px 0px;
+  color: #6a6a6a;
+}
 .list-complete-item {
   transition: all 0.45s;
   display: flex;
@@ -222,6 +231,14 @@ export default {
   },
 
   methods: {
+    /**
+     *
+     */
+    getGroupText(currentQuestion) {
+      let groupQuestion = this.filteredItemList.find(element => element.linkId === currentQuestion.groupId);
+      return groupQuestion.text;
+    },
+
     /**
      *
      */

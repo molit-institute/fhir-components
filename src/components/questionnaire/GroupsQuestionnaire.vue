@@ -18,6 +18,7 @@
         :secondary="secondary"
         :danger="danger"
         :language="language"
+        :filteredItemList="filteredItemList"
         @answer="relayAnswer($event)"
       ></component>
     </div>
@@ -372,6 +373,7 @@ export default {
     }
   },
   methods: {
+
     /**
      *
      */
