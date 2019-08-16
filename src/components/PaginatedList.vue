@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="form-group" v-if="searchable">
-      <input :value="searchTerm" class="form-control" @input="updateSearch" placeholder />
+      <input :value="searchTerm" class="form-control" @input="updateSearch" :placeholder="searchInputPlaceholder" />
     </div>
     <slot></slot>
     <nav v-if="bundle && bundle.entry && bundle.entry[0] && showPagination">
@@ -120,6 +120,10 @@ export default {
     viewBehavior: {
       type: String,
       default: "href"
+    },
+    searchInputPlaceholder: {
+      type: String,
+      default: "Search.."
     }
   },
 

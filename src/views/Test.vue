@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <resource-selector :fhirBaseUrl="baseUrl" :resourceName="'Patient'" :titleAttribute="titleAttribute" :searchAttributes="searchAttributes" />
+    <resource-selector :fhirBaseUrl="baseUrl" :resourceName="'Patient'" :titleAttribute="titleAttribute" :subtitleAttributes="subtitleAttributes" :searchAttributes="searchAttributes" />
   </div>
 </template>
 
@@ -20,7 +20,14 @@ export default {
       titleAttribute: {
         value: "name",
         type: "HumanName"
-      }
+      },
+      subtitleAttributes: [
+        {
+          name: "Geburtsdatum",
+          value: "birthDate",
+          type: "Date"
+        }
+      ]
     };
   },
 

@@ -90,7 +90,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 label {
   font-size: smaller;
   font-weight: bold;

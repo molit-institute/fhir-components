@@ -1,7 +1,8 @@
 import moment from "moment";
 
 /**
- * Adds a 0 in case the length is smaller than the given length. number is not allowed to be null/undefined, length is not allowed to be null/undefined or its value below 2, else the return will be set to "00"
+ * Adds a 0 in case the length is smaller than the given length. number is not allowed to be null/undefined,
+ * length is not allowed to be null/undefined or its value below 2, else the return will be set to "00"
  * source : https://stackoverflow.com/questions/1091372/getting-the-clients-timezone-in-javascript
  */
 export function pad(number, length) {
