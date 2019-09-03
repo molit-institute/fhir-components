@@ -65,7 +65,6 @@ function getAnswerOptionValue(answerOption) {
  * @param {String} reference
  */
 function getReferenceOptions(questionnaire, reference) {
-  //getting reference id to compare to ValueSet-Id
   if (questionnaire && reference) {
     let referenceSplit = reference.split("#", 2);
     let referenceId = referenceSplit[1];
@@ -118,19 +117,21 @@ function handleEnableWhen(currentQuestionnaireResponse, itemList) {
   return newItemList;
 }
 
+/**
+ * This Method adds Items to the given List by checking every question for an enable-when, then checking if there are answers for this question and if so, will run
+ * the Logic-Method. If the Logic-Method returns true, the question will be added to the new List.
+ * @param {*} answersList  List of all answers
+ * @param {*} itemList  original unflattened items of the questionnaire
+ * @param {*} newItemList new ItemList containing all questions and activated questions
+ */
 function addItemToList(answersList, itemList, newItemList) {
-  //itemlist durchgehen und mit questionnaireResponse vergleichen
   for (let i = 0; i < itemList.length; i++) {
     if (itemList[i].enableWhen) {
-      // Für jede Logik Frage
-      // hole für jedes Enable-when die Answer
       for (let x = 0; x < itemList[i].enableWhen.length; x++) {
         let item = answersList.find(function(element) {
           return element.linkId === itemList[i].enableWhen[x].question;
         });
-        // schau ob Answer da
         if (item.answer && item.answer.length !== 0) {
-          // bei Antwort Logik laufen lassen
           if (handleEnableWhenLogic(item, itemList[i].enableWhen[x])) {
             newItemList.push(itemList[i]);
             if (itemList[i].type === "group") {
@@ -156,9 +157,7 @@ function addItemToList(answersList, itemList, newItemList) {
  */
 function handleEnableWhenLogic(item, enableWhen) {
   let result = false;
-  //check all the answers
   for (let i = 0; i < item.answer.length; i++) {
-    //check operator
     switch (enableWhen.operator) {
       case "exists":
         result = true;
