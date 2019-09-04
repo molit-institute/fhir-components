@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="container-fluid">
-      <molecular-report :resources="exampleReport" />
-      <molecular-report :resources="exampleReport" variantType="CNV" />
-      <!-- <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer> -->
+      <!-- <molecular-report :resources="exampleReport" /> -->
+      <!-- <molecular-report :resources="exampleReport" variantType="CNV" /> -->
+      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="GroupedQuestionnaire"></questionnaire-renderer>
     </div>
   </div>
 </template>
@@ -61,8 +61,8 @@ export default {
           },
           {
             linkId: "18.1",
-            prefix: "18.",
-            text: "Group",
+            prefix: "1",
+            text: "Bitte wählen Sie bei den folgenden Fragen die Zahl zwischen 1 und 7 an die am besten auf Sie zutrifft",
             type: "group",
             enableWhen: [
               {
@@ -75,7 +75,7 @@ export default {
               {
                 linkId: "18",
                 prefix: "18.",
-                text: "Boolean Required",
+                text: "Hat Ihr körperlicher Zustand oder Ihre medizinische Behandlung Ihr Zusammensein oder Ihre gemeinsamen Unternehmungen mit anderen Menschen beeinträchtigt?",
                 type: "boolean",
                 required: true
               },

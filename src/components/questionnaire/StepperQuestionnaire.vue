@@ -26,6 +26,9 @@
           >&nbsp;
           <span class="color-grey" v-if="language">{{ language.of }} {{ numberOfQuestions }}</span>
         </div>
+        <div v-if="getQuestion.groupId && !getQuestion.item" class="question-group-text">
+          {{ getGroupText(getQuestion) }}
+        </div>
       </div>
       <br />
       <div v-if="!spinner.loading">
@@ -88,6 +91,13 @@
   min-height: 1.8em;
   font-weight: bold;
   cursor: pointer;
+}
+
+.question-group-text {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-top: -4px;
+  color: #6a6a6a;
 }
 
 .button {
@@ -327,6 +337,18 @@ export default {
   },
 
   methods: {
+    /**
+     *
+     */
+    getGroupText(currentQuestion) {
+      let groupQuestion = this.filteredItemList.find(element => element.linkId === currentQuestion.groupId);
+      if (groupQuestion) {
+        return groupQuestion.text;
+      } else {
+        return "";
+      }
+    },
+
     /**
      *
      */

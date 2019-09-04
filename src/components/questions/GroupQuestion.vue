@@ -26,6 +26,9 @@
           <!-- Checking the type of each question and displaying the question-component -->
           <div class="card card-margin-top">
             <div class="card-body">
+              <div v-if="groupquestion.groupId && !groupquestion.item" class="question-group-text">
+                {{ getGroupText(groupquestion) }}
+              </div>
               <component
                 :is="getQuestionType(groupquestion)"
                 :question="groupquestion"
@@ -49,6 +52,13 @@
 </template>
 
 <style lang="scss" scoped>
+.question-group-text {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin: 15px 0px;
+  color: #6a6a6a;
+}
+
 .list-complete-item {
   transition: all 0.45s;
   display: flex;
@@ -104,6 +114,9 @@ import BooleanQuestion from "./BooleanQuestion.vue";
 export default {
   name: "group-question",
   props: {
+    filteredItemList: {
+      type: Array
+    },
     questionnaire: {
       type: Object,
       required: true
@@ -172,6 +185,17 @@ export default {
     BooleanQuestion
   },
   methods: {
+    /**
+     *
+     */
+    getGroupText(currentQuestion) {
+      let groupQuestion = this.filteredItemList.find(element => element.linkId === currentQuestion.groupId);
+      if (groupQuestion) {
+        return groupQuestion.text;
+      } else {
+        return "";
+      }
+    },
     /**
      *
      */
