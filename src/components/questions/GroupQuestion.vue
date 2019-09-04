@@ -114,7 +114,7 @@ import BooleanQuestion from "./BooleanQuestion.vue";
 export default {
   name: "group-question",
   props: {
-    filteredItemList:{
+    filteredItemList: {
       type: Array
     },
     questionnaire: {
@@ -190,7 +190,11 @@ export default {
      */
     getGroupText(currentQuestion) {
       let groupQuestion = this.filteredItemList.find(element => element.linkId === currentQuestion.groupId);
-      return groupQuestion.text;
+      if (groupQuestion) {
+        return groupQuestion.text;
+      } else {
+        return "";
+      }
     },
     /**
      *

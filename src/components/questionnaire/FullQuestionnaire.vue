@@ -236,7 +236,11 @@ export default {
      */
     getGroupText(currentQuestion) {
       let groupQuestion = this.filteredItemList.find(element => element.linkId === currentQuestion.groupId);
-      return groupQuestion.text;
+      if (groupQuestion) {
+        return groupQuestion.text;
+      } else {
+        return "";
+      }
     },
 
     /**

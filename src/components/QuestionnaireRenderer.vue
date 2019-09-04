@@ -363,7 +363,7 @@ export default {
     },
 
     /**
-     * 
+     *
      */
     resetAnsweredQuestionsList() {
       this.answeredRequiredQuestionsList = [];
