@@ -18,8 +18,6 @@
         :secondary="secondary"
         :danger="danger"
         :language="language"
-        @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-        @addRequiredAnswer="addRequiredQuestionEvent($event)"
         @answer="relayAnswer($event)"
       ></component>
     </div>
@@ -38,8 +36,6 @@
             :secondary="secondary"
             :danger="danger"
             :language="language"
-            @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-            @addRequiredAnswer="addRequiredQuestionEvent($event)"
             @answer="relayAnswer($event)"
           ></component>
         </div>
@@ -66,7 +62,7 @@
         <div class="progress-counter small">{{ questionCount }} {{ language.of }} {{ numberOfQuestions }}</div>
         <!-- Button Next -->
         <span>
-          <button type="button" class="button button btn-primary btn-lg" v-on:click="countUp" v-if="count <= itemList.length - 1 && !disabled && !this.editMode">
+          <button type="button" class="button button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredList.length - 1 && !disabled && !this.editMode">
             {{ language.next }}
           </button>
           <button type="button" class="button btn-secondary btn-lg" disabled v-if="disabled">
@@ -198,10 +194,17 @@ import choiceQuestion from "./../../components/questions/ChoiceQuestion.vue";
 import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
-import questionnaireResponseController from "./../../util/questionnaireResponseController";
+import questionnaireResponse from "./../../util/questionnaireResponse";
+// import questionnaireResponseController from "./../../util/questionnaireResponseController";
 import Spinner from "vue-simple-spinner";
 export default {
   props: {
+    /**
+     *
+     */
+    filteredItemList: {
+      type: Array
+    },
     /**
      *
      */
@@ -293,11 +296,35 @@ export default {
       itemList: [],
       questionCount: 0,
       disabled: false,
-      flatItemList: [],
       currentQuestion: Object
     };
   },
   computed: {
+    filteredList() {
+      let newItemList = [];
+      let lastMainGroupId = "";
+      if (this.questionnaire && this.questionnaire.item && this.questionnaireResponse) {
+        for (let i = 0; i < this.filteredItemList.length; i++) {
+          if (this.filteredItemList && this.filteredItemList[i].type === "group" && !this.filteredItemList[i].groupId) {
+            lastMainGroupId = this.filteredItemList[i].linkId;
+            let group = questionnaireResponse.Item.create();
+            group.linkId = this.filteredItemList[i].linkId;
+            group.definition = this.filteredItemList[i].definition;
+            group.text = this.filteredItemList[i].text;
+            group.type = "group";
+            newItemList.push(group);
+          } else if (!this.filteredItemList[i].groupId) {
+            newItemList.push(this.filteredItemList[i]);
+          } else if (this.filteredItemList[i].groupId) {
+            let result = newItemList.findIndex(item => item.linkId === lastMainGroupId);
+            if (result !== -1 && newItemList[result].item) {
+              newItemList[result].item.push(this.filteredItemList[i]);
+            }
+          }
+        }
+      }
+      return newItemList;
+    },
     /**
      *
      */
@@ -323,8 +350,8 @@ export default {
      */
     numberOfRequiredQuestions() {
       let totalNumber = 0;
-      for (let i = 0; i < this.flatItemList.length; i++) {
-        if (this.flatItemList[i].required) {
+      for (let i = 0; i < this.filteredList.length; i++) {
+        if (this.filteredList[i].required) {
           totalNumber++;
         }
       }
@@ -335,13 +362,13 @@ export default {
      * Counts all Questions from ItemList excluding Groups
      */
     numberOfQuestions() {
-      return this.itemList.length;
+      return this.filteredList.length;
     },
     /**
      * Checks if not all required Question have been completed
      */
     notAllRequiredQuestionsCompleted() {
-      return this.requiredQuestionList.length !== this.numberOfRequiredQuestions(this.flatItemList);
+      return this.requiredQuestionList.length !== this.numberOfRequiredQuestions(this.filteredList);
     }
   },
   methods: {
@@ -360,30 +387,10 @@ export default {
     },
 
     /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be removed from the List of answered Questions
-     */
-    removeRequiredQuestionEvent(question) {
-      this.$emit("removeRequiredAnswer", question);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be added to the List of answered Questions
-     */
-    addRequiredQuestionEvent(question) {
-      this.$emit("addRequiredAnswer", question);
-    },
-
-    scrollToTop() {
-      window.scrollTo(0, 0);
-    },
-
-    /**
      * Returns the number of all required questions in the given list
      */
     numberOfRequiredQuestionsInItem(question) {
-      let flatList = questionnaireResponseController.createItemList(question);
+      let flatList = question.item;
       let totalNumber = 0;
       for (let i = 0; i < flatList.length; i++) {
         if (flatList[i].required) {
@@ -409,17 +416,17 @@ export default {
      * Returns a Question from the itemList
      */
     getQuestionFromItemList() {
-      return this.itemList[this.count];
+      return this.filteredList[this.count];
     },
 
     /**
      * Counts up the Question-Number
      */
     countUp() {
-      if (this.count < this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+      if (this.count < this.filteredList.length - 1 && !this.disabled && this.startCount === null) {
         this.count++;
         this.questionCount = this.getQuestionPositionNumber();
-      } else if (this.count === this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+      } else if (this.count === this.filteredList.length - 1 && !this.disabled && this.startCount === null) {
         this.$emit("finished");
       } else if (this.startCount !== null) {
         this.$emit("finished");
@@ -447,7 +454,7 @@ export default {
     setDisabled() {
       this.disabled = false;
       let currentQuestion = this.getQuestion;
-      if (currentQuestion.required || (currentQuestion.type === "group" && this.numberOfRequiredQuestionsInItem(currentQuestion) > 0)) {
+      if ((currentQuestion && currentQuestion.required) || (currentQuestion && currentQuestion.type === "group" && this.numberOfRequiredQuestionsInItem(currentQuestion) > 0)) {
         this.disabled = true;
       }
       for (let i = 0; i < this.requiredQuestionList.length; i++) {
@@ -468,8 +475,7 @@ export default {
   },
   watch: {
     questionnaire() {
-      this.itemList = this.questionnaire.item;
-
+      // console.log("watcher Questionnaire");
       this.count = 0;
     },
     count() {
@@ -484,15 +490,13 @@ export default {
   },
 
   created() {
-    this.itemList = this.questionnaire.item;
-    this.flatItemList = questionnaireResponseController.createItemList(this.questionnaire);
     //sets count if startcount was given from the summarypage through the questionnaire.view
     if (this.startCount) {
       this.count = this.startCount;
       this.questionCount = this.count;
     }
     if (this.getLastQuestion) {
-      this.count = this.itemList.length - 1;
+      this.count = this.filteredList.length - 1;
       this.questionCount = this.count;
     }
 

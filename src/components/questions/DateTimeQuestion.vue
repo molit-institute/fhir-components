@@ -2,7 +2,7 @@
   <div>
     <div class="card">
       <h2>{{ question.text }}</h2>
-      <div v-if="language" :style="{ color: this.danger }" :class="[{ hidden: filled || !question.required }]">
+      <div v-if="language" :style="{ color: this.danger }" :class="[{ hidden: validate || !question.required }]">
         {{ language.mandatory_question }}
       </div>
     </div>
@@ -57,8 +57,7 @@ export default {
     return {
       date: "",
       time: "",
-      dateTime: "",
-      filled: false
+      dateTime: ""
     };
   },
 
@@ -105,35 +104,24 @@ export default {
       this.dateTime = moment(this.date + "T" + this.time + ":00").format();
     },
     dateTime() {
+      let newQuestionnaireResponse = null;
       if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "") {
-        let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.dateTime], "dateTime");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = true;
       } else {
-        this.filled = false;
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "dateTime");
+        this.$emit("answer", newQuestionnaireResponse);
       }
     },
     question() {
       this.getDateAndTime();
-      this.filled = false;
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
-
+  computed: {
+    validate() {
+      return this.selected || this.selected === [];
+    }
+  },
   methods: {
     getAnswer() {
       return questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "dateTime");

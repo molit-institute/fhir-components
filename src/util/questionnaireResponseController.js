@@ -187,7 +187,7 @@ export function createAnswers(array, type) {
 export function addAnswersToQuestionnaireResponse(questionnaireResponse, linkId, array, type) {
   let questResp = questionnaireResponse;
   try {
-    if (questResp && linkId && type && array !== null) {
+    if (questResp && linkId && type) {
       questResp.item = addAnswersToQuestion(questResp.item, linkId, array, type);
       if (!questResp.item) {
         throw new Error("Adding Answers to Question did not work, the QuestionnaireResponse items were null or undefined");
@@ -213,7 +213,11 @@ function addAnswersToQuestion(varitem, linkId, array, type) {
       varitem[i].item = addAnswersToQuestion(varitem[i].item, linkId, array, type);
     } else {
       if (varitem[i].linkId === linkId) {
-        varitem[i].answer = createAnswers(array, type);
+        if (array === null || array === undefined) {
+          varitem[i].answer = null;
+        } else {
+          varitem[i].answer = createAnswers(array, type);
+        }
       }
     }
   }

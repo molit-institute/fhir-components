@@ -14,13 +14,12 @@
       :secondary="secondary"
       :danger="danger"
       :enableReturn="enableReturn"
+      :filteredItemList="filteredItemList"
       :language="language"
       :spinner="spinner"
       @summary="backToSummary()"
       @finished="finishQuestionnaire()"
       @return="leaveQuestionnaireRenderer()"
-      @removeRequiredAnswer="removeQuestionFromRequiredAnsweredQuestionsList($event)"
-      @addRequiredAnswer="addQuestionToRequiredAnsweredQuestionsList($event)"
       @answer="handleQuestionnaireResponseEvent($event)"
     ></component>
   </div>
@@ -33,6 +32,7 @@ import StepperQuestionnaire from "./questionnaire/StepperQuestionnaire";
 
 import * as fhirApi from "@molit/fhir-api";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
+import questionnaireController from "./../util/questionnaireController";
 import valueSetController from "./../util/valueSetController";
 import Spinner from "vue-simple-spinner";
 import de from "./../i18n/de";
@@ -167,6 +167,7 @@ export default {
       currentQuestionnaire: null,
       currentValueSets: [],
       currentStartCount: null,
+      filteredItemList: [],
       language: null,
       spinner: {
         loading: true,
@@ -176,14 +177,6 @@ export default {
   },
 
   computed: {
-    // currentMode() {
-    //   return (
-    //     this.mode.charAt(0).toUpperCase() +
-    //     this.mode.slice(1).toLowerCase() +
-    //     "Questionnaire"
-    //   );
-    // },
-
     /**
      * Checks if there are already Answers in the QuestionnaireResponse
      */
@@ -199,21 +192,87 @@ export default {
       return returnValue;
     }
   },
+
   watch: {
     async questionnaireResponse() {
       await this.handleQuestionnaireResponse();
     },
     answeredRequiredQuestionsList() {
-      this.handleAnsweredQuestionsList();
+      // this.handleAnsweredQuestionsList();
     },
     locale() {
       this.handlei18n();
     },
     currentQuestionnaireResponse() {
+      // this.handleAnsweredQuestionsList();
       this.$emit("updated", this.currentQuestionnaireResponse);
+    },
+    filteredItemList() {
+      this.handleAnsweredQuestionsList();
     }
   },
+
   methods: {
+    /**
+     * Adds and Removes Questions from the requiredAnswersList
+     */
+    handleAnsweredQuestionsList() {
+      if (this.currentQuestionnaireResponse) {
+        let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
+        let aRQL = this.answeredRequiredQuestionsList;
+        for (let i = 0; i < qr.length; i++) {
+          let result = this.filteredItemList.find(function(element) {
+            return element.linkId === qr[i].linkId;
+          });
+          if (result) {
+            if (qr[i].answer && qr[i].answer.length >= 1) {
+              this.addQuestionToRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
+            } else {
+              this.removeQuestionFromRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
+            }
+          } else {
+            let questionToRemove = aRQL.find(function(element) {
+              return element.linkId === qr[i].linkId;
+            });
+            if (questionToRemove) {
+              this.removeQuestionFromRequiredAnsweredQuestionsList(questionToRemove);
+            }
+          }
+        }
+      }
+    },
+
+    /**
+     * Removes all Answers of Questions that are not triggered in the Questionnaire
+     */
+    removeUntriggeredAnswers() {
+      let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
+      for (let i = 0; i < qr.length; i++) {
+        let result = this.filteredItemList.find(function(element) {
+          return element.linkId === qr[i].linkId;
+        });
+        if (!result) {
+          if (qr[i].answer && qr[i].answer.length >= 1) {
+            qr[i].answer = [];
+          }
+        }
+      }
+    },
+
+    /**
+     *
+     */
+    filterItemList() {
+      let newList = [];
+      if (this.currentQuestionnaireResponse && this.questionnaire) {
+        newList = questionnaireController.handleEnableWhen(this.currentQuestionnaireResponse, this.currentQuestionnaire.item);
+      }
+      this.filteredItemList = newList;
+    },
+
+    /**
+     * Changes Language to the given locale
+     */
     handlei18n() {
       switch (this.locale) {
         case "en":
@@ -222,24 +281,24 @@ export default {
         case "de":
           this.language = de;
           break;
-        // case "es":
-        //   this.language = this.es;
-        //   break;
         default:
           break;
       }
     },
+
     /**
      *
      */
     backToSummary() {
       this.$emit("finished", this.currentQuestionnaireResponse);
     },
+
     /**
      *
      */
     handleQuestionnaireResponseEvent(object) {
       this.currentQuestionnaireResponse = object;
+      this.filterItemList();
     },
 
     /**
@@ -304,7 +363,7 @@ export default {
     },
 
     /**
-     *
+     * 
      */
     resetAnsweredQuestionsList() {
       this.answeredRequiredQuestionsList = [];
@@ -316,9 +375,21 @@ export default {
     async handleQuestionnaire() {
       if (this.questionnaire) {
         this.currentQuestionnaire = this.questionnaire;
+        // Add Group-Ids to Questions in Groups
+        for (let i = 0; i < this.currentQuestionnaire.item.length; i++) {
+          if (this.currentQuestionnaire.item[i].type === "group") {
+            this.addGroupIdToItems(this.currentQuestionnaire.item[i].item, this.currentQuestionnaire.item[i].linkId);
+          }
+        }
       } else if (this.questionnaireUrl) {
         try {
           this.currentQuestionnaire = await fhirApi.fetchByUrl(this.questionnaireUrl);
+          // Add Group-Ids to Questions in Groups
+          for (let i = 0; i < this.currentQuestionnaire.item.length; i++) {
+            if (this.currentQuestionnaire.item[i].type === "group") {
+              this.addGroupIdToItems(this.currentQuestionnaire.item[i].item, this.currentQuestionnaire.item[i].linkId);
+            }
+          }
         } catch (error) {
           //TODO Errorhandling
         }
@@ -328,15 +399,13 @@ export default {
     },
 
     /**
-     *
+     * Adds GroupId to all Questions inside a Group.
      */
-    handleAnsweredQuestionsList() {
-      let itemList = questionnaireResponseController.createItemList(this.currentQuestionnaire);
-      if (this.currentQuestionnaireResponse) {
-        for (let i = 0; i < this.currentQuestionnaireResponse.item.length; i++) {
-          if (this.currentQuestionnaireResponse.item[i].answer.length === 1) {
-            this.addQuestionToRequiredAnsweredQuestionsList(itemList[i]);
-          }
+    addGroupIdToItems(item, linkId) {
+      for (let i = 0; i < item.length; i++) {
+        item[i].groupId = linkId;
+        if (item[i].type === "group") {
+          this.addGroupIdToItems(item[i].item, item[i].linkId);
         }
       }
     },
@@ -385,15 +454,16 @@ export default {
         }
       } else {
         try {
-          // if (this.currentQuestionnaire && this.baseUrl) {
           this.currentValueSets = await valueSetController.getNewValueSets([this.currentQuestionnaire], this.baseUrl);
-          // }
         } catch (error) {
           // console.log(error);
         }
       }
     },
 
+    /**
+     *
+     */
     handleStartQuestion() {
       if (this.startCount) {
         this.currentStartCount = this.startCount;
@@ -407,6 +477,7 @@ export default {
      * Emits an Event wich includes the finished Questionnaire Response
      */
     finishQuestionnaire() {
+      this.removeUntriggeredAnswers();
       this.$emit("finished", this.currentQuestionnaireResponse);
     },
 
@@ -428,7 +499,8 @@ export default {
     this.spinner.message = this.language.loading.data;
     this.handleAnsweredQuestionsList();
     this.handleStartQuestion();
-    this.handleQuestionnaireResponse();
+    await this.handleQuestionnaireResponse();
+    this.filterItemList();
     setTimeout(() => {
       this.spinner.loading = false;
     }, 250);

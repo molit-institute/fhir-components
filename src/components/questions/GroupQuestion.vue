@@ -21,35 +21,54 @@
           <div class="group-title">{{ question.text }}</div>
         </div>
       </div>
-      <div class="card-margin-top" v-for="groupquestion in question.item" :key="groupquestion.linkId">
-        <!-- Checking the type of each question and displaying the question-component -->
-        <div class="card">
-          <div class="card-body">
-            <component
-              :is="getQuestionType(groupquestion)"
-              :question="groupquestion"
-              mode="GROUPS"
-              :questionnaireResponse="questionnaireResponse"
-              :questionnaire="questionnaire"
-              :valueSets="valueSets"
-              :baseUrl="baseUrl"
-              :primary="primary"
-              :secondary="secondary"
-              :danger="danger"
-              :language="language"
-              @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-              @addRequiredAnswer="addRequiredQuestionEvent($event)"
-              @answer="relayAnswer($event)"
-            ></component>
+      <transition-group name="list-complete" tag="p">
+        <span class="list-complete-item " v-for="groupquestion in question.item" :key="groupquestion.linkId">
+          <!-- Checking the type of each question and displaying the question-component -->
+          <div class="card card-margin-top">
+            <div class="card-body">
+              <component
+                :is="getQuestionType(groupquestion)"
+                :question="groupquestion"
+                mode="GROUPS"
+                :questionnaireResponse="questionnaireResponse"
+                :questionnaire="questionnaire"
+                :valueSets="valueSets"
+                :baseUrl="baseUrl"
+                :primary="primary"
+                :secondary="secondary"
+                :danger="danger"
+                :language="language"
+                @answer="relayAnswer($event)"
+              ></component>
+            </div>
           </div>
-        </div>
-      </div>
+        </span>
+      </transition-group>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.list-complete-item {
+  transition: all 0.45s;
+  display: flex;
+}
+
+.list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-40px);
+}
+
+.list-complete-leave-active {
+  opacity: 0;
+  transform: translateY(-40px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
 .card-margin-top {
+  width: 100%;
   margin-top: 16px;
 }
 .icon {
@@ -152,7 +171,6 @@ export default {
     ChoiceQuestion,
     BooleanQuestion
   },
-  computed: {},
   methods: {
     /**
      *
@@ -165,22 +183,6 @@ export default {
      */
     relayAnswer(object) {
       this.$emit("answer", object);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be removed from the List of answered Questions
-     */
-    removeRequiredQuestionEvent(question) {
-      this.$emit("removeRequiredAnswer", question);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be added to the List of answered Questions
-     */
-    addRequiredQuestionEvent(question) {
-      this.$emit("addRequiredAnswer", question);
     }
   }
 };
