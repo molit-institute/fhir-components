@@ -177,14 +177,6 @@ export default {
   },
 
   computed: {
-    // currentMode() {
-    //   return (
-    //     this.mode.charAt(0).toUpperCase() +
-    //     this.mode.slice(1).toLowerCase() +
-    //     "Questionnaire"
-    //   );
-    // },
-
     /**
      * Checks if there are already Answers in the QuestionnaireResponse
      */
@@ -200,6 +192,7 @@ export default {
       return returnValue;
     }
   },
+
   watch: {
     async questionnaireResponse() {
       await this.handleQuestionnaireResponse();
@@ -218,6 +211,7 @@ export default {
       this.handleAnsweredQuestionsList();
     }
   },
+
   methods: {
     /**
      * Adds and Removes Questions from the requiredAnswersList
@@ -277,7 +271,7 @@ export default {
     },
 
     /**
-     *
+     * Changes Language to the given locale
      */
     handlei18n() {
       switch (this.locale) {
@@ -287,19 +281,18 @@ export default {
         case "de":
           this.language = de;
           break;
-        // case "es":
-        //   this.language = this.es;
-        //   break;
         default:
           break;
       }
     },
+
     /**
      *
      */
     backToSummary() {
       this.$emit("finished", this.currentQuestionnaireResponse);
     },
+
     /**
      *
      */
@@ -370,7 +363,7 @@ export default {
     },
 
     /**
-     *
+     * 
      */
     resetAnsweredQuestionsList() {
       this.answeredRequiredQuestionsList = [];
@@ -461,9 +454,7 @@ export default {
         }
       } else {
         try {
-          // if (this.currentQuestionnaire && this.baseUrl) {
           this.currentValueSets = await valueSetController.getNewValueSets([this.currentQuestionnaire], this.baseUrl);
-          // }
         } catch (error) {
           // console.log(error);
         }
