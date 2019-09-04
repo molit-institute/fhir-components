@@ -94,7 +94,7 @@
 }
 
 .question-group-text {
-  font-size: 1.4em;
+  font-size: 1.2em;
   font-weight: 600;
   margin-top: -4px;
   color: #6a6a6a;
