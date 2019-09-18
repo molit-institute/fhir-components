@@ -26,7 +26,7 @@
           >&nbsp;
           <span class="color-grey" v-if="language">{{ language.of }} {{ numberOfQuestions }}</span>
         </div>
-        <div v-if="getQuestion.groupId && !getQuestion.item" class="question-group-text">
+        <div v-if="currentQuestion && getQuestion.groupId && !getQuestion.item" class="question-group-text">
           {{ getGroupText(getQuestion) }}
         </div>
       </div>
@@ -51,10 +51,15 @@
       <div v-if="!spinner.loading" class="spacer"></div>
       <div v-if="!spinner.loading && language" class="button-container">
         <!-- Button Back -->
-        <button type="button" class="btn button btn-outline-primary btn-lg" v-on:click="countDown" v-if="(!this.editMode && this.count !== 0) || (this.enableReturn && this.count === 0)">
+        <button
+          type="button"
+          class="btn button btn-outline-primary btn-lg"
+          v-on:click="countDown"
+          v-if="(!this.editMode && this.count !== 0) || (!this.editMode && this.enablereturn && this.count === 0)"
+        >
           {{ language.back }}
         </button>
-        <button type="button" class="btn button btn-outline-secondary btn-lg" disabled v-if="this.editMode || (this.count === 0 && !this.enableReturn)">
+        <button type="button" class="btn button btn-outline-secondary btn-lg" disabled v-if="this.editMode || (this.count === 0 && !this.enablereturn)">
           {{ language.back }}
         </button>
         <!-- Button Next -->
@@ -268,7 +273,9 @@ export default {
     return {
       count: 0,
       questionCount: 0,
-      disabled: false
+      disabled: false,
+      lastquestion: false,
+      enablereturn: true
     };
   },
   computed: {
@@ -454,25 +461,46 @@ export default {
       this.setDisabled();
     },
     questionnaireResponse() {
+      console.log(this.questionnaireResponse);
       this.setDisabled();
     },
     filteredItemList() {
       if (this.filteredItemList[this.count].type !== "group" && this.count === 0) {
-        this.questionCount = 1;
+        // this.questionCount = 1;
+        this.questionCount = this.getQuestionPositionNumber();
+      }
+    },
+    editMode() {
+      if (this.editMode) {
+        this.enablereturn = false;
+      } else {
+        this.enablereturn = true;
       }
     }
   },
 
-  async created() {
-    //sets count if startcount was given from the summarypage through the questionnaire.view
-    if (this.startCount) {
+  updated() {
+    console.log("updated v0.2 debug");
+
+    if (this.lastquestion && this.filteredItemList && this.filteredItemList.length > 0) {
+      this.count = this.filteredItemList.length - 1;
+      console.log(this.count, this.filteredItemList, this.filteredItemList.length);
+      this.lastquestion = false;
+      this.questionCount = this.getQuestionPositionNumber();
+    }
+    if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
     }
-    if (this.getLastQuestion) {
-      this.count = this.filteredItemList.length - 1;
+  },
+
+  created() {
+    //sets count if startcount was given from the summarypage through the questionnaire.view
+    if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
+      this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
     }
+    this.lastquestion = this.lastQuestion;
     this.setDisabled();
   },
 

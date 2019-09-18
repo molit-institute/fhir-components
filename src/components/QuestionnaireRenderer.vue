@@ -205,6 +205,7 @@ export default {
     },
     currentQuestionnaireResponse() {
       // this.handleAnsweredQuestionsList();
+      console.log(this.currentQuestionnaireResponse)
       this.$emit("updated", this.currentQuestionnaireResponse);
     },
     filteredItemList() {
