@@ -7,8 +7,8 @@
     <!-- Question-Components -->
     <div v-if="!spinner.loading">
       <transition-group name="list-complete" tag="p">
-        <span v-for="question in filteredItemList" :key="question.linkId" class="list-complete-item">
-          <div class="card card-basic-margins">
+        <span v-for="(question, index) in filteredItemList" :key="question.linkId" class="list-complete-item">
+          <div :id="index" class="card card-basic-margins">
             <div class="card-body" v-if="language">
               <div v-if="question.type !== 'group'">{{ language.question }} {{ getQuestionIndex(question) + 1 }} {{ language.of }} {{ questionsList.length }}</div>
               <div v-if="question.groupId && !question.item" class="question-group-text">
@@ -165,6 +165,12 @@ export default {
       type: String
     },
     /**
+     *
+     */
+    startCount: {
+      type: Number
+    },
+    /**
      * Primary color
      */
     primary: {
@@ -194,7 +200,8 @@ export default {
   },
   data() {
     return {
-      disabled: true
+      disabled: true,
+      scrollToQuestion: true
     };
   },
 
@@ -268,6 +275,13 @@ export default {
      */
     getQuestionIndex(question) {
       return this.questionsList.indexOf(question);
+    }
+  },
+  updated() {
+    if (this.startCount && this.scrollToQuestion) {
+      this.scrollToQuestion = false;
+      var elmnt = document.getElementById(this.startCount);
+      elmnt.scrollIntoView();
     }
   },
 

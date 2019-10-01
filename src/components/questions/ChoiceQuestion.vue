@@ -261,6 +261,7 @@ export default {
     onBoxClickedSingleChoice(display, code) {
       this.selected = this.formatAnswer(display, code);
     },
+
     /**
      *
      */
@@ -283,6 +284,7 @@ export default {
         }
       }
     },
+
     /**
      * Returns a Object with display and code
      */
@@ -290,12 +292,14 @@ export default {
       let data = { display: display, code: code };
       return data;
     },
+
     /**
      * Returns the options for in the Question for the view to display
      */
     getChoiceOptions() {
       return questionnaireController.getChoiceOptions(this.questionnaire, this.question, this.valueSets, this.baseUrl);
     },
+
     /**
      * Sets the value of the variable selected.
      */

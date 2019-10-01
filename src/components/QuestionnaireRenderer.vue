@@ -4,7 +4,7 @@
       :questionnaireResponse="currentQuestionnaireResponse"
       :is="mode"
       :lastQuestion="lastQuestion"
-      :startCount="startCount"
+      :startCount="currentStartCount"
       :questionnaire="currentQuestionnaire"
       :requiredQuestionList="answeredRequiredQuestionsList"
       :baseUrl="baseUrl"
@@ -101,14 +101,7 @@ export default {
      * ID of the question in the ItemList where in the list of questions the renderer should start
      */
     startQuestion: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Number on which Page to start
-     */
-    startCount: {
-      type: Number,
+      type: Object,
       default: null
     },
     /**
@@ -205,7 +198,6 @@ export default {
     },
     currentQuestionnaireResponse() {
       // this.handleAnsweredQuestionsList();
-      console.log(this.currentQuestionnaireResponse)
       this.$emit("updated", this.currentQuestionnaireResponse);
     },
     filteredItemList() {
@@ -466,11 +458,60 @@ export default {
      *
      */
     handleStartQuestion() {
-      if (this.startCount) {
-        this.currentStartCount = this.startCount;
-      } else if (this.startQuestion) {
-        let itemList = questionnaireResponseController.createItemList(this.currentQuestionnaire);
-        this.currentStartCount = itemList.indexOf(this.startQuestion);
+      if (this.startQuestion && this.filteredItemList) {
+        if (this.mode === "GroupedQuestionnaire") {
+          let question = null;
+          for (let i = 0; i < this.filteredItemList.length; i++) {
+            if (this.startQuestion.linkId === this.filteredItemList[i].linkId) {
+              question = this.filteredItemList[i];
+            }
+          }
+          if (question.groupId) {
+            //get groupId
+            console.log("Group.id:", question.groupId)
+            let groupQuestion = this.getParentGroupQuestion(question.groupId);
+            console.log("groupQuestion", groupQuestion)
+            this.handleCurrentStartCount(groupQuestion);
+          } else {
+            this.handleCurrentStartCount(this.startQuestion);
+          }
+        } else {
+          this.handleCurrentStartCount(this.startQuestion);
+        }
+      } else {
+        console.warn("QuestionnaireRenderer|handleStartQuestion: FilteredItemList or startQuestion was null or undefined");
+        //TODO
+      }
+    },
+
+    /**
+     * Takes the given groupId and searches for the fitting Group-Question with the matching link-Id. If the Group-Question is in a Group itself, the Method will
+     * call itself to find the parent Group-Question.
+     *
+     * @returns the parent groupQuestion
+     */
+    getParentGroupQuestion(groupId) {
+      let parentQuestion = null;
+      for (let i = 0; i < this.filteredItemList.length; i++) {
+        if (this.filteredItemList[i].linkId === groupId) {
+          if (this.filteredItemList[i].groupId) {
+            parentQuestion = this.getParentGroupQuestion(this.filteredItemList[i].groupId);
+          } else {
+            parentQuestion = this.filteredItemList[i];
+          }
+        }
+      }
+      return parentQuestion;
+    },
+
+    /**
+     * finds the index of the given question in the filtered ItemList sets the startCount
+     */
+    handleCurrentStartCount(question) {
+      this.currentStartCount = this.filteredItemList.indexOf(question);
+      if (this.currentStartCount < 0) {
+        console.warn("QuestionnaireRenderer|handleStartQuestion: Question was not found");
+        this.currentStartCount = 0;
       }
     },
 
@@ -499,9 +540,9 @@ export default {
     await this.handleValueSets();
     this.spinner.message = this.language.loading.data;
     this.handleAnsweredQuestionsList();
-    this.handleStartQuestion();
     await this.handleQuestionnaireResponse();
-    this.filterItemList();
+    await this.filterItemList();
+    this.handleStartQuestion();
     setTimeout(() => {
       this.spinner.loading = false;
     }, 250);

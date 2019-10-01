@@ -26,7 +26,7 @@
           >&nbsp;
           <span class="color-grey" v-if="language">{{ language.of }} {{ numberOfQuestions }}</span>
         </div>
-        <div v-if="currentQuestion && getQuestion.groupId && !getQuestion.item" class="question-group-text">
+        <div v-if="getQuestion.groupId && !getQuestion.item" class="question-group-text">
           {{ getGroupText(getQuestion) }}
         </div>
       </div>

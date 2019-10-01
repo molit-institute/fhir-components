@@ -132,7 +132,7 @@ export default {
     selected() {
       var form = document.getElementById("integer" + this.question.linkId);
       let newQuestionnaireResponse = null;
-      if (this.selected) {
+      if (form && this.selected) {
         form.classList.add("was-validated");
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "integer");
         this.$emit("answer", newQuestionnaireResponse);
