@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="container-fluid">
-      <molecular-report :resources="exampleReport" />
-      <molecular-report :resources="exampleReport" variantType="CNV" />
-      <!-- <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="StepperQuestionnaire"></questionnaire-renderer> -->
+      <!-- <molecular-report :resources="exampleReport" /> -->
+      <!-- <molecular-report :resources="exampleReport" variantType="CNV" /> -->
+      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="GroupedQuestionnaire"></questionnaire-renderer>
     </div>
   </div>
 </template>
@@ -48,166 +48,93 @@ export default {
         description: "Dieser Fragebogen wurde zu Testzwecken erstellt und sollte nicht außerhalb der Testumgebung genutzt werden.",
         item: [
           {
-            linkId: "1",
-            prefix: "1.",
-            text: "Hallo dies ist ein Test-Fragebogen und dies hier nur eine Frage vom Typ `Display`",
-            type: "display"
-          },
-          {
-            linkId: "4",
-            prefix: "4.",
-            text: "Text Required",
-            type: "text",
-            required: true
-          },
-          {
-            linkId: "2",
-            text: "In den folgenden Fragen geht es um Tätigkeiten, die Sie vielleicht im Laufe eines normalen Tages ausüben.",
+            linkId: "8",
+            text: "Früherkennung",
             type: "group",
             item: [
               {
-                linkId: "2.1",
-                prefix: "2.1",
-                text: "Url",
-                type: "url"
-              },
-              {
-                linkId: "2.2",
-                prefix: "2.2",
-                text: "Url Required",
-                type: "url",
-                required: true
+                linkId: "8.1",
+                prefix: "8.1",
+                text: "Haben Sie schon mal an folgenden Untersuchungen zur Krebsfrüherkennung teilgenommen?",
+                type: "group",
+                item: [
+                  {
+                    linkId: "8.1.1",
+                    prefix: "8.1.1",
+                    text: "Darmspiegelung?",
+                    type: "choice",
+                    answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_epidemiologischerFragebogen_answers19"
+                  },
+                  {
+                    linkId: "8.1.2",
+                    prefix: "8.1.2",
+                    text: "Hautkrebsvorsorge?",
+                    type: "choice",
+                    answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_epidemiologischerFragebogen_answers19"
+                  },
+                  {
+                    linkId: "8.1.3",
+                    prefix: "8.1.3",
+                    text: "(nur für männliche Teilnehmer) Prostatakrebsvorsorge?",
+                    type: "choice",
+                    answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_epidemiologischerFragebogen_answers19"
+                  },
+                  {
+                    linkId: "8.1.4",
+                    prefix: "8.1.4",
+                    text: "(nur für weibliche Teilnehmer) Brustkrebsvorsorge?",
+                    type: "choice",
+                    answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_epidemiologischerFragebogen_answers19"
+                  },
+                  {
+                    linkId: "8.1.5",
+                    prefix: "8.1.5",
+                    text: "(nur für weibliche Teilnehmer) Gynäkologische Krebsvorsorge (Vorsorgeuntersuchung Unterleibskrebs)? ",
+                    type: "choice",
+                    answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_epidemiologischerFragebogen_answers19"
+                  }
+                ]
               }
             ]
           },
-          {
-            linkId: "3",
-            prefix: "3.",
-            text: "Text",
-            type: "text"
-          },
-          {
-            linkId: "5",
-            prefix: "5.",
-            text: "String",
-            type: "string"
-          },
-          {
-            linkId: "6",
-            prefix: "6.",
-            text: "String Required",
-            type: "string",
-            required: true
-          },
-          {
-            linkId: "7",
-            prefix: "7.",
-            text: "Decimal",
-            type: "decimal"
-          },
-          {
-            linkId: "8",
-            prefix: "8.",
-            text: "Decimal Required",
-            type: "decimal",
-            required: true
-          },
+
           {
             linkId: "9",
-            prefix: "9.",
-            text: "Integer",
-            type: "integer"
-          },
-          {
-            linkId: "10",
-            prefix: "10.",
-            text: "Integer Required",
-            type: "integer",
-            required: true
-          },
-          {
-            linkId: "11",
-            prefix: "11.",
-            text: "Date",
-            type: "date"
-          },
-          {
-            linkId: "12",
-            prefix: "12.",
-            text: "Date Required",
-            type: "date",
-            required: true
-          },
-          {
-            linkId: "13",
-            prefix: "13.",
-            text: "Time",
-            type: "time"
-          },
-          {
-            linkId: "14",
-            prefix: "14.",
-            text: "Time Required",
-            type: "time",
-            required: true
-          },
-          {
-            linkId: "15",
-            prefix: "15.",
-            text: "DateTime",
-            type: "dateTime"
-          },
-          {
-            linkId: "16",
-            prefix: "16.",
-            text: "DateTime Required",
-            type: "dateTime",
-            required: true
-          },
-          {
-            linkId: "17",
-            prefix: "17.",
-            text: "Boolean",
-            type: "boolean"
-          },
-          {
-            linkId: "18",
-            prefix: "18.",
-            text: "Boolean Required",
-            type: "boolean",
-            required: true
-          },
-          {
-            linkId: "19",
-            prefix: "19.",
-            text: "Single-Choice",
-            type: "choice",
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers1"
-          },
-          {
-            linkId: "20",
-            prefix: "20.",
-            text: "Single-Choice Required",
-            type: "choice",
-            required: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers1"
-          },
-          {
-            linkId: "21",
-            prefix: "21.",
-            text: "Multiple-Choice?",
-            type: "choice",
-            repeats: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers2"
-          },
-          {
-            linkId: "22",
-            prefix: "22.",
-            text: "Multiple-Choice Required?",
-            type: "choice",
-            required: true,
-            repeats: true,
-            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_answers2"
+            text: "Fragen für weibliche Teilnehmer",
+            type: "group",
+            item: [
+              {
+                linkId: "9.1",
+                prefix: "9.1",
+                text: "Mit wie vielen Jahren hatten Sie Ihre erste Regelblutung? ",
+                type: "integer"
+              },
+              {
+                linkId: "9.2",
+                prefix: "9.2",
+                text: "Mit wie vielen Jahren trat Ihre letzte Regelblutung auf? ",
+                type: "integer"
+              },
+              {
+                linkId: "9.3",
+                prefix: "9.3",
+                text: "Mit wie vielen Jahren hatten Sie Ihre Wechseljahre? (falls noch nicht, bitte „00“ eintragen)",
+                type: "integer"
+              },
+              {
+                linkId: "9.4",
+                prefix: "9.4",
+                text: "Wie viele Schwangerschaften hatten Sie?",
+                type: "integer"
+              },
+              {
+                linkId: "9.5",
+                prefix: "9.5",
+                text: "Haben Sie die Antibabypille eingenommen?",
+                type: "choice",
+                answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_epidemiologischerFragebogen_answers20"
+              }
+            ]
           }
         ]
       }

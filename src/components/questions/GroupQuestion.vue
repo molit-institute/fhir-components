@@ -23,9 +23,10 @@
       </div>
       <div class="card-margin-top" v-for="groupquestion in question.item" :key="groupquestion.linkId">
         <!-- Checking the type of each question and displaying the question-component -->
-        <div class="card">
+        <div v-if="groupquestion.type !== 'group'" class="card">
           <div class="card-body">
             <component
+              :id="groupquestion.linkId"
               :is="getQuestionType(groupquestion)"
               :question="groupquestion"
               mode="GROUPS"
@@ -42,6 +43,25 @@
               @answer="relayAnswer($event)"
             ></component>
           </div>
+        </div>
+        <div v-if="groupquestion.type === 'group'">
+          <component
+            :id="groupquestion.linkId"
+            :is="getQuestionType(groupquestion)"
+            :question="groupquestion"
+            mode="GROUPS"
+            :questionnaireResponse="questionnaireResponse"
+            :questionnaire="questionnaire"
+            :valueSets="valueSets"
+            :baseUrl="baseUrl"
+            :primary="primary"
+            :secondary="secondary"
+            :danger="danger"
+            :language="language"
+            @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
+            @addRequiredAnswer="addRequiredQuestionEvent($event)"
+            @answer="relayAnswer($event)"
+          ></component>
         </div>
       </div>
     </div>
@@ -83,7 +103,7 @@ import BooleanQuestion from "./BooleanQuestion.vue";
  * This Component adds a Group-Question
  */
 export default {
-  name: "group-question",
+  name: "groupQuestion",
   props: {
     questionnaire: {
       type: Object,
