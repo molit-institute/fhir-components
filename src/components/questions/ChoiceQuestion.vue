@@ -305,6 +305,7 @@ export default {
      */
     setSelected() {
       let data = questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "coding");
+      console.log("setSelected", data, this.question.linkId);
       if (this.question.repeats) {
         this.selected = data;
       } else {
@@ -312,7 +313,11 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    console.log("choice beforeDestroy");
+  },
   async created() {
+    console.log("choice created");
     try {
       this.optionsList = await this.getChoiceOptions();
     } catch (error) {

@@ -151,6 +151,7 @@ export default {
   },
 
   created() {
+    console.log("integer created");
     this.setSelected();
   }
 };

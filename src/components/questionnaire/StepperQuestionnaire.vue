@@ -3,7 +3,7 @@
   <div class="card">
     <div class="column card-body">
       <!-- SPINNER -->
-      <div v-if="spinner.loading" class="center-vertical">
+      <div v-if="spinner.loading && filteredItemList && count !== null" class="center-vertical">
         <spinner size="large" class="mt4" :message="spinner.message"></spinner>
       </div>
       <!-- PROGRESS -->
@@ -31,7 +31,7 @@
         </div>
       </div>
       <br />
-      <div v-if="!spinner.loading">
+      <div v-if="!spinner.loading && count !== null && filteredItemList">
         <component
           :is="getQuestionType"
           :question="getQuestion"
@@ -271,10 +271,10 @@ export default {
   },
   data() {
     return {
-      count: 0,
+      count: null,
       questionCount: 0,
       disabled: false,
-      lastquestion: false,
+      lastquestion: null,
       enablereturn: true
     };
   },
@@ -287,7 +287,6 @@ export default {
       if (this.getQuestionFromItemList()) {
         type = this.getQuestionFromItemList().type + "Question";
       }
-
       return type;
     },
 
@@ -296,13 +295,6 @@ export default {
      */
     getQuestion() {
       return this.getQuestionFromItemList();
-    },
-
-    /**
-     *
-     */
-    getLastQuestion() {
-      return this.lastQuestion;
     },
 
     /**
@@ -455,13 +447,13 @@ export default {
 
   watch: {
     count() {
+      console.log("watch count", this.count);
       this.setDisabled();
     },
     requiredQuestionList() {
       this.setDisabled();
     },
     questionnaireResponse() {
-      console.log(this.questionnaireResponse);
       this.setDisabled();
     },
     filteredItemList() {
@@ -480,13 +472,12 @@ export default {
   },
 
   updated() {
-    console.log("updated v0.2 debug");
-
+    console.log("stepper updated", this.lastquestion, this.startCount);
     if (this.lastquestion && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.filteredItemList.length - 1;
-      console.log(this.count, this.filteredItemList, this.filteredItemList.length);
       this.lastquestion = false;
       this.questionCount = this.getQuestionPositionNumber();
+      // console.log("count:", this.count);
     }
     if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.startCount;
@@ -496,9 +487,17 @@ export default {
 
   created() {
     //sets count if startcount was given from the summarypage through the questionnaire.view
+    console.log("created", this.lastquestion, this.filteredItemList);
     if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
+    } else if (this.lastquestion !== null && this.filteredItemList && this.filteredItemList.length > 0) {
+      this.count = this.filteredItemList.length - 1;
+      this.lastquestion = false;
+      this.questionCount = this.getQuestionPositionNumber();
+    } else if (this.count === null) {
+      console.log("möp");
+      this.count = 0;
     }
     this.lastquestion = this.lastQuestion;
     this.setDisabled();

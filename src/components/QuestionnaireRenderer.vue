@@ -24,6 +24,14 @@
     ></component>
   </div>
 </template>
+<style lang="scss" scoped>
+.center-vertical {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 
 <script>
 import FullQuestionnaire from "./questionnaire/FullQuestionnaire";
@@ -255,10 +263,10 @@ export default {
     /**
      *
      */
-    filterItemList() {
+    async filterItemList() {
       let newList = [];
       if (this.currentQuestionnaireResponse && this.questionnaire) {
-        newList = questionnaireController.handleEnableWhen(this.currentQuestionnaireResponse, this.currentQuestionnaire.item);
+        newList = await questionnaireController.handleEnableWhen(this.currentQuestionnaireResponse, this.currentQuestionnaire.item);
       }
       this.filteredItemList = newList;
     },
@@ -468,9 +476,9 @@ export default {
           }
           if (question.groupId) {
             //get groupId
-            console.log("Group.id:", question.groupId)
+            console.log("Group.id:", question.groupId);
             let groupQuestion = this.getParentGroupQuestion(question.groupId);
-            console.log("groupQuestion", groupQuestion)
+            console.log("groupQuestion", groupQuestion);
             this.handleCurrentStartCount(groupQuestion);
           } else {
             this.handleCurrentStartCount(this.startQuestion);
@@ -545,7 +553,7 @@ export default {
     this.handleStartQuestion();
     setTimeout(() => {
       this.spinner.loading = false;
-    }, 250);
+    }, 350);
   }
 };
 </script>

@@ -12,7 +12,7 @@
         :baseUrl="baseUrl"
         :lastQuestion="lastQuestion"
         locale="de"
-        mode="GroupedQuestionnaire"
+        mode="StepperQuestionnaire"
         :editMode="edit"
         :startQuestion="indexQuestion"
       ></questionnaire-renderer>
@@ -22,7 +22,7 @@
             <pre>{{ this.qr }}</pre>
           </div>
         </div>
-        <div class="col-sm-6" >
+        <div class="col-sm-6">
           <div>
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
@@ -89,85 +89,61 @@ export default {
         item: [
           {
             linkId: "1",
-            prefix: "1.",
-            text: "Hallo dies ist ein Test-Fragebogen und dies hier nur eine Frage vom Typ `Display`",
-            type: "display"
-          },
-          {
-            linkId: "17",
-            prefix: "17.",
-            text: "Boolean",
-            type: "boolean"
-          },
-          {
-            linkId: "18.1",
-            prefix: "1",
-            text: "Bitte wählen Sie bei den folgenden Fragen die Zahl zwischen 1 und 7 an die am besten auf Sie zutrifft",
-            type: "group",
-            enableWhen: [
-              {
-                question: "17",
-                operator: "=",
-                answerBoolean: true
-              }
-            ],
-            item: [
-              {
-                linkId: "18",
-                prefix: "18.",
-                text: "Hat Ihr körperlicher Zustand oder Ihre medizinische Behandlung Ihr Zusammensein oder Ihre gemeinsamen Unternehmungen mit anderen Menschen beeinträchtigt?",
-                type: "boolean",
-                required: true
-              },
-              {
-                linkId: "3",
-                prefix: "3.",
-                text: "Text",
-                type: "text",
-                enableWhen: [
-                  {
-                    question: "18",
-                    operator: "=",
-                    answerBoolean: true
-                  }
-                ]
-              },
-              {
-                linkId: "5",
-                prefix: "5.",
-                text: "String",
-                type: "string"
-              },
-              {
-                linkId: "6",
-                prefix: "6.",
-                text: "String Required",
-                type: "string",
-                required: true
-              },
-              {
-                linkId: "7",
-                prefix: "7.",
-                text: "Decimal",
-                type: "decimal",
-                enableWhen: [
-                  {
-                    question: "6",
-                    operator: "=",
-                    answerString: "huhu"
-                  }
-                ]
-              }
-            ]
-          },
-
-          {
-            linkId: "8",
-            prefix: "8.",
-            text: "Decimal Required",
-            type: "decimal",
+            prefix: "1. ",
+            text: "Wie würden Sie Ihren Gesundheitszustand im Allgemeinen beschreiben?",
+            type: "choice",
+            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_GL_answers1",
             required: true
-          }
+          },
+          {
+            linkId: "2",
+            prefix: "2. ",
+            text: "Sind sie bei mittelschweren Tätigkeiten, z.B. einen Tisch verschieben, staubsaugen, kegeln eingeschränkt",
+            type: "choice",
+            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_GL_answers2",
+            required: true
+          },
+          {
+            linkId: "3",
+            prefix: "3. ",
+            text: "Sind sie dabei eingeschränkt mehrere Treppenabsätze zu steigen",
+            type: "choice",
+            answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_GL_answers2",
+            required: true
+          },
+          // {
+          //   linkId: "4",
+          //   prefix: "4. ",
+          //   text: "Haben Sie in den vergangenen 4 Wochen aufgrund Ihrer körperlichen Gesundheit ihre Ziele erreichen können?",
+          //   type: "choice",
+          //   answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_GL_answers3",
+          //   required: true
+          // },
+
+          // {
+          //   linkId: "5",
+          //   prefix: "5. ",
+          //   text: "Konnten Sie in den vergangenen 4 Wochen aufgrund Ihrer seelischen Gesundheit ihre Ziele erreichen?",
+          //   type: "choice",
+          //   answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_GL_answers3",
+          //   required: true
+          // },
+          // {
+          //   linkId: "6",
+          //   prefix: "6. ",
+          //   text: "Inwieweit haben Schmerzen in den vergangenen 4 Wochen Ihre Alltagstätigkeiten (im Beruf und zu Hause) beeinträchtigt?",
+          //   type: "choice",
+          //   answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_GL_answers4",
+          //   required: true
+          // },
+          // {
+          //   linkId: "7",
+          //   prefix: "7. ",
+          //   text: "Wie oft fühlten Sie sich in den vergangenen 4 Wochen entmutigt und traurig?",
+          //   type: "choice",
+          //   answerValueSet: "http://molit.eu/fhir/ValueSet/DEMO_GL_answers5",
+          //   required: true
+          // }
         ]
       }
     };
@@ -196,6 +172,7 @@ export default {
       this.show_summary = false;
       this.edit = true;
       this.indexQuestion = question;
+      this.lastQuestion = false;
       this.show_renderer = true;
     },
 
@@ -206,6 +183,7 @@ export default {
       this.index = null;
       this.show_summary = true;
       this.indexQuestion = null;
+      this.lastQuestion = false;
     },
     backToRenderer() {
       this.show_summary = false;

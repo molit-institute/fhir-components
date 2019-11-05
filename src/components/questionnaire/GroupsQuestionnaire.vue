@@ -1,14 +1,5 @@
 <template>
   <div v-if="questionnaire" class="card">
-    <div>Count: {{ count }}</div>
-    <div>QuestionCount: {{ questionCount }}</div>
-    <div>EditMode: {{ this.editMode }}</div>
-    <div>Disabled: {{ disabled }}</div>
-    <div>
-      requiredQuestionList: {{ requiredQuestionList.length }}
-      <pre>{{ requiredQuestionList }}</pre>
-    </div>
-
     <!-- SPINNER -->
     <div v-if="spinner.loading" class="center-vertical spinner">
       <spinner size="large" class="mt4" :message="spinner.message"></spinner>
