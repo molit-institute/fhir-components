@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{ question.text }}</h2>
+    <h2>{{ question.prefix }} {{ question.text }}</h2>
     <div v-if="language" :style="{ color: this.danger }" :class="[{ hidden: validate || !question.required }]">
       {{ language.mandatory_question }}
     </div>

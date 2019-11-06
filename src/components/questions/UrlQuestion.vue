@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card">
-      <h2>{{ question.text }}</h2>
+      <h2>{{ question.prefix }} {{ question.text }}</h2>
       <div id="url-mandatory" :style="{ color: this.danger }" :class="[{ hidden: validate || !question.required }]">
         <span v-if="language">{{ language.mandatory_question }}</span>
       </div>

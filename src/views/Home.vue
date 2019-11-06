@@ -3,7 +3,40 @@
     <div class="container-fluid">
       <!-- <molecular-report :resources="exampleReport" /> -->
       <!-- <molecular-report :resources="exampleReport" variantType="CNV" /> -->
-      <questionnaire-renderer :questionnaire="questionnaire" :baseUrl="baseUrl" locale="de" mode="GroupedQuestionnaire"></questionnaire-renderer>
+      <questionnaire-renderer
+        @finished="toSummary($event)"
+        @updated="updateQR($event)"
+        v-if="show_renderer"
+        :questionnaireResponse="qr"
+        :questionnaire="questionnaire"
+        :baseUrl="baseUrl"
+        :lastQuestion="lastQuestion"
+        locale="de"
+        mode="GroupedQuestionnaire"
+        :editMode="edit"
+        :startQuestion="indexQuestion"
+      ></questionnaire-renderer>
+      <div class="row" v-if="show_summary">
+        <div class="col-sm-6" style="background-color:lightgrey;cursor:pointer;">
+          <div v-if="show_summary" v-on:click="backToRenderer()">
+            <pre>{{ this.qr }}</pre>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div>
+            <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
+              {{ item.text }}
+              <div>
+                <pre style="cursor:pointer;" v-on:click="editQuestion(item)">
+            {{ getItemList(qr)[index].answer }}
+            </pre
+                >
+              </div>
+              <hr />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,6 +51,7 @@ import exampleReport2 from "@/assets/fhir/resources/genomics-observation-example
 import MolecularReport from "@/components/MolecularReport";
 import QuestionnaireList from "@/components/QuestionnaireList";
 import QuestionnaireResponseList from "@/components/QuestionnaireResponseList";
+import questionnaireResponseController from "./../util/questionnaireResponseController";
 
 export default {
   computed: {
@@ -31,6 +65,12 @@ export default {
   },
   data() {
     return {
+      show_renderer: true,
+      show_summary: false,
+      lastQuestion: false,
+      qr: null,
+      edit: false,
+      indexQuestion: null,
       baseUrl: "https://fhir.molit.eu/r4/",
       questionnaire: {
         resourceType: "Questionnaire",
@@ -53,6 +93,7 @@ export default {
         item: [
           {
             linkId: "1",
+            prefix: "1",
             text: "Persönliche Angaben",
             type: "group",
             item: [
@@ -109,6 +150,7 @@ export default {
 
           {
             linkId: "2",
+            prefix: "2",
             text: "Größe und Gewicht",
             type: "group",
             item: [
@@ -129,6 +171,7 @@ export default {
 
           {
             linkId: "3",
+            prefix: "3",
             text: "Rauchen",
             type: "group",
             item: [
@@ -176,6 +219,7 @@ export default {
 
           {
             linkId: "4",
+            prefix: "4",
             text: "Alkohol",
             type: "group",
             item: [
@@ -212,6 +256,7 @@ export default {
 
           {
             linkId: "5",
+            prefix: "5",
             text: "Ernährung und Umwelt",
             type: "group",
             item: [
@@ -440,6 +485,7 @@ export default {
               },
               {
                 linkId: "5.3",
+                prefix: "5.3",
                 text: "Wie häufig haben Sie im verganenen Jahr durchschnittlich folgende Vitamine/Nahrungsergänzungsstoffe eingenommen, die nicht Ihre Ärztin/Ihr Arzt verschrieben hat?",
                 type: "group",
                 item: [
@@ -510,6 +556,7 @@ export default {
               },
               {
                 linkId: "5.4",
+                prefix: "5.4",
                 text: "Sind Sie/waren Sie am Arbeitsplatz bestimmten Schadstoffen/schädlicher Strahlung ausgesetzt?",
                 type: "group",
                 item: [
@@ -569,6 +616,7 @@ export default {
 
           {
             linkId: "6",
+            prefix: "6",
             text: "Körperliche Aktivität",
             type: "group",
             item: [
@@ -610,6 +658,7 @@ export default {
 
           {
             linkId: "7",
+            prefix: "7",
             text: "Anamnese",
             type: "group",
             item: [
@@ -657,6 +706,7 @@ export default {
 
           {
             linkId: "8",
+            prefix: "8",
             text: "Früherkennung",
             type: "group",
             item: [
@@ -708,6 +758,7 @@ export default {
 
           {
             linkId: "9",
+            prefix: "9",
             text: "Fragen für weibliche Teilnehmer",
             type: "group",
             item: [
@@ -759,8 +810,38 @@ export default {
   },
 
   methods: {
+    getItemList(object) {
+      return questionnaireResponseController.createItemList(object);
+    },
     test(resource) {
       console.log(resource);
+    },
+    updateQR(newqr) {
+      this.qr = newqr;
+    },
+    editQuestion(question) {
+      this.show_summary = false;
+      this.edit = true;
+      this.indexQuestion = question;
+      this.lastQuestion = false;
+      this.show_renderer = true;
+    },
+
+    toSummary(newQr) {
+      this.qr = newQr;
+      this.show_renderer = false;
+      this.edit = false;
+      this.index = null;
+      this.show_summary = true;
+      this.indexQuestion = null;
+      this.lastQuestion = false;
+    },
+    backToRenderer() {
+      this.show_summary = false;
+      this.lastQuestion = true;
+      this.show_renderer = true;
+      this.edit = false;
+      this.indexQuestion = null;
     }
   }
 };

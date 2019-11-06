@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="display">
-      <h5 class="">{{ question.text }}</h5>
+      <h5 class="">{{ question.prefix }} {{ question.text }}</h5>
     </div>
   </div>
 </template>

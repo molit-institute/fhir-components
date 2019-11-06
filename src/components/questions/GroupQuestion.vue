@@ -7,7 +7,7 @@
       </svg>
       <div v-if="language" class="group-subtitle">{{ language.questionGroup }} {{ question.prefix }}</div>
       <div class="group-title">
-        {{ question.text }}
+        {{ question.prefix }} {{ question.text }}
       </div>
     </div>
     <div v-if="mode === 'GROUPS'">
