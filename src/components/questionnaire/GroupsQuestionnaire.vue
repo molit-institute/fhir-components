@@ -375,6 +375,9 @@ export default {
       this.$emit("addRequiredAnswer", question);
     },
 
+    /**
+     * 
+     */
     scrollToTop() {
       window.scrollTo(0, 0);
     },

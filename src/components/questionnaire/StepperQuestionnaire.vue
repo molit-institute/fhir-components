@@ -369,6 +369,13 @@ export default {
     },
 
     /**
+     *
+     */
+    scrollToTop() {
+      window.scrollTo(0, 0);
+    },
+
+    /**
      * Counts up the Question-Number
      */
     countUp() {
@@ -377,6 +384,7 @@ export default {
         if (this.itemList[this.count].type !== "group") {
           this.questionCount = this.getQuestionPositionNumber();
         }
+        this.scrollToTop();
       } else if (this.count === this.itemList.length - 1 && !this.disabled && this.startCount === null) {
         this.$emit("finished");
       } else if (this.startCount !== null) {
@@ -397,6 +405,7 @@ export default {
         } else if (this.itemList[this.count].type === "group" && this.questionCount === 1) {
           this.questionCount = 0;
         }
+        this.scrollToTop();
         //if count = 0 go back to Metadata
       } else if (this.count === 0) {
         this.$emit("return");
