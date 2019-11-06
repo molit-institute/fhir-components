@@ -419,6 +419,7 @@ export default {
       if (this.count < this.itemList.length - 1 && !this.disabled && this.startCount === null) {
         this.count++;
         this.questionCount = this.getQuestionPositionNumber();
+        this.scrollToTop();
       } else if (this.count === this.itemList.length - 1 && !this.disabled && this.startCount === null) {
         this.$emit("finished");
       } else if (this.startCount !== null) {
@@ -435,6 +436,7 @@ export default {
         this.count--;
         //update questionPositionNumber
         this.questionCount = this.getQuestionPositionNumber();
+        this.scrollToTop();
         //if count = 0 go back to Metadata
       } else if (this.count === 0) {
         this.$emit("return");
