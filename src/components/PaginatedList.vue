@@ -178,6 +178,8 @@ export default {
         delete params[this.searchAttributes[0].value];
       }
 
+      Object.keys(params).forEach(key => !params[key] && params[key] === "" && delete params[key]);
+
       return params;
     },
 
