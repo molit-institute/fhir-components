@@ -14,13 +14,13 @@
       </div>
       <ul class="pagination">
         <li :class="['page-item ', { disabled: currentPage === 1 }]">
-          <router-link :to="{ path: currentPath, query: firstPageParams }" class="page-link" v-if="useQueryParams">&lt;&lt;</router-link>
-          <a href="javascript:void(0);" class="page-link" @click="navigateToFirstPage" v-else>&lt;&lt;</a>
+          <router-link :to="{ path: currentPath, query: firstPageParams }" class="page-link" v-if="useQueryParams"><slot name="firstPage">&lt;&lt;</slot></router-link>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToFirstPage" v-else><slot name="firstPage">&lt;&lt;</slot></a>
         </li>
 
         <li :class="['page-item ', { disabled: currentPage === 1 }]">
-          <router-link :to="{ path: currentPath, query: prevPageParams }" class="page-link" v-if="useQueryParams">&lt;</router-link>
-          <a href="javascript:void(0);" class="page-link" @click="navigateToPrevPage" v-else>&lt;</a>
+          <router-link :to="{ path: currentPath, query: prevPageParams }" class="page-link" v-if="useQueryParams"><slot name="previousPage">&lt;</slot></router-link>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToPrevPage" v-else><slot name="previousPage">&lt;</slot></a>
         </li>
 
         <li class="page-item disabled" v-if="currentPage > paginationSize">
@@ -37,13 +37,13 @@
         </li>
 
         <li :class="['page-item ', { disabled: currentPage === lastPage }]">
-          <router-link :to="{ path: currentPath, query: nextPageParams }" class="page-link" v-if="useQueryParams">&gt;</router-link>
-          <a href="javascript:void(0);" class="page-link" @click="navigateToNextPage" v-else>&gt;</a>
+          <router-link :to="{ path: currentPath, query: nextPageParams }" class="page-link" v-if="useQueryParams"><slot name="nextPage">&gt;</slot></router-link>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToNextPage" v-else><slot name="nextPage">&gt;</slot></a>
         </li>
 
         <li :class="['page-item ', { disabled: currentPage === lastPage }]">
-          <router-link :to="{ path: currentPath, query: lastPageParams }" class="page-link" v-if="useQueryParams">&gt;&gt;</router-link>
-          <a href="javascript:void(0);" class="page-link" @click="navigateToLastPage" v-else>&gt;&gt;</a>
+          <router-link :to="{ path: currentPath, query: lastPageParams }" class="page-link" v-if="useQueryParams"><slot name="lastPage">&gt;&gt;</slot></router-link>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToLastPage" v-else><slot name="lastPage">&gt;&gt;</slot></a>
         </li>
       </ul>
     </nav>
@@ -177,6 +177,8 @@ export default {
       } else if (!this.searchTerm && this.searchAttributes && this.searchAttributes[0]) {
         delete params[this.searchAttributes[0].value];
       }
+
+      Object.keys(params).forEach(key => !params[key] && params[key] === "" && delete params[key]);
 
       return params;
     },
@@ -340,6 +342,16 @@ export default {
     },
     bundle(value) {
       this.$emit("update", value);
+    },
+    pageCount() {
+      this.count = this.pageCount;
+      this.initializeView();
+    },
+    searchParams: {
+      deep: true,
+      handler() {
+        this.initializeView();
+      }
     }
   },
 
