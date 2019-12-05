@@ -11,7 +11,7 @@
 
     <div class="card option-card">
       <div class="form-row" v-if="question">
-        <div :id="'url' + question.linkId" class="size">
+        <div :id="'url' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="url-text">{{ language.url.text }}:</label>
           <input value="selected" type="text" v-model="selected" class="form-control" id="url-text" pattern="\S*" />
           <div v-if="language" class="invalid-feedback">
@@ -65,8 +65,7 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
-      selected: "",
-      filled: false
+      selected: ""
     };
   },
 
@@ -140,17 +139,6 @@ export default {
     setSelected() {
       this.selected = "";
       this.selected = questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "url");
-    },
-    /**
-     *
-     */
-    checkValidationStatus() {
-      let form = document.getElementById("url" + this.question.linkId);
-      if (form && this.validateUrl()) {
-        form.classList.add("was-validated");
-      } else if (form && !this.selected) {
-        form.classList.remove("was-validated");
-      }
     }
   },
 
@@ -159,11 +147,6 @@ export default {
       this.setSelected();
     },
     selected() {
-      let form = document.getElementById("url" + this.question.linkId);
-      if (form) {
-        form.classList.remove("was-validated");
-      }
-      this.filled = true;
       if (this.selected) {
         if (!this.validateUrl()) {
           this.$emit("removeRequiredAnswer", this.question);
@@ -172,43 +155,17 @@ export default {
         }
         let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "url");
-        if (form) {
-          form.classList.add("was-validated");
-        }
+
         this.$emit("answer", newQuestionnaireResponse);
       } else {
         let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "url");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = false;
       }
     },
     question() {
       this.setSelected();
-      if (this.selected) {
-        this.filled = true;
-      } else {
-        this.filled = false;
-      }
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled && this.validateUrl()) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
-  },
-
-  updated() {
-    this.checkValidationStatus();
   },
 
   mounted() {

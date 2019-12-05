@@ -146,8 +146,7 @@ export default {
     return {
       selected: null,
       optionsList: null,
-      repeats: null,
-      filled: false
+      repeats: null
     };
   },
 
@@ -209,21 +208,12 @@ export default {
       if (this.repeats) {
         //CHECKBOXES
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, this.selected, "coding");
-        //checking if checkboxes are selected and setting filled accordingly
-        if (!this.validateCheckBox()) {
-          this.filled = true;
-        } else {
-          this.filled = false;
-        }
       } else {
         //RADIOBUTTONS
-        this.filled = false;
         if (this.selected) {
           newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "coding");
-          this.filled = true;
         } else {
           newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, this.selected, "coding");
-          // this.filled = false;
         }
       }
       this.$emit("answer", newQuestionnaireResponse);
@@ -241,23 +231,8 @@ export default {
       } catch (error) {
         alert(error);
       }
-      this.filled = false;
       this.setSelected();
       this.repeats = this.question.repeats;
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
 
@@ -270,18 +245,21 @@ export default {
       }
       return false;
     },
+
     /**
      *
      */
     validateCheckBox() {
       return this.selected && this.selected.length === 0 && this.question.required;
     },
+
     /**
      *
      */
     onBoxClickedSingleChoice(display, code) {
       this.selected = this.formatAnswer(display, code);
     },
+
     /**
      *
      */
@@ -304,6 +282,7 @@ export default {
         }
       }
     },
+
     /**
      * Returns a Object with display and code
      */
@@ -311,12 +290,14 @@ export default {
       let data = { display: display, code: code };
       return data;
     },
+
     /**
      * Returns the options for in the Question for the view to display
      */
     getChoiceOptions() {
       return questionnaireController.getChoiceOptions(this.questionnaire, this.question, this.valueSets, this.baseUrl);
     },
+
     /**
      * Sets the value of the variable selected.
      */

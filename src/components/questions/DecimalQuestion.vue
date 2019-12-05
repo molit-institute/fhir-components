@@ -10,7 +10,7 @@
     <hr />
     <div class="card option-card">
       <div class="form-row">
-        <div :id="'decimal' + question.linkId" class="size">
+        <div :id="'decimal' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="url-text">{{ language.decimal.text }}:</label>
           <input step="any" value="selected" type="number" v-model="selected" class="form-control" id="decimal" />
           <div v-if="language" class="invalid-feedback">
@@ -53,7 +53,6 @@ export default {
   data: function() {
     return {
       selected: null,
-      filled: false,
       started: false
     };
   },
@@ -107,14 +106,6 @@ export default {
     /**
      *
      */
-    checkValidationStatus() {
-      let form = document.getElementById("decimal" + this.question.linkId);
-      if (form) {
-        form.classList.add("was-validated");
-      } else if (form && !this.selected) {
-        form.classList.remove("was-validated");
-      }
-    },
     setSelected() {
       this.selected = questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "decimal");
     }
@@ -124,41 +115,19 @@ export default {
       this.setSelected();
     },
     selected() {
-      var form = document.getElementById("decimal" + this.question.linkId);
-      if (form) {
-        form.classList.remove("was-validated");
-      }
+      let newQuestionnaireResponse = null;
       if (!isNaN(parseFloat(this.selected))) {
-        this.filled = true;
-        form.classList.add("was-validated");
         let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "decimal");
         this.$emit("answer", newQuestionnaireResponse);
-        this.started = true;
       } else {
-        this.filled = false;
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "decimal");
+        this.$emit("answer", newQuestionnaireResponse);
       }
     },
     question() {
       this.setSelected();
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
-  },
-  updated() {
-    this.checkValidationStatus();
   },
   mounted() {
     this.handleKeyPress();

@@ -8,9 +8,18 @@
     <hr />
     <div class="class option-card">
       <div class="form-row">
-        <div :id="'integer' + question.linkId" class="size">
+        <div :id="'integer' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="integerInput">{{ language.integer.text }}:</label>
-          <input id="integerInput" type="number" step="1" onkeypress="return (event.charCode !== 44 && event.charCode !== 46)" v-model="selected" class="form-control" />
+          <input
+            id="integerInput"
+            type="number"
+            step="1"
+            onkeypress="return (event.charCode !== 44 && event.charCode !== 46)"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            v-model="selected"
+            class="form-control"
+          />
           <div v-if="language" class="invalid-feedback">
             {{ language.integer.invalid }}
           </div>
@@ -51,8 +60,7 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
-      selected: null,
-      filled: false
+      selected: null
     };
   },
 
@@ -131,34 +139,17 @@ export default {
       this.setSelected();
     },
     selected() {
-      var form = document.getElementById("integer" + this.question.linkId);
       let newQuestionnaireResponse = null;
       if (this.selected) {
-        form.classList.add("was-validated");
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "integer");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = true;
       } else {
-        this.filled = false;
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "integer");
+        this.$emit("answer", newQuestionnaireResponse);
       }
     },
     question() {
       this.setSelected();
-      this.filled = false;
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
 

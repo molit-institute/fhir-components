@@ -53,7 +53,6 @@ export default {
   data: function() {
     return {
       selected: null,
-      filled: false,
       required: false
     };
   },
@@ -117,32 +116,19 @@ export default {
       this.setSelected();
     },
     selected() {
+      let newQuestionnaireResponse = null;
       if (this.selected) {
         let newQuestionnaireResponse = null;
         newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "string");
         this.$emit("answer", newQuestionnaireResponse);
-        this.filled = true;
       } else {
-        this.filled = false;
+        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "string");
+        this.$emit("answer", newQuestionnaireResponse);
       }
     },
     question() {
       this.setSelected();
       this.filled = false;
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
 
