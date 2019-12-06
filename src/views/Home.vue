@@ -4,12 +4,12 @@
       <!-- <molecular-report :resources="exampleReport" /> -->
       <!-- <molecular-report :resources="exampleReport" variantType="CNV" /> -->
       <div v-if="show_renderer" style="display: flex;">
-        <span
+        <!-- <span
           ><pre>{{ questionnaire }}</pre></span
         >
         <span
           ><pre>{{ questionnaireResponse }}</pre></span
-        >
+        > -->
       </div>
 
       <span class="flex"
