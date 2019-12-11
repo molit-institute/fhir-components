@@ -57,7 +57,11 @@ export default {
     return {
       date: "",
       time: "",
-      dateTime: ""
+      dateTime: "",
+      /**
+       * Allows events to be emitted if true
+       */
+      allow_events: false
     };
   },
 
@@ -94,8 +98,10 @@ export default {
     }
   },
   watch: {
-    questionnaireResponse() {
-      this.getDateAndTime();
+    async questionnaireResponse() {
+      this.allow_events = false;
+      await this.getDateAndTime();
+      this.allow_events = true;
     },
     date() {
       this.dateTime = moment(this.date + "T" + this.time + ":00").format();
@@ -104,14 +110,22 @@ export default {
       this.dateTime = moment(this.date + "T" + this.time + ":00").format();
     },
     dateTime() {
-      let newQuestionnaireResponse = null;
-      if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "") {
-        let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.dateTime], "dateTime");
-        this.$emit("answer", newQuestionnaireResponse);
-      } else {
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "dateTime");
-        this.$emit("answer", newQuestionnaireResponse);
+      if (this.allow_events) {
+        let object = null;
+        if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "") {
+          object = {
+            type: "dateTime",
+            question: this.question,
+            value: [this.selected]
+          };
+        } else {
+          object = {
+            type: "dateTime",
+            question: this.question,
+            value: null
+          };
+        }
+        this.$emit("answer", object);
       }
     },
     question() {
@@ -142,8 +156,8 @@ export default {
     }
   },
 
-  created() {
-    this.getDateAndTime();
+  async created() {
+    await this.getDateAndTime();
   }
 };
 </script>

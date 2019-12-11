@@ -3,14 +3,7 @@
     <div class="container-fluid">
       <!-- <molecular-report :resources="exampleReport" /> -->
       <!-- <molecular-report :resources="exampleReport" variantType="CNV" /> -->
-      <div v-if="show_renderer" style="display: flex;">
-        <!-- <span
-          ><pre>{{ questionnaire }}</pre></span
-        >
-        <span
-          ><pre>{{ questionnaireResponse }}</pre></span
-        > -->
-      </div>
+      <div v-if="show_renderer" style="display: flex;"></div>
 
       <span class="flex"
         ><div class="item" v-on:click="setQuestionnaireMode('StepperQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'StepperQuestionnaire' }]">Stepper</div>
@@ -233,6 +226,7 @@ export default {
             {
               linkId: "1",
               prefix: "1",
+              required: true,
               text: "String",
               type: "string"
             },
@@ -243,28 +237,58 @@ export default {
               type: "group",
               item: [
                 {
-                  linkId: "2.1",
-                  prefix: "2.1",
-                  text: "Name",
-                  type: "string"
+                  linkId: "11",
+                  prefix: "1. ",
+                  text: "Bereitet es Ihnen Schwierigkeiten sich körperlich anzustrengen? (z.B. eine schwere Einkaufsstasche oder einen Koffer zu tragen)",
+                  type: "choice",
+                  required: true,
+                  answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_QLQC30_answers4"
                 },
                 {
-                  linkId: "2.2",
-                  prefix: "2.2",
-                  text: "Alter",
-                  type: "integer"
+                  linkId: "12",
+                  prefix: "2. ",
+                  text: "Bereitet es Ihnen Schwierigkeiten, einen längeren Spaziergang zu machen?",
+                  type: "choice",
+                  required: true,
+                  answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_QLQC30_answers4"
+                },
+                {
+                  linkId: "13",
+                  prefix: "3. ",
+                  text: "Bereitet es Ihnen Schwierigkeiten , eine kurze Strecke außer Haus zu gehen?",
+                  type: "choice",
+                  required: true,
+                  answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_QLQC30_answers4"
+                },
+                {
+                  linkId: "14",
+                  prefix: "4. ",
+                  text: "Müssen Sie tagsüber im Bett liegen oder in einem Sessel sitzen?",
+                  type: "choice",
+                  required: true,
+                  answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_QLQC30_answers4"
+                },
+                {
+                  linkId: "15",
+                  prefix: "5. ",
+                  text: "Brauchen Sie Hilfe beim Essen, Anziehen, Waschen oder Benutzen der Toilette?",
+                  type: "choice",
+                  required: true,
+                  answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_QLQC30_answers4"
                 }
               ]
             },
             {
               linkId: "3",
               prefix: "2",
+              required: true,
               text: "Integer",
               type: "integer"
             },
             {
               linkId: "4",
               prefix: "2.1",
+              required: true,
               text: "Decimal",
               type: "decimal"
             }

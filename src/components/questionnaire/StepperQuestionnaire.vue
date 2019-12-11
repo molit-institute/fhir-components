@@ -2,9 +2,6 @@
   <!-- show every question on a different page (see https://vuetifyjs.com/en/components/steppers) -->
   <div class="card">
     <div class="column card-body">
-      <div>StartCount: {{ startCount }}</div>
-      <div>LastQuestion: {{ lastQuestion }}</div>
-      <div>editMode: {{ editMode }}</div>
       <!-- SPINNER -->
       <div v-if="spinner.loading && filteredItemList && count !== null" class="center-vertical">
         <spinner size="large" class="mt4" :message="spinner.message"></spinner>
@@ -68,13 +65,13 @@
         </button>
         <!-- Button Next -->
         <span>
-          <button type="button" class="button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredItemList.length - 1 && !disabled && !this.editMode">
+          <button id="next-button" type="button" class="button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredItemList.length - 1 && !disabled && !this.editMode">
             {{ language.next }}
           </button>
-          <button type="button" class="button btn-secondary btn-lg" disabled v-if="count < filteredItemList.length && disabled">
+          <button id="disabled-next-button" type="button" class="button btn-secondary btn-lg" disabled v-if="count < filteredItemList.length && disabled">
             {{ language.next }}
           </button>
-          <button type="button" class="button btn-primary btn-lg" v-on:click="goToSummary()" v-if="this.editMode && !disabled">
+          <button id="summary-button" type="button" class="button btn-primary btn-lg" v-on:click="goToSummary()" v-if="this.editMode && !disabled">
             {{ language.accept }}
           </button>
         </span>
@@ -275,10 +272,25 @@ export default {
   },
   data() {
     return {
-      count: null,
+      /**
+       * Number representing the index in the questions-list
+       */
+      count: 0,
+      /**
+       * Number for visual count-representation
+       */
       questionCount: 0,
+      /**
+       * If true disables the next-button
+       */
       disabled: false,
+      /**
+       *
+       */
       lastquestion: null,
+      /**
+       * If true enables the return button
+       */
       enablereturn: true
     };
   },
@@ -402,15 +414,16 @@ export default {
      * Counts up the Question-Number
      */
     countUp() {
-      if (this.count < this.filteredItemList.length - 1 && !this.disabled && this.startCount === null) {
+      if (this.count < this.filteredItemList.length - 1 && !this.disabled && !this.editMode) {
+        //next button
         this.count++;
         if (this.filteredItemList[this.count].type !== "group") {
           this.questionCount = this.getQuestionPositionNumber();
         }
         this.scrollToTop();
-      } else if (this.count === this.filteredItemList.length - 1 && !this.disabled && this.startCount === null) {
+      } else if (this.count === this.filteredItemList.length - 1 && !this.disabled && !this.editMode) {
         this.$emit("finished");
-      } else if (this.startCount !== null) {
+      } else if (this.startCount !== null && this.editMode) {
         this.$emit("finished");
       }
     },
@@ -420,7 +433,7 @@ export default {
      */
     countDown() {
       //If count bigger than 0 and startCount is null
-      if (this.count > 0 && this.startCount === null) {
+      if (this.count > 0 && !this.editMode) {
         this.count--;
         //update questionPositionNumber
         if (this.filteredItemList[this.count].type !== "group") {
@@ -494,7 +507,7 @@ export default {
       this.lastquestion = false;
       this.questionCount = this.getQuestionPositionNumber();
     }
-    if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
+    if (this.startCount && this.editMode && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
     }
@@ -504,12 +517,10 @@ export default {
     if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
-    } else if (this.lastquestion !== null && this.filteredItemList && this.filteredItemList.length > 0) {
+    } else if (this.lastquestion === true && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.filteredItemList.length - 1;
       this.lastquestion = false;
       this.questionCount = this.getQuestionPositionNumber();
-    } else if (this.count === null) {
-      this.count = 0;
     }
 
     this.lastquestion = this.lastQuestion;

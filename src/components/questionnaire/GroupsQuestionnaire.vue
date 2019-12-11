@@ -1,12 +1,5 @@
 <template>
   <div v-if="questionnaire" class="card">
-    <!-- <pre>{{ filteredItemList }}</pre> -->
-    <!-- <pre>
-      {{ questionnaire.item }}
-    </pre> -->
-
-    {{ startCount }}
-    {{ lastQuestion }}
     <!-- SPINNER -->
     <div v-if="spinner.loading" class="center-vertical spinner">
       <spinner size="large" class="mt4" :message="spinner.message"></spinner>
@@ -76,13 +69,13 @@
         <div class="progress-counter small">{{ questionCount }} {{ language.of }} {{ numberOfQuestions }}</div>
         <!-- Button Next -->
         <span>
-          <button type="button" class="button button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredList.length - 1 && !disabled && !this.editMode">
+          <button id="return-button" type="button" class="button button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredList.length - 1 && !disabled && !this.editMode">
             {{ language.next }}
           </button>
-          <button type="button" class="button btn-secondary btn-lg" disabled v-if="disabled">
+          <button id="disabed-return-button" type="button" class="button btn-secondary btn-lg" disabled v-if="disabled">
             {{ language.next }}
           </button>
-          <button type="button" class="button btn-primary btn-lg" v-on:click="goToSummary()" v-if="this.editMode && !disabled">
+          <button id="summary-button" type="button" class="button btn-primary btn-lg" v-on:click="goToSummary()" v-if="this.editMode && !disabled">
             {{ language.accept }}
           </button>
         </span>
@@ -208,7 +201,6 @@ import choiceQuestion from "./../../components/questions/ChoiceQuestion.vue";
 import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
-// import questionnaireResponseController from "./../../util/questionnaireResponseController";
 import questionnaireResponse from "./../../util/questionnaireResponse";
 import Spinner from "vue-simple-spinner";
 export default {
@@ -384,6 +376,7 @@ export default {
     numberOfQuestions() {
       return this.filteredList.length;
     },
+
     /**
      * Checks if not all required Question have been completed
      */
@@ -439,6 +432,7 @@ export default {
       }
       return positionnumber;
     },
+
     /**
      * Returns a Question from the itemList
      */
@@ -450,13 +444,13 @@ export default {
      * Counts up the Question-Number
      */
     countUp() {
-      if (this.count < this.filteredList.length - 1 && !this.disabled && this.startCount === null) {
+      if (this.count < this.filteredList.length - 1 && !this.disabled && !this.editMode) {
         this.count++;
         this.questionCount = this.getQuestionPositionNumber();
         this.scrollToTop();
-      } else if (this.count === this.filteredList.length - 1 && !this.disabled && this.startCount === null) {
+      } else if (this.count === this.filteredList.length - 1 && !this.disabled && !this.editMode) {
         this.$emit("finished");
-      } else if (this.startCount !== null) {
+      } else if (this.startCount !== null && this.editMode) {
         this.$emit("finished");
       }
     },
@@ -466,7 +460,7 @@ export default {
      */
     countDown() {
       //If count bigger than 0 and startCount is null
-      if (this.count > 0 && this.startCount === null) {
+      if (this.count > 0 && !this.editMode) {
         this.count--;
         //update questionPositionNumber
         this.questionCount = this.getQuestionPositionNumber();
@@ -533,7 +527,7 @@ export default {
       this.lastquestion = false;
       this.questionCount = this.getQuestionPositionNumber();
     }
-    if (this.startCount && this.filteredList && this.filteredList.length > 0) {
+    if (this.startCount && this.editMode && this.filteredList && this.filteredList.length > 0) {
       this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
     }

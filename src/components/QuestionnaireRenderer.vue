@@ -157,10 +157,12 @@ export default {
     return {
       filteredItemList: [],
       answeredRequiredQuestionsList: [],
+      currentMode: null,
       currentQuestionnaireResponse: null,
       currentQuestionnaire: null,
       currentValueSets: [],
       currentStartCount: null,
+      lastAnsweredQuestion: null,
       language: null,
       spinner: {
         loading: true,
@@ -170,14 +172,6 @@ export default {
   },
 
   computed: {
-    // currentMode() {
-    //   return (
-    //     this.mode.charAt(0).toUpperCase() +
-    //     this.mode.slice(1).toLowerCase() +
-    //     "Questionnaire"
-    //   );
-    // },
-
     /**
      * Checks if there are already Answers in the QuestionnaireResponse
      */
@@ -194,19 +188,21 @@ export default {
     }
   },
   watch: {
+    mode() {
+      if (this.currentMode && this.mode !== this.currentMode) {
+        this.handleStartQuestion(this.lastAnsweredQuestion);
+      }
+      this.currentMode = this.mode;
+    },
     questionnaire() {
       this.handleQuestionnaireResponse();
     },
     async questionnaireResponse() {
       await this.handleQuestionnaireResponse();
-      //   this.handleAnsweredQuestionsList();
     },
     filteredItemList() {
       this.handleAnsweredQuestionsList();
     },
-    // answeredRequiredQuestionsList() {
-    //   this.handleAnsweredQuestionsList();
-    // },
     locale() {
       this.handlei18n();
     },
@@ -223,24 +219,24 @@ export default {
         case "de":
           this.language = de;
           break;
-        // case "es":
-        //   this.language = this.es;
-        //   break;
         default:
           break;
       }
     },
+
     /**
      *
      */
     backToSummary() {
       this.$emit("finished", this.currentQuestionnaireResponse);
     },
+
     /**
-     *
+     * Takes the given object, adds new answers to the curren QuestionnaireRespons and saves the question as the last answered Question
      */
     handleQuestionnaireResponseEvent(object) {
-      this.currentQuestionnaireResponse = object;
+      this.lastAnsweredQuestion = object.question;
+      this.currentQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, object.question.linkId, object.value, object.type);
     },
 
     /**
@@ -351,6 +347,7 @@ export default {
         }
       }
     },
+
     /**
      * Adds and Removes Questions from the requiredAnswersList
      */
@@ -440,30 +437,51 @@ export default {
       }
     },
 
-    handleStartQuestion() {
-      if (this.startQuestion && this.filteredItemList) {
+    /**
+     *
+     */
+    handleStartQuestion(question) {
+      if (question && this.filteredItemList) {
         if (this.mode === "GroupedQuestionnaire") {
-          let question = null;
+          let questionItem = null;
           for (let i = 0; i < this.filteredItemList.length; i++) {
-            if (this.startQuestion.linkId === this.filteredItemList[i].linkId) {
-              question = this.filteredItemList[i];
+            if (question.linkId === this.filteredItemList[i].linkId) {
+              questionItem = this.filteredItemList[i];
             }
           }
-          if (question.groupId) {
+          if (questionItem.groupId) {
             //get groupId
-            let groupQuestion = this.getParentGroupQuestion(question.groupId);
+            let groupQuestion = this.getParentGroupQuestion(questionItem.groupId);
             this.handleCurrentStartCount(groupQuestion);
           } else {
-            this.handleCurrentStartCount(this.startQuestion);
+            this.handleCurrentStartCount(question);
           }
         } else {
-          this.handleCurrentStartCount(this.startQuestion);
+          this.handleCurrentStartCount(question);
         }
       } else {
         console.warn("QuestionnaireRenderer|handleStartQuestion: FilteredItemList or startQuestion was null or undefined");
         //TODO
       }
     },
+
+    /**
+     * finds the index of the given question in the filtered ItemList and sets the startCount
+     */
+    handleCurrentStartCount(question) {
+      //use different list if mode is GroupedQuestionnaire
+      if (this.mode === "GroupedQuestionnaire") {
+        this.currentStartCount = this.questionnaire.item.indexOf(question);
+      } else {
+        this.currentStartCount = this.filteredItemList.indexOf(question);
+      }
+
+      if (this.currentStartCount < 0) {
+        console.warn("QuestionnaireRenderer|handleStartQuestion: Question was not found");
+        this.currentStartCount = 0;
+      }
+    },
+
     /**
      * Takes the given groupId and searches for the fitting Group-Question with the matching link-Id. If the Group-Question is in a Group itself, the Method will
      * call itself to find the parent Group-Question.
@@ -483,22 +501,7 @@ export default {
       }
       return parentQuestion;
     },
-    /**
-     * finds the index of the given question in the filtered ItemList sets the startCount
-     */
-    handleCurrentStartCount(question) {
-      //use different list if mode is GroupedQuestionnaire
-      if (this.mode === "GroupedQuestionnaire") {
-        this.currentStartCount = this.questionnaire.item.indexOf(question);
-      } else {
-        this.currentStartCount = this.filteredItemList.indexOf(question);
-      }
 
-      if (this.currentStartCount < 0) {
-        console.warn("QuestionnaireRenderer|handleStartQuestion: Question was not found");
-        this.currentStartCount = 0;
-      }
-    },
     /**
      *
      */
@@ -536,7 +539,8 @@ export default {
     this.handleAnsweredQuestionsList();
     await this.handleQuestionnaireResponse();
     await this.filterItemList();
-    this.handleStartQuestion();
+    this.currentMode = this.mode;
+    this.handleStartQuestion(this.startQuestion);
     setTimeout(() => {
       this.spinner.loading = false;
     }, 250);

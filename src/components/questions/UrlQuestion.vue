@@ -147,21 +147,26 @@ export default {
       this.setSelected();
     },
     selected() {
+      let object = null;
       if (this.selected) {
-        if (!this.validateUrl()) {
-          this.$emit("removeRequiredAnswer", this.question);
-        } else {
-          this.$emit("addRequiredAnswer", this.question);
-        }
-        let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "url");
-
-        this.$emit("answer", newQuestionnaireResponse);
+        // if (!this.validateUrl()) {
+        //   this.$emit("removeRequiredAnswer", this.question);
+        // } else {
+        //   this.$emit("addRequiredAnswer", this.question);
+        // }
+        object = {
+          type: "url",
+          question: this.question,
+          value: [this.selected]
+        };
       } else {
-        let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "url");
-        this.$emit("answer", newQuestionnaireResponse);
+        object = {
+          type: "url",
+          question: this.question,
+          value: null
+        };
       }
+      this.$emit("answer", object);
     },
     question() {
       this.setSelected();

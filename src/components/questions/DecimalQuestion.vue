@@ -52,7 +52,14 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
+      /**
+       * Variable to store the value of the input
+       */
       selected: null,
+      /**
+       * Allows events to be emitted if true
+       */
+      allow_events: false,
       started: false
     };
   },
@@ -111,18 +118,28 @@ export default {
     }
   },
   watch: {
-    questionnaireResponse() {
-      this.setSelected();
+    async questionnaireResponse() {
+      this.allow_events = false;
+      await this.setSelected();
+      this.allow_events = true;
     },
     selected() {
-      let newQuestionnaireResponse = null;
-      if (!isNaN(parseFloat(this.selected))) {
-        let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "decimal");
-        this.$emit("answer", newQuestionnaireResponse);
-      } else {
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "decimal");
-        this.$emit("answer", newQuestionnaireResponse);
+      if (this.allow_events) {
+        let object = null;
+        if (!isNaN(parseFloat(this.selected))) {
+          object = {
+            type: "decimal",
+            question: this.question,
+            value: [this.selected]
+          };
+        } else {
+          object = {
+            type: "decimal",
+            question: this.question,
+            value: null
+          };
+        }
+        this.$emit("answer", object);
       }
     },
     question() {
@@ -133,8 +150,9 @@ export default {
     this.handleKeyPress();
   },
 
-  created() {
-    this.setSelected();
+  async created() {
+    await this.setSelected();
+    this.allow_events = true;
   }
 };
 </script>

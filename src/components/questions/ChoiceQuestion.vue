@@ -144,7 +144,14 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
+      /**
+       * Variable to store the value of the input
+       */
       selected: null,
+      /**
+       * Allows events to be emitted if true
+       */
+      allow_events: false,
       optionsList: null,
       repeats: null
     };
@@ -200,23 +207,39 @@ export default {
     }
   },
   watch: {
-    questionnaireResponse() {
-      this.setSelected();
+    async questionnaireResponse() {
+      this.allow_events = false;
+      await this.setSelected();
+      this.allow_events = true;
     },
     selected() {
-      let newQuestionnaireResponse = null;
-      if (this.repeats) {
-        //CHECKBOXES
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, this.selected, "coding");
-      } else {
-        //RADIOBUTTONS
-        if (this.selected) {
-          newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "coding");
+      if (this.allow_events) {
+        let object = null;
+        if (this.repeats) {
+          //CHECKBOXES
+          object = {
+            type: "coding",
+            question: this.question,
+            value: this.selected
+          };
         } else {
-          newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, this.selected, "coding");
+          //RADIOBUTTONS
+          if (this.selected) {
+            object = {
+              type: "coding",
+              question: this.question,
+              value: [this.selected]
+            };
+          } else {
+            object = {
+              type: "coding",
+              question: this.question,
+              value: this.selected
+            };
+          }
         }
+        this.$emit("answer", object);
       }
-      this.$emit("answer", newQuestionnaireResponse);
     },
     async valueSets() {
       try {
@@ -316,10 +339,11 @@ export default {
     } catch (error) {
       alert(error);
     }
-    this.setSelected();
+    await this.setSelected();
     this.repeats = this.question.repeats;
     // this.removeQuestionFromRequiredAnsweredQuestionsList(this.question);
     this.$emit("removeRequiredAnswer", this.question);
+    this.allow_events = true;
   }
 };
 </script>

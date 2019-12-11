@@ -43,7 +43,14 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data() {
     return {
-      selected: null
+      /**
+       * Variable to store the value of the input
+       */
+      selected: null,
+      /**
+       * Allows events to be emitted if true
+       */
+      allow_events: false
     };
   },
 
@@ -93,19 +100,27 @@ export default {
   },
 
   watch: {
-    questionnaireResponse() {
-      this.setSelected();
+    async questionnaireResponse() {
+      this.allow_events = false;
+      await this.setSelected();
+      this.allow_events = true;
     },
     selected() {
-      let newQuestionnaireResponse = null;
+      let object = null;
       if (this.selected) {
-        let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "date");
-        this.$emit("answer", newQuestionnaireResponse);
+        object = {
+          type: "date",
+          question: this.question,
+          value: [this.selected]
+        };
       } else {
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, null, "date");
-        this.$emit("answer", newQuestionnaireResponse);
+        object = {
+          type: "date",
+          question: this.question,
+          value: null
+        };
       }
+      this.$emit("answer", object);
     },
     question() {
       this.setSelected();
@@ -113,8 +128,9 @@ export default {
     }
   },
 
-  created() {
-    this.setSelected();
+  async created() {
+    await this.setSelected();
+    this.allow_events = true;
   }
 };
 </script>
