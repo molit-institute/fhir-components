@@ -1,12 +1,18 @@
 <template>
   <div v-if="questionnaire" class="card">
     <!-- <pre>{{ filteredItemList }}</pre> -->
+    <!-- <pre>
+      {{ questionnaire.item }}
+    </pre> -->
 
+    {{ startCount }}
+    {{ lastQuestion }}
     <!-- SPINNER -->
     <div v-if="spinner.loading" class="center-vertical spinner">
       <spinner size="large" class="mt4" :message="spinner.message"></spinner>
     </div>
     <!-- show every question on a different page (see https://vuetifyjs.com/en/components/steppers) -->
+    <!-- if Questiontype is Group -->
     <div v-if="!spinner.loading && getQuestionType === 'groupQuestion'" class="component-container container">
       <component
         :is="getQuestionType"
@@ -351,6 +357,7 @@ export default {
     getQuestion() {
       return this.getQuestionFromItemList();
     },
+
     /**
      *
      */

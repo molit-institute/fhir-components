@@ -493,7 +493,6 @@ export default {
       this.count = this.filteredItemList.length - 1;
       this.lastquestion = false;
       this.questionCount = this.getQuestionPositionNumber();
-      // console.log("count:", this.count);
     }
     if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.startCount;

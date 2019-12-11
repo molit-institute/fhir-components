@@ -21,7 +21,6 @@
       <div v-if="show_questionnaire_list">
         <div v-for="questionnaire in questionnaires" :key="questionnaire.id" v-on:click="openSelectedQuestionnaire(questionnaire)">
           <div>{{ questionnaire.title }}</div>
-          <div>{{ questionnaire.id }}</div>
         </div>
       </div>
       <questionnaire-renderer
@@ -39,17 +38,22 @@
         :startQuestion="indexQuestion"
       ></questionnaire-renderer>
       <div class="row" v-if="show_summary">
-        <div class="col-sm-6" style="background-color:lightgrey;cursor:pointer;">
+        <div class="col-sm-4" style="background-color:lightgrey;cursor:pointer;">
           <div v-if="show_summary" v-on:click="backToRenderer()">
             <pre>{{ this.questionnaireResponse }}</pre>
           </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4" style="background-color:lightgrey;cursor:pointer;">
+          <div v-if="show_summary" v-on:click="backToRenderer()">
+            <pre>{{ this.questionnaire }}</pre>
+          </div>
+        </div>
+        <div class="col-sm-4">
           <div>
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
               <div>
-                <pre v-if="getItemList(questionnaireResponse)[index]" style="cursor:pointer;" v-on:click="editQuestion(item)">
+                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor:pointer;" v-on:click="editQuestion(item)">
             {{ getItemList(questionnaireResponse)[index].answer }}
             </pre
                 >
@@ -128,6 +132,7 @@ export default {
       questionnaires: [
         {
           resourceType: "Questionnaire",
+          id: "1",
           meta: {
             versionId: "1",
             lastUpdated: "2017-08-23T12:15:33.776+02:00"
@@ -207,6 +212,7 @@ export default {
         },
         {
           resourceType: "Questionnaire",
+          id: "2",
           meta: {
             versionId: "1",
             lastUpdated: "2017-08-23T12:15:33.776+02:00"

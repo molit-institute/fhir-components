@@ -194,6 +194,9 @@ export default {
     }
   },
   watch: {
+    questionnaire() {
+      this.handleQuestionnaireResponse();
+    },
     async questionnaireResponse() {
       await this.handleQuestionnaireResponse();
       //   this.handleAnsweredQuestionsList();
@@ -378,11 +381,18 @@ export default {
     },
 
     /**
-     *  Creates a new QuestionnaireResponse if no QuestionnaireResponse was given via props
+     *  Creates a new QuestionnaireResponse if no QuestionnaireResponse was given via props or the given questionnaire-reference-id
+     *  does not match the id of the given questionnaire
      */
     handleQuestionnaireResponse() {
       if (this.questionnaireResponse) {
-        this.currentQuestionnaireResponse = this.questionnaireResponse;
+        let split = this.questionnaireResponse.questionnaire.split("/");
+        let id = split[1];
+        if (id === this.questionnaire.id) {
+          this.currentQuestionnaireResponse = this.questionnaireResponse;
+        } else {
+          this.createQuestionnaireResponse();
+        }
       } else {
         this.createQuestionnaireResponse();
       }
@@ -441,9 +451,7 @@ export default {
           }
           if (question.groupId) {
             //get groupId
-            console.log("Group.id:", question.groupId);
             let groupQuestion = this.getParentGroupQuestion(question.groupId);
-            console.log("groupQuestion", groupQuestion);
             this.handleCurrentStartCount(groupQuestion);
           } else {
             this.handleCurrentStartCount(this.startQuestion);
@@ -479,7 +487,13 @@ export default {
      * finds the index of the given question in the filtered ItemList sets the startCount
      */
     handleCurrentStartCount(question) {
-      this.currentStartCount = this.filteredItemList.indexOf(question);
+      //use different list if mode is GroupedQuestionnaire
+      if (this.mode === "GroupedQuestionnaire") {
+        this.currentStartCount = this.questionnaire.item.indexOf(question);
+      } else {
+        this.currentStartCount = this.filteredItemList.indexOf(question);
+      }
+
       if (this.currentStartCount < 0) {
         console.warn("QuestionnaireRenderer|handleStartQuestion: Question was not found");
         this.currentStartCount = 0;
