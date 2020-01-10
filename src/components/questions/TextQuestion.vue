@@ -136,7 +136,7 @@ export default {
           object = {
             type: "text",
             question: this.question,
-            value: null
+            value: []
           };
         }
         this.$emit("answer", object);

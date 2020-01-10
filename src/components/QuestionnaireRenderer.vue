@@ -20,8 +20,6 @@
       @summary="backToSummary()"
       @finished="finishQuestionnaire()"
       @return="leaveQuestionnaireRenderer()"
-      @removeRequiredAnswer="removeQuestionFromRequiredAnsweredQuestionsList($event)"
-      @addRequiredAnswer="addQuestionToRequiredAnsweredQuestionsList($event)"
       @answer="handleQuestionnaireResponseEvent($event)"
     ></component>
   </div>
@@ -201,13 +199,16 @@ export default {
       await this.handleQuestionnaireResponse();
     },
     filteredItemList() {
-      this.handleAnsweredQuestionsList();
+      // this.handleAnsweredQuestionsList();
     },
     locale() {
       this.handlei18n();
     },
-    currentQuestionnaireResponse() {
-      this.$emit("updated", this.currentQuestionnaireResponse);
+    currentQuestionnaireResponse: {
+      deep: true,
+      handler: function() {
+        this.$emit("updated", this.currentQuestionnaireResponse);
+      }
     }
   },
   methods: {
@@ -234,9 +235,10 @@ export default {
     /**
      * Takes the given object, adds new answers to the curren QuestionnaireRespons and saves the question as the last answered Question
      */
-    handleQuestionnaireResponseEvent(object) {
+    async handleQuestionnaireResponseEvent(object) {
       this.lastAnsweredQuestion = object.question;
-      this.currentQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, object.question.linkId, object.value, object.type);
+      this.currentQuestionnaireResponse = await questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, object.question.linkId, object.value, object.type);
+      this.handleAnsweredQuestionsList();
     },
 
     /**
@@ -356,9 +358,7 @@ export default {
         let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
         let aRQL = this.answeredRequiredQuestionsList;
         for (let i = 0; i < qr.length; i++) {
-          let result = this.filteredItemList.find(function(element) {
-            return element.linkId === qr[i].linkId;
-          });
+          let result = this.filteredItemList.find(element => element.linkId === qr[i].linkId);
           if (result) {
             if (qr[i].answer && qr[i].answer.length >= 1) {
               this.addQuestionToRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
@@ -536,9 +536,9 @@ export default {
     this.spinner.message = this.language.loading.valueset;
     await this.handleValueSets();
     this.spinner.message = this.language.loading.data;
-    this.handleAnsweredQuestionsList();
     await this.handleQuestionnaireResponse();
     await this.filterItemList();
+    this.handleAnsweredQuestionsList();
     this.currentMode = this.mode;
     this.handleStartQuestion(this.startQuestion);
     setTimeout(() => {

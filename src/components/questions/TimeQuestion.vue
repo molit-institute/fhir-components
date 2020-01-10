@@ -119,7 +119,7 @@ export default {
           object = {
             type: "time",
             question: this.question,
-            value: null
+            value: []
           };
         }
         this.$emit("answer", object);

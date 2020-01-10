@@ -298,8 +298,8 @@ export default {
   },
   data() {
     return {
+      scrollToQuestion: true,
       count: 0,
-      itemList: [],
       questionCount: 1,
       disabled: false,
       currentQuestion: Object,
@@ -477,6 +477,7 @@ export default {
     setDisabled() {
       this.disabled = false;
       let currentQuestion = this.getQuestion;
+      let numberOfAnsweredRequiredQuestionsInItem = 0;
       if (currentQuestion) {
         if (currentQuestion.required || (currentQuestion.type === "group" && this.numberOfRequiredQuestionsInItem(currentQuestion) > 0)) {
           this.disabled = true;
@@ -490,8 +491,15 @@ export default {
                 }
                 if (this.requiredQuestionList[i] === currentQuestion.item[e]) {
                   this.disabled = false;
+                  numberOfAnsweredRequiredQuestionsInItem++;
                 }
               }
+            }
+            //TODO check if all questions are answered, else set disabled to true
+            if (numberOfAnsweredRequiredQuestionsInItem !== this.numberOfRequiredQuestionsInItem(currentQuestion)) {
+              this.disabled = true;
+            } else {
+              this.disabled = false;
             }
           } else if (this.requiredQuestionList[i] === currentQuestion) {
             this.disabled = false;
@@ -512,6 +520,12 @@ export default {
     },
     questionnaireResponse() {
       this.setDisabled();
+    },
+    filteredList: {
+      deep: true,
+      handler: function() {
+        this.setDisabled();
+      }
     },
     editMode() {
       if (this.editMode) {

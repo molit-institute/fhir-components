@@ -3,6 +3,7 @@
     <div class="container-fluid">
       <!-- <molecular-report :resources="exampleReport" /> -->
       <!-- <molecular-report :resources="exampleReport" variantType="CNV" /> -->
+      <!-- QUESTIONNAIRE RENDERER -->
       <div v-if="show_renderer" style="display: flex;"></div>
 
       <span class="flex"
@@ -159,13 +160,15 @@ export default {
                   linkId: "2.1",
                   prefix: "2.1",
                   text: "Name",
-                  type: "string"
+                  type: "string",
+                  required: true
                 },
                 {
                   linkId: "2.2",
                   prefix: "2.2",
                   text: "Alter",
-                  type: "integer"
+                  type: "integer",
+                  required: true
                 },
                 {
                   linkId: "2.3",
@@ -177,13 +180,15 @@ export default {
                       linkId: "2.3.1",
                       prefix: "2.3.1",
                       text: "Haben sie Haare auf dem Kopf",
-                      type: "boolean"
+                      type: "boolean",
+                      required: true
                     },
                     {
                       linkId: "2.3.2",
                       prefix: "2.3.2",
                       text: "Wieviele Haare?",
-                      type: "integer"
+                      type: "integer",
+                      required: true
                     }
                   ]
                 }

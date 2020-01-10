@@ -136,7 +136,7 @@ export default {
           object = {
             type: "decimal",
             question: this.question,
-            value: null
+            value: []
           };
         }
         this.$emit("answer", object);

@@ -163,7 +163,7 @@ export default {
         object = {
           type: "url",
           question: this.question,
-          value: null
+          value: []
         };
       }
       this.$emit("answer", object);

@@ -478,21 +478,30 @@ export default {
     questionnaire() {
       this.count = 0;
     },
+
     count() {
       this.setDisabled();
     },
+
     requiredQuestionList() {
       this.setDisabled();
     },
+
     questionnaireResponse() {
       this.setDisabled();
     },
-    filteredItemList() {
-      if (this.filteredItemList[this.count].type !== "group" && this.count === 0) {
-        // this.questionCount = 1;
-        this.questionCount = this.getQuestionPositionNumber();
+
+    filteredItemList: {
+      deep: true,
+      handler: function() {
+        if (this.filteredItemList[this.count].type !== "group" && this.count === 0) {
+          // this.questionCount = 1;
+          this.questionCount = this.getQuestionPositionNumber();
+        }
+        this.setDisabled();
       }
     },
+
     editMode() {
       if (this.editMode) {
         this.enablereturn = false;
@@ -501,6 +510,7 @@ export default {
       }
     }
   },
+
   updated() {
     if (this.lastquestion && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.filteredItemList.length - 1;

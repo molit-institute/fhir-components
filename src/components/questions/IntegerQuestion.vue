@@ -160,7 +160,7 @@ export default {
           object = {
             type: "integer",
             question: this.question,
-            value: null
+            value: []
           };
         }
         this.$emit("answer", object);
