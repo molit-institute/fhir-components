@@ -198,9 +198,6 @@ export default {
     async questionnaireResponse() {
       await this.handleQuestionnaireResponse();
     },
-    filteredItemList() {
-      // this.handleAnsweredQuestionsList();
-    },
     locale() {
       this.handlei18n();
     },
@@ -237,7 +234,7 @@ export default {
      */
     async handleQuestionnaireResponseEvent(object) {
       this.lastAnsweredQuestion = object.question;
-      this.currentQuestionnaireResponse = await questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, object.question.linkId, object.value, object.type);
+      this.currentQuestionnaireResponse = await questionnaireResponseController.addAnswersToQuestionnaireResponse(this.currentQuestionnaireResponse, object.question.linkId, object.value, object.type);
       this.handleAnsweredQuestionsList();
     },
 
@@ -253,7 +250,7 @@ export default {
      */
     addAnswerToQuestionnaireResponse(linkId, type, answers) {
       if (linkId && type && answers !== null) {
-        this.currentQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, linkId, answers, type);
+        this.currentQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.currentQuestionnaireResponse, linkId, answers, type);
       }
     },
 
