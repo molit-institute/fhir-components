@@ -468,13 +468,12 @@ export default {
     handleCurrentStartCount(question) {
       //use different list if mode is GroupedQuestionnaire
       if (this.mode === "GroupedQuestionnaire") {
-        this.currentStartCount = this.questionnaire.item.indexOf(question);
+        this.currentStartCount = this.questionnaire.item.findIndex(object => object.linkId === question.linkId);
       } else {
-        this.currentStartCount = this.filteredItemList.indexOf(question);
+        this.currentStartCount = this.filteredItemList.findIndex(object => object.linkId === question.linkId);
       }
 
       if (this.currentStartCount < 0) {
-        console.warn("QuestionnaireRenderer|handleStartQuestion: Question was not found");
         this.currentStartCount = 0;
       }
     },
