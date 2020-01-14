@@ -1,14 +1,15 @@
 <template>
   <div>
     <component
+      :filteredItemList="filteredItemList"
+      :questionnaire="currentQuestionnaire"
       :questionnaireResponse="currentQuestionnaireResponse"
+      :requiredQuestionList="answeredRequiredQuestionsList"
+      :valueSets="currentValueSets"
       :is="mode"
       :lastQuestion="lastQuestion"
-      :startCount="startCount"
-      :questionnaire="currentQuestionnaire"
-      :requiredQuestionList="answeredRequiredQuestionsList"
+      :startCount="currentStartCount"
       :baseUrl="baseUrl"
-      :valueSets="currentValueSets"
       :editMode="editMode"
       :primary="primary"
       :secondary="secondary"
@@ -19,8 +20,6 @@
       @summary="backToSummary()"
       @finished="finishQuestionnaire()"
       @return="leaveQuestionnaireRenderer()"
-      @removeRequiredAnswer="removeQuestionFromRequiredAnsweredQuestionsList($event)"
-      @addRequiredAnswer="addQuestionToRequiredAnsweredQuestionsList($event)"
       @answer="handleQuestionnaireResponseEvent($event)"
     ></component>
   </div>
@@ -30,7 +29,6 @@
 import FullQuestionnaire from "./questionnaire/FullQuestionnaire";
 import GroupedQuestionnaire from "./questionnaire/GroupsQuestionnaire";
 import StepperQuestionnaire from "./questionnaire/StepperQuestionnaire";
-
 import * as fhirApi from "@molit/fhir-api";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
 import valueSetController from "./../util/valueSetController";
@@ -101,14 +99,7 @@ export default {
      * ID of the question in the ItemList where in the list of questions the renderer should start
      */
     startQuestion: {
-      type: Number,
-      default: null
-    },
-    /**
-     * Number on which Page to start
-     */
-    startCount: {
-      type: Number,
+      type: Object,
       default: null
     },
     /**
@@ -162,11 +153,14 @@ export default {
 
   data() {
     return {
+      filteredItemList: [],
       answeredRequiredQuestionsList: [],
+      currentMode: null,
       currentQuestionnaireResponse: null,
       currentQuestionnaire: null,
       currentValueSets: [],
       currentStartCount: null,
+      lastAnsweredQuestion: null,
       language: null,
       spinner: {
         loading: true,
@@ -176,14 +170,6 @@ export default {
   },
 
   computed: {
-    // currentMode() {
-    //   return (
-    //     this.mode.charAt(0).toUpperCase() +
-    //     this.mode.slice(1).toLowerCase() +
-    //     "Questionnaire"
-    //   );
-    // },
-
     /**
      * Checks if there are already Answers in the QuestionnaireResponse
      */
@@ -200,17 +186,26 @@ export default {
     }
   },
   watch: {
+    mode() {
+      if (this.currentMode && this.mode !== this.currentMode) {
+        this.handleStartQuestion(this.lastAnsweredQuestion);
+      }
+      this.currentMode = this.mode;
+    },
+    questionnaire() {
+      this.handleQuestionnaireResponse();
+    },
     async questionnaireResponse() {
       await this.handleQuestionnaireResponse();
-    },
-    answeredRequiredQuestionsList() {
-      this.handleAnsweredQuestionsList();
     },
     locale() {
       this.handlei18n();
     },
-    currentQuestionnaireResponse() {
-      this.$emit("updated", this.currentQuestionnaireResponse);
+    currentQuestionnaireResponse: {
+      deep: true,
+      handler: function() {
+        this.$emit("updated", this.currentQuestionnaireResponse);
+      }
     }
   },
   methods: {
@@ -222,24 +217,25 @@ export default {
         case "de":
           this.language = de;
           break;
-        // case "es":
-        //   this.language = this.es;
-        //   break;
         default:
           break;
       }
     },
+
     /**
      *
      */
     backToSummary() {
       this.$emit("finished", this.currentQuestionnaireResponse);
     },
+
     /**
-     *
+     * Takes the given object, adds new answers to the curren QuestionnaireRespons and saves the question as the last answered Question
      */
-    handleQuestionnaireResponseEvent(object) {
-      this.currentQuestionnaireResponse = object;
+    async handleQuestionnaireResponseEvent(object) {
+      this.lastAnsweredQuestion = object.question;
+      this.currentQuestionnaireResponse = await questionnaireResponseController.addAnswersToQuestionnaireResponse(this.currentQuestionnaireResponse, object.question.linkId, object.value, object.type);
+      this.handleAnsweredQuestionsList();
     },
 
     /**
@@ -254,7 +250,7 @@ export default {
      */
     addAnswerToQuestionnaireResponse(linkId, type, answers) {
       if (linkId && type && answers !== null) {
-        this.currentQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, linkId, answers, type);
+        this.currentQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.currentQuestionnaireResponse, linkId, answers, type);
       }
     },
 
@@ -316,9 +312,21 @@ export default {
     async handleQuestionnaire() {
       if (this.questionnaire) {
         this.currentQuestionnaire = this.questionnaire;
+        // Add Group-Ids to Questions in Groups
+        for (let i = 0; i < this.currentQuestionnaire.item.length; i++) {
+          if (this.currentQuestionnaire.item[i].type === "group") {
+            this.addGroupIdToItems(this.currentQuestionnaire.item[i].item, this.currentQuestionnaire.item[i].linkId);
+          }
+        }
       } else if (this.questionnaireUrl) {
         try {
           this.currentQuestionnaire = await fhirApi.fetchByUrl(this.questionnaireUrl);
+          // Add Group-Ids to Questions in Groups
+          for (let i = 0; i < this.currentQuestionnaire.item.length; i++) {
+            if (this.currentQuestionnaire.item[i].type === "group") {
+              this.addGroupIdToItems(this.currentQuestionnaire.item[i].item, this.currentQuestionnaire.item[i].linkId);
+            }
+          }
         } catch (error) {
           //TODO Errorhandling
         }
@@ -328,25 +336,57 @@ export default {
     },
 
     /**
-     *
+     * Adds GroupId to all Questions inside a Group.
+     */
+    addGroupIdToItems(item, linkId) {
+      for (let i = 0; i < item.length; i++) {
+        item[i].groupId = linkId;
+        if (item[i].type === "group") {
+          this.addGroupIdToItems(item[i].item, item[i].linkId);
+        }
+      }
+    },
+
+    /**
+     * Adds and Removes Questions from the requiredAnswersList
      */
     handleAnsweredQuestionsList() {
-      let itemList = questionnaireResponseController.createItemList(this.currentQuestionnaire);
       if (this.currentQuestionnaireResponse) {
-        for (let i = 0; i < this.currentQuestionnaireResponse.item.length; i++) {
-          if (this.currentQuestionnaireResponse.item[i].answer.length === 1) {
-            this.addQuestionToRequiredAnsweredQuestionsList(itemList[i]);
+        let qr = questionnaireResponseController.createItemList(this.currentQuestionnaireResponse);
+        let aRQL = this.answeredRequiredQuestionsList;
+        for (let i = 0; i < qr.length; i++) {
+          let result = this.filteredItemList.find(element => element.linkId === qr[i].linkId);
+          if (result) {
+            if (qr[i].answer && qr[i].answer.length >= 1) {
+              this.addQuestionToRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
+            } else {
+              this.removeQuestionFromRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
+            }
+          } else {
+            let questionToRemove = aRQL.find(function(element) {
+              return element.linkId === qr[i].linkId;
+            });
+            if (questionToRemove) {
+              this.removeQuestionFromRequiredAnsweredQuestionsList(questionToRemove);
+            }
           }
         }
       }
     },
 
     /**
-     *  Creates a new QuestionnaireResponse if no QuestionnaireResponse was given via props
+     *  Creates a new QuestionnaireResponse if no QuestionnaireResponse was given via props or the given questionnaire-reference-id
+     *  does not match the id of the given questionnaire
      */
     handleQuestionnaireResponse() {
       if (this.questionnaireResponse) {
-        this.currentQuestionnaireResponse = this.questionnaireResponse;
+        let split = this.questionnaireResponse.questionnaire.split("/");
+        let id = split[1];
+        if (id === this.questionnaire.id) {
+          this.currentQuestionnaireResponse = this.questionnaireResponse;
+        } else {
+          this.createQuestionnaireResponse();
+        }
       } else {
         this.createQuestionnaireResponse();
       }
@@ -394,13 +434,79 @@ export default {
       }
     },
 
-    handleStartQuestion() {
-      if (this.startCount) {
-        this.currentStartCount = this.startCount;
-      } else if (this.startQuestion) {
-        let itemList = questionnaireResponseController.createItemList(this.currentQuestionnaire);
-        this.currentStartCount = itemList.indexOf(this.startQuestion);
+    /**
+     *
+     */
+    handleStartQuestion(question) {
+      if (question && this.filteredItemList) {
+        if (this.mode === "GroupedQuestionnaire") {
+          let questionItem = null;
+          for (let i = 0; i < this.filteredItemList.length; i++) {
+            if (question.linkId === this.filteredItemList[i].linkId) {
+              questionItem = this.filteredItemList[i];
+            }
+          }
+          if (questionItem.groupId) {
+            //get groupId
+            let groupQuestion = this.getParentGroupQuestion(questionItem.groupId);
+            this.handleCurrentStartCount(groupQuestion);
+          } else {
+            this.handleCurrentStartCount(question);
+          }
+        } else {
+          this.handleCurrentStartCount(question);
+        }
+      } else {
+        console.warn("QuestionnaireRenderer|handleStartQuestion: FilteredItemList or startQuestion was null or undefined");
+        //TODO
       }
+    },
+
+    /**
+     * finds the index of the given question in the filtered ItemList and sets the startCount
+     */
+    handleCurrentStartCount(question) {
+      //use different list if mode is GroupedQuestionnaire
+      if (this.mode === "GroupedQuestionnaire") {
+        this.currentStartCount = this.questionnaire.item.findIndex(object => object.linkId === question.linkId);
+      } else {
+        this.currentStartCount = this.filteredItemList.findIndex(object => object.linkId === question.linkId);
+      }
+
+      if (this.currentStartCount < 0) {
+        this.currentStartCount = 0;
+      }
+    },
+
+    /**
+     * Takes the given groupId and searches for the fitting Group-Question with the matching link-Id. If the Group-Question is in a Group itself, the Method will
+     * call itself to find the parent Group-Question.
+     *
+     * @returns the parent groupQuestion
+     */
+    getParentGroupQuestion(groupId) {
+      let parentQuestion = null;
+      for (let i = 0; i < this.filteredItemList.length; i++) {
+        if (this.filteredItemList[i].linkId === groupId) {
+          if (this.filteredItemList[i].groupId) {
+            parentQuestion = this.getParentGroupQuestion(this.filteredItemList[i].groupId);
+          } else {
+            parentQuestion = this.filteredItemList[i];
+          }
+        }
+      }
+      return parentQuestion;
+    },
+
+    /**
+     *
+     */
+    async filterItemList() {
+      let newList = [];
+      if (this.currentQuestionnaireResponse && this.questionnaire) {
+        newList = await questionnaireResponseController.createItemList(this.currentQuestionnaire);
+      }
+      this.filteredItemList = newList;
     },
 
     /**
@@ -426,9 +532,11 @@ export default {
     this.spinner.message = this.language.loading.valueset;
     await this.handleValueSets();
     this.spinner.message = this.language.loading.data;
+    await this.handleQuestionnaireResponse();
+    await this.filterItemList();
     this.handleAnsweredQuestionsList();
-    this.handleStartQuestion();
-    this.handleQuestionnaireResponse();
+    this.currentMode = this.mode;
+    this.handleStartQuestion(this.startQuestion);
     setTimeout(() => {
       this.spinner.loading = false;
     }, 250);

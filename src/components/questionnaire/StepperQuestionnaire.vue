@@ -3,7 +3,7 @@
   <div class="card">
     <div class="column card-body">
       <!-- SPINNER -->
-      <div v-if="spinner.loading" class="center-vertical">
+      <div v-if="spinner.loading && filteredItemList && count !== null" class="center-vertical">
         <spinner size="large" class="mt4" :message="spinner.message"></spinner>
       </div>
       <!-- PROGRESS -->
@@ -26,10 +26,14 @@
           >&nbsp;
           <span class="color-grey" v-if="language">{{ language.of }} {{ numberOfQuestions }}</span>
         </div>
+        <div v-if="getQuestion.groupId && !getQuestion.item" class="question-group-text">
+          {{ getGroupText(getQuestion) }}
+        </div>
       </div>
       <br />
-      <div v-if="!spinner.loading">
+      <div v-if="!spinner.loading && count !== null && filteredItemList">
         <component
+          :key="getQuestion.id"
           :is="getQuestionType"
           :question="getQuestion"
           mode="STEPPER"
@@ -42,15 +46,18 @@
           :danger="danger"
           :language="language"
           @next="countUp"
-          @removeRequiredAnswer="removeRequiredQuestionEvent($event)"
-          @addRequiredAnswer="addRequiredQuestionEvent($event)"
           @answer="relayAnswer($event)"
         ></component>
       </div>
       <div v-if="!spinner.loading" class="spacer"></div>
       <div v-if="!spinner.loading && language" class="button-container">
         <!-- Button Back -->
-        <button type="button" class="btn button btn-outline-primary btn-lg" v-on:click="countDown" v-if="(!this.editMode && this.count !== 0) || (this.enableReturn && this.count === 0)">
+        <button
+          type="button"
+          class="btn button btn-outline-primary btn-lg"
+          v-on:click="countDown"
+          v-if="(!this.editMode && this.count !== 0) || (!this.editMode && this.enableReturn && this.count === 0)"
+        >
           {{ language.back }}
         </button>
         <button type="button" class="btn button btn-outline-secondary btn-lg" disabled v-if="this.editMode || (this.count === 0 && !this.enableReturn)">
@@ -58,13 +65,13 @@
         </button>
         <!-- Button Next -->
         <span>
-          <button type="button" class="button btn-primary btn-lg" v-on:click="countUp" v-if="count <= itemList.length - 1 && !disabled && !this.editMode">
+          <button id="next-button" type="button" class="button btn-primary btn-lg" v-on:click="countUp" v-if="count <= filteredItemList.length - 1 && !disabled && !this.editMode">
             {{ language.next }}
           </button>
-          <button type="button" class="button btn-secondary btn-lg" disabled v-if="count < itemList.length && disabled">
+          <button id="disabled-next-button" type="button" class="button btn-secondary btn-lg" disabled v-if="count < filteredItemList.length && disabled">
             {{ language.next }}
           </button>
-          <button type="button" class="button btn-primary btn-lg" v-on:click="goToSummary()" v-if="this.editMode && !disabled">
+          <button id="summary-button" type="button" class="button btn-primary btn-lg" v-on:click="goToSummary()" v-if="this.editMode && !disabled">
             {{ language.accept }}
           </button>
         </span>
@@ -74,6 +81,13 @@
 </template>
 
 <style lang="scss" scoped>
+.question-group-text {
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-top: -4px;
+  color: #6a6a6a;
+}
+
 .center-vertical {
   flex: 1;
   display: flex;
@@ -159,10 +173,15 @@ import stringQuestion from "./../../components/questions/StringQuestion.vue";
 import booleanQuestion from "./../../components/questions/BooleanQuestion.vue";
 import groupQuestion from "./../../components/questions/GroupQuestion.vue";
 import displayQuestion from "./../../components/questions/DisplayQuestion.vue";
-import questionnaireResponseController from "./../../util/questionnaireResponseController";
 import Spinner from "vue-simple-spinner";
 export default {
   props: {
+    /**
+     *
+     */
+    filteredItemList: {
+      type: Array
+    },
     /**
      *
      */
@@ -253,10 +272,26 @@ export default {
   },
   data() {
     return {
+      /**
+       * Number representing the index in the questions-list
+       */
       count: 0,
-      itemList: [],
+      /**
+       * Number for visual count-representation
+       */
       questionCount: 0,
-      disabled: false
+      /**
+       * If true disables the next-button
+       */
+      disabled: false,
+      /**
+       *
+       */
+      lastquestion: null,
+      /**
+       * If true enables the return button
+       */
+      enablereturn: true
     };
   },
   computed: {
@@ -264,7 +299,11 @@ export default {
      * Returns the Type of the current Question
      */
     getQuestionType() {
-      return this.getQuestionFromItemList().type + "Question";
+      let type = null;
+      if (this.getQuestionFromItemList()) {
+        type = this.getQuestionFromItemList().type + "Question";
+      }
+      return type;
     },
 
     /**
@@ -286,9 +325,11 @@ export default {
      */
     numberOfRequiredQuestions() {
       let totalNumber = 0;
-      for (let i = 0; i < this.itemList.length; i++) {
-        if (this.itemList[i].required) {
-          totalNumber++;
+      if (this.filteredItemList) {
+        for (let i = 0; i < this.filteredItemList.length; i++) {
+          if (this.filteredItemList[i].required) {
+            totalNumber++;
+          }
         }
       }
       return totalNumber;
@@ -306,11 +347,9 @@ export default {
      */
     numberOfQuestions() {
       let number = 0;
-      if (this.itemList) {
-        for (let i = 0; i < this.itemList.length; i++) {
-          if (this.itemList[i].type !== "group") {
-            number++;
-          }
+      for (let i = 0; i < this.filteredItemList.length; i++) {
+        if (this.filteredItemList[i].type !== "group") {
+          number++;
         }
       }
       return number;
@@ -318,6 +357,18 @@ export default {
   },
 
   methods: {
+    /**
+     *
+     */
+    getGroupText(currentQuestion) {
+      let groupQuestion = this.filteredItemList.find(element => element.linkId === currentQuestion.groupId);
+      if (groupQuestion) {
+        return groupQuestion.text;
+      } else {
+        return "";
+      }
+    },
+
     /**
      *
      */
@@ -333,26 +384,10 @@ export default {
     },
 
     /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be removed from the List of answered Questions
-     */
-    removeRequiredQuestionEvent(question) {
-      this.$emit("removeRequiredAnswer", question);
-    },
-
-    /**
-     * Emits new Event to give the required Question to Parent-Component
-     * to be added to the List of answered Questions
-     */
-    addRequiredQuestionEvent(question) {
-      this.$emit("addRequiredAnswer", question);
-    },
-
-    /**
      * Returns a Question from the itemList
      */
     getQuestionFromItemList() {
-      return this.itemList[this.count];
+      return this.filteredItemList[this.count];
     },
 
     /**
@@ -361,7 +396,7 @@ export default {
     getQuestionPositionNumber() {
       let positionnumber = 1;
       for (let i = 0; i < this.count; i++) {
-        if (this.itemList[i].type !== "group") {
+        if (this.filteredItemList[i].type !== "group") {
           positionnumber++;
         }
       }
@@ -369,17 +404,26 @@ export default {
     },
 
     /**
+     *
+     */
+    scrollToTop() {
+      window.scrollTo(0, 0);
+    },
+
+    /**
      * Counts up the Question-Number
      */
     countUp() {
-      if (this.count < this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+      if (this.count < this.filteredItemList.length - 1 && !this.disabled && !this.editMode) {
+        //next button
         this.count++;
-        if (this.itemList[this.count].type !== "group") {
+        if (this.filteredItemList[this.count].type !== "group") {
           this.questionCount = this.getQuestionPositionNumber();
         }
-      } else if (this.count === this.itemList.length - 1 && !this.disabled && this.startCount === null) {
+        this.scrollToTop();
+      } else if (this.count === this.filteredItemList.length - 1 && !this.disabled && !this.editMode) {
         this.$emit("finished");
-      } else if (this.startCount !== null) {
+      } else if (this.startCount !== null && this.editMode) {
         this.$emit("finished");
       }
     },
@@ -389,14 +433,15 @@ export default {
      */
     countDown() {
       //If count bigger than 0 and startCount is null
-      if (this.count > 0 && this.startCount === null) {
+      if (this.count > 0 && !this.editMode) {
         this.count--;
         //update questionPositionNumber
-        if (this.itemList[this.count].type !== "group") {
+        if (this.filteredItemList[this.count].type !== "group") {
           this.questionCount = this.getQuestionPositionNumber();
-        } else if (this.itemList[this.count].type === "group" && this.questionCount === 1) {
+        } else if (this.filteredItemList[this.count].type === "group" && this.questionCount === 1) {
           this.questionCount = 0;
         }
+        this.scrollToTop();
         //if count = 0 go back to Metadata
       } else if (this.count === 0) {
         this.$emit("return");
@@ -407,16 +452,22 @@ export default {
      *
      */
     setDisabled() {
-      this.disabled = false;
-      let currentQuestion = this.getQuestion;
-      if (currentQuestion.required) {
-        this.disabled = true;
-        for (let i = 0; i < this.requiredQuestionList.length; i++) {
-          if (
-            // this.requiredQuestionList[i] === currentQuestion
-            JSON.stringify(this.requiredQuestionList[i]) === JSON.stringify(currentQuestion)
-          ) {
-            this.disabled = false;
+      //Set questionCount to 1 if first Question is not a group
+      if (this.filteredItemList) {
+        if (this.filteredItemList[this.count] && this.filteredItemList[this.count].type !== "group" && this.count === 0) {
+          this.questionCount = 1;
+        }
+        this.disabled = false;
+        let currentQuestion = this.getQuestion;
+        if (currentQuestion && currentQuestion.required) {
+          this.disabled = true;
+          for (let i = 0; i < this.requiredQuestionList.length; i++) {
+            if (
+              // this.requiredQuestionList[i] === currentQuestion
+              JSON.stringify(this.requiredQuestionList[i]) === JSON.stringify(currentQuestion)
+            ) {
+              this.disabled = false;
+            }
           }
         }
       }
@@ -425,40 +476,65 @@ export default {
 
   watch: {
     questionnaire() {
-      this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
-
       this.count = 0;
     },
+
     count() {
       this.setDisabled();
     },
+
     requiredQuestionList() {
       this.setDisabled();
     },
+
     questionnaireResponse() {
       this.setDisabled();
+    },
+
+    filteredItemList: {
+      deep: true,
+      handler: function() {
+        if (this.filteredItemList[this.count].type !== "group" && this.count === 0) {
+          // this.questionCount = 1;
+          this.questionCount = this.getQuestionPositionNumber();
+        }
+        this.setDisabled();
+      }
+    },
+
+    editMode() {
+      if (this.editMode) {
+        this.enablereturn = false;
+      } else {
+        this.enablereturn = true;
+      }
     }
   },
 
-  created() {
-    this.itemList = questionnaireResponseController.createItemList(this.questionnaire);
-    //sets count if startcount was given from the summarypage through the questionnaire.view
-    if (this.startCount) {
+  updated() {
+    if (this.lastquestion && this.filteredItemList && this.filteredItemList.length > 0) {
+      this.count = this.filteredItemList.length - 1;
+      this.lastquestion = false;
+      this.questionCount = this.getQuestionPositionNumber();
+    }
+    if (this.startCount && this.editMode && this.filteredItemList && this.filteredItemList.length > 0) {
       this.count = this.startCount;
       this.questionCount = this.getQuestionPositionNumber();
     }
-    if (this.getLastQuestion) {
-      this.count = this.itemList.length - 1;
+  },
+  created() {
+    //sets count if startcount was given from the summarypage through the questionnaire.view
+    if (this.startCount && this.filteredItemList && this.filteredItemList.length > 0) {
+      this.count = this.startCount;
+      this.questionCount = this.getQuestionPositionNumber();
+    } else if (this.lastquestion === true && this.filteredItemList && this.filteredItemList.length > 0) {
+      this.count = this.filteredItemList.length - 1;
+      this.lastquestion = false;
       this.questionCount = this.getQuestionPositionNumber();
     }
 
-    //Resetting Lists to avoid leftovers
-    // this.RESET_REQUIRED_ANSWERED_QUESTIONS_LIST();
+    this.lastquestion = this.lastQuestion;
     this.setDisabled();
-    //Set questionCount to 1 if first Question is not a group
-    if (this.itemList[this.count].type !== "group" && this.count === 0) {
-      this.questionCount = 1;
-    }
   },
 
   components: {

@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="card">
-      <h2>{{ question.text }}</h2>
-      <div v-if="language" :style="{ color: this.danger }" :class="[{ hidden: filled || !question.required }]">
+      <h2>{{ question.prefix }} {{ question.text }}</h2>
+      <div v-if="language" :style="{ color: this.danger }" :class="[{ hidden: validate || !question.required }]">
         {{ language.mandatory_question }}
       </div>
     </div>
@@ -58,7 +58,10 @@ export default {
       date: "",
       time: "",
       dateTime: "",
-      filled: false
+      /**
+       * Allows events to be emitted if true
+       */
+      allow_events: false
     };
   },
 
@@ -95,8 +98,10 @@ export default {
     }
   },
   watch: {
-    questionnaireResponse() {
-      this.getDateAndTime();
+    async questionnaireResponse() {
+      this.allow_events = false;
+      await this.getDateAndTime();
+      this.allow_events = true;
     },
     date() {
       this.dateTime = moment(this.date + "T" + this.time + ":00").format();
@@ -105,35 +110,33 @@ export default {
       this.dateTime = moment(this.date + "T" + this.time + ":00").format();
     },
     dateTime() {
-      if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "") {
-        let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.dateTime], "dateTime");
-        this.$emit("answer", newQuestionnaireResponse);
-        this.filled = true;
-      } else {
-        this.filled = false;
+      if (this.allow_events) {
+        let object = null;
+        if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "") {
+          object = {
+            type: "dateTime",
+            question: this.question,
+            value: [this.selected]
+          };
+        } else {
+          object = {
+            type: "dateTime",
+            question: this.question,
+            value: []
+          };
+        }
+        this.$emit("answer", object);
       }
     },
     question() {
       this.getDateAndTime();
-      this.filled = false;
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
-
+  computed: {
+    validate() {
+      return this.selected || this.selected === [];
+    }
+  },
   methods: {
     getAnswer() {
       return questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "dateTime");
@@ -153,8 +156,8 @@ export default {
     }
   },
 
-  created() {
-    this.getDateAndTime();
+  async created() {
+    await this.getDateAndTime();
   }
 };
 </script>

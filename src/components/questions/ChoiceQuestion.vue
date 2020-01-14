@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card" v-if="language">
-      <h2>{{ question.text }}</h2>
+      <h2>{{ question.prefix }} {{ question.text }}</h2>
       <div v-if="!repeats" :style="{ color: danger }" :class="[{ hidden: validate || !question.required }]">
         {{ language.mandatory_question }}
       </div>
@@ -144,10 +144,16 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
+      /**
+       * Variable to store the value of the input
+       */
       selected: null,
+      /**
+       * Allows events to be emitted if true
+       */
+      allow_events: false,
       optionsList: null,
-      repeats: null,
-      filled: false
+      repeats: null
     };
   },
 
@@ -201,32 +207,39 @@ export default {
     }
   },
   watch: {
-    questionnaireResponse() {
-      this.setSelected();
+    async questionnaireResponse() {
+      this.allow_events = false;
+      await this.setSelected();
+      this.allow_events = true;
     },
     selected() {
-      let newQuestionnaireResponse = null;
-      if (this.repeats) {
-        //CHECKBOXES
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, this.selected, "coding");
-        //checking if checkboxes are selected and setting filled accordingly
-        if (!this.validateCheckBox()) {
-          this.filled = true;
+      if (this.allow_events) {
+        let object = null;
+        if (this.repeats) {
+          //CHECKBOXES
+          object = {
+            type: "coding",
+            question: this.question,
+            value: this.selected
+          };
         } else {
-          this.filled = false;
+          //RADIOBUTTONS
+          if (this.selected) {
+            object = {
+              type: "coding",
+              question: this.question,
+              value: [this.selected]
+            };
+          } else {
+            object = {
+              type: "coding",
+              question: this.question,
+              value: this.selected
+            };
+          }
         }
-      } else {
-        //RADIOBUTTONS
-        this.filled = false;
-        if (this.selected) {
-          newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "coding");
-          this.filled = true;
-        } else {
-          newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, this.selected, "coding");
-          // this.filled = false;
-        }
+        this.$emit("answer", object);
       }
-      this.$emit("answer", newQuestionnaireResponse);
     },
     async valueSets() {
       try {
@@ -241,23 +254,8 @@ export default {
       } catch (error) {
         alert(error);
       }
-      this.filled = false;
       this.setSelected();
       this.repeats = this.question.repeats;
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
   },
 
@@ -270,18 +268,21 @@ export default {
       }
       return false;
     },
+
     /**
      *
      */
     validateCheckBox() {
       return this.selected && this.selected.length === 0 && this.question.required;
     },
+
     /**
      *
      */
     onBoxClickedSingleChoice(display, code) {
       this.selected = this.formatAnswer(display, code);
     },
+
     /**
      *
      */
@@ -304,6 +305,7 @@ export default {
         }
       }
     },
+
     /**
      * Returns a Object with display and code
      */
@@ -311,12 +313,14 @@ export default {
       let data = { display: display, code: code };
       return data;
     },
+
     /**
      * Returns the options for in the Question for the view to display
      */
     getChoiceOptions() {
       return questionnaireController.getChoiceOptions(this.questionnaire, this.question, this.valueSets, this.baseUrl);
     },
+
     /**
      * Sets the value of the variable selected.
      */
@@ -335,10 +339,11 @@ export default {
     } catch (error) {
       alert(error);
     }
-    this.setSelected();
+    await this.setSelected();
     this.repeats = this.question.repeats;
     // this.removeQuestionFromRequiredAnsweredQuestionsList(this.question);
     this.$emit("removeRequiredAnswer", this.question);
+    this.allow_events = true;
   }
 };
 </script>

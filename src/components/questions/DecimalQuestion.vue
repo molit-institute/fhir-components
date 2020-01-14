@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card">
-      <h2>{{ question.text }}</h2>
+      <h2>{{ question.prefix }} {{ question.text }}</h2>
       <div v-if="language" :style="{ color: this.danger }" :class="[{ hidden: selected || !question.required }]">
         {{ language.mandatory_question }}
       </div>
@@ -10,7 +10,7 @@
     <hr />
     <div class="card option-card">
       <div class="form-row">
-        <div :id="'decimal' + question.linkId" class="size">
+        <div :id="'decimal' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="url-text">{{ language.decimal.text }}:</label>
           <input step="any" value="selected" type="number" v-model="selected" class="form-control" id="decimal" />
           <div v-if="language" class="invalid-feedback">
@@ -52,8 +52,14 @@ import questionnaireResponseController from "./../../util/questionnaireResponseC
 export default {
   data: function() {
     return {
+      /**
+       * Variable to store the value of the input
+       */
       selected: null,
-      filled: false,
+      /**
+       * Allows events to be emitted if true
+       */
+      allow_events: false,
       started: false
     };
   },
@@ -107,65 +113,46 @@ export default {
     /**
      *
      */
-    checkValidationStatus() {
-      let form = document.getElementById("decimal" + this.question.linkId);
-      if (form) {
-        form.classList.add("was-validated");
-      } else if (form && !this.selected) {
-        form.classList.remove("was-validated");
-      }
-    },
     setSelected() {
       this.selected = questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "decimal");
     }
   },
   watch: {
-    questionnaireResponse() {
-      this.setSelected();
+    async questionnaireResponse() {
+      this.allow_events = false;
+      await this.setSelected();
+      this.allow_events = true;
     },
     selected() {
-      var form = document.getElementById("decimal" + this.question.linkId);
-      if (form) {
-        form.classList.remove("was-validated");
-      }
-      if (!isNaN(parseFloat(this.selected))) {
-        this.filled = true;
-        form.classList.add("was-validated");
-        let newQuestionnaireResponse = null;
-        newQuestionnaireResponse = questionnaireResponseController.addAnswersToQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, [this.selected], "decimal");
-        this.$emit("answer", newQuestionnaireResponse);
-        this.started = true;
-      } else {
-        this.filled = false;
+      if (this.allow_events) {
+        let object = null;
+        if (!isNaN(parseFloat(this.selected))) {
+          object = {
+            type: "decimal",
+            question: this.question,
+            value: [this.selected]
+          };
+        } else {
+          object = {
+            type: "decimal",
+            question: this.question,
+            value: []
+          };
+        }
+        this.$emit("answer", object);
       }
     },
     question() {
       this.setSelected();
-    },
-    /**
-     * Reacting to any changes to filled, in order to emit an event for the parent component.
-     */
-    filled() {
-      try {
-        if (this.question.required && this.filled) {
-          this.$emit("addRequiredAnswer", this.question);
-        } else if (this.question.required && !this.filled) {
-          this.$emit("removeRequiredAnswer", this.question);
-        }
-      } catch (error) {
-        alert(error);
-      }
     }
-  },
-  updated() {
-    this.checkValidationStatus();
   },
   mounted() {
     this.handleKeyPress();
   },
 
-  created() {
-    this.setSelected();
+  async created() {
+    await this.setSelected();
+    this.allow_events = true;
   }
 };
 </script>
