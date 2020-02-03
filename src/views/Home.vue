@@ -126,6 +126,34 @@ export default {
       questionnaires: [
         {
           resourceType: "Questionnaire",
+          id: "2",
+          title: "date test",
+          item: [
+            {
+              linkId: "1",
+              prefix: "1",
+              text: "Datetime",
+              required: true,
+              type: "dateTime"
+            },
+            {
+              linkId: "2",
+              prefix: "2",
+              text: "Datetime",
+              required: true,
+              type: "dateTime"
+            },
+            {
+              linkId: "3",
+              prefix: "3",
+              text: "Date",
+              required: true,
+              type: "date"
+            }
+          ]
+        },
+        {
+          resourceType: "Questionnaire",
           id: "1",
           meta: {
             versionId: "1",

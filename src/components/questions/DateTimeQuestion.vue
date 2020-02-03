@@ -116,7 +116,7 @@ export default {
           object = {
             type: "dateTime",
             question: this.question,
-            value: [this.selected]
+            value: [this.dateTime]
           };
         } else {
           object = {
@@ -157,7 +157,9 @@ export default {
   },
 
   async created() {
+    this.allow_events = false;
     await this.getDateAndTime();
+    this.allow_events = true;
   }
 };
 </script>
