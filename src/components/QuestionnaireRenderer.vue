@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import questionnaireController from "./../util/questionnaireController";
 import FullQuestionnaire from "./questionnaire/FullQuestionnaire";
 import GroupedQuestionnaire from "./questionnaire/GroupsQuestionnaire";
 import StepperQuestionnaire from "./questionnaire/StepperQuestionnaire";
@@ -203,7 +204,9 @@ export default {
     },
     currentQuestionnaireResponse: {
       deep: true,
-      handler: function() {
+      handler: async function() {
+        await this.filterItemList();
+        this.handleAnsweredQuestionsList();
         this.$emit("updated", this.currentQuestionnaireResponse);
       }
     }
@@ -504,7 +507,8 @@ export default {
     async filterItemList() {
       let newList = [];
       if (this.currentQuestionnaireResponse && this.questionnaire) {
-        newList = await questionnaireResponseController.createItemList(this.currentQuestionnaire);
+        // newList = await questionnaireResponseController.createItemList(this.currentQuestionnaire);
+        newList = await questionnaireController.handleEnableWhen(this.currentQuestionnaireResponse, this.currentQuestionnaire.item);
       }
       this.filteredItemList = newList;
     },

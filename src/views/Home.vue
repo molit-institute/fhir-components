@@ -32,12 +32,12 @@
         :startQuestion="indexQuestion"
       ></questionnaire-renderer>
       <div class="row" v-if="show_summary">
-        <div class="col-sm-4" style="background-color:lightgrey;cursor:pointer;">
+        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer;">
           <div v-if="show_summary" v-on:click="backToRenderer()">
             <pre>{{ this.questionnaireResponse }}</pre>
           </div>
         </div>
-        <div class="col-sm-4" style="background-color:lightgrey;cursor:pointer;">
+        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer;">
           <div v-if="show_summary" v-on:click="backToRenderer()">
             <pre>{{ this.questionnaire }}</pre>
           </div>
@@ -47,7 +47,7 @@
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
               <div>
-                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor:pointer;" v-on:click="editQuestion(item)">
+                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor: pointer;" v-on:click="editQuestion(item)">
             {{ getItemList(questionnaireResponse)[index].answer }}
             </pre
                 >
@@ -109,7 +109,7 @@ export default {
 
     exampleReport() {
       return [exampleReport, exampleReport2];
-    }
+    },
   },
   data() {
     return {
@@ -134,36 +134,36 @@ export default {
               prefix: "1",
               text: "Datetime",
               required: true,
-              type: "dateTime"
+              type: "dateTime",
             },
             {
               linkId: "2",
               prefix: "2",
               text: "Datetime",
               required: true,
-              type: "dateTime"
+              type: "dateTime",
             },
             {
               linkId: "3",
               prefix: "3",
               text: "Date",
               required: true,
-              type: "date"
-            }
-          ]
+              type: "date",
+            },
+          ],
         },
         {
           resourceType: "Questionnaire",
           id: "1",
           meta: {
             versionId: "1",
-            lastUpdated: "2017-08-23T12:15:33.776+02:00"
+            lastUpdated: "2017-08-23T12:15:33.776+02:00",
           },
           identifier: [
             {
               system: "eu.molit.questionic",
-              value: "epidemiologischerFragebogenSLK"
-            }
+              value: "epidemiologischerFragebogenSLK",
+            },
           ],
           title: "Fragebogen Lang",
           publisher: "SLK-Kliniken Heilbronn",
@@ -176,27 +176,34 @@ export default {
               linkId: "1",
               prefix: "1",
               text: "Geben sie bitte ihre Lieblingszahl ein",
-              type: "integer"
+              type: "integer",
             },
             {
               linkId: "2",
               prefix: "1.1",
               text: "Persönliche Angaben",
               type: "group",
+              enableWhen: [
+                {
+                  question: "1",
+                  operator: "=",
+                  answerBoolean: "22",
+                },
+              ],
               item: [
                 {
                   linkId: "2.1",
                   prefix: "2.1",
                   text: "Name",
                   type: "string",
-                  required: true
+                  required: true,
                 },
                 {
                   linkId: "2.2",
                   prefix: "2.2",
                   text: "Alter",
                   type: "integer",
-                  required: true
+                  required: true,
                 },
                 {
                   linkId: "2.3",
@@ -209,34 +216,41 @@ export default {
                       prefix: "2.3.1",
                       text: "Haben sie Haare auf dem Kopf",
                       type: "boolean",
-                      required: true
+                      required: true,
                     },
                     {
                       linkId: "2.3.2",
                       prefix: "2.3.2",
                       text: "Wieviele Haare?",
                       type: "integer",
-                      required: true
-                    }
-                  ]
-                }
-              ]
+                      required: true,
+                      enableWhen: [
+                        {
+                          question: "2.3.1",
+                          operator: "=",
+                          answerBoolean: true,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
             },
             {
               linkId: "3",
               prefix: "2",
               text: "Persönliche Angaben",
-              type: "decimal"
+              type: "decimal",
             },
             {
               linkId: "4",
               prefix: "2.1",
               text: "Persönliche Angaben",
-              type: "decimal"
-            }
-          ]
-        }
-      ]
+              type: "decimal",
+            },
+          ],
+        },
+      ],
     };
   },
 
@@ -246,7 +260,7 @@ export default {
     Patient,
     MolecularReport,
     QuestionnaireList,
-    QuestionnaireResponseList
+    QuestionnaireResponseList,
   },
 
   methods: {
@@ -296,7 +310,7 @@ export default {
       this.show_renderer = true;
       this.edit = false;
       this.indexQuestion = null;
-    }
-  }
+    },
+  },
 };
 </script>
