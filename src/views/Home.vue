@@ -109,7 +109,7 @@ export default {
 
     exampleReport() {
       return [exampleReport, exampleReport2];
-    },
+    }
   },
   data() {
     return {
@@ -126,6 +126,80 @@ export default {
       questionnaires: [
         {
           resourceType: "Questionnaire",
+          title: "EnableWhen-Test",
+          id: "3",
+          item: [
+            {
+              linkId: "1",
+              prefix: "1.",
+              text: "Bitte wählen Sie eine oder mehrere Untersuchungen aus",
+              type: "choice",
+              repeats: true,
+              answerOption: [
+                {
+                  valueString: "Behandlung 1"
+                },
+                {
+                  valueString: "Behandlung 2"
+                },
+                {
+                  valueString: "Behandlung 3"
+                }
+              ]
+            },
+            {
+              linkId: "2",
+              prefix: "2.",
+              type: "group",
+              text: "Ist das true wenn bei Frage 1 Behandlung 2 und Behandlung 3 ausgewählt wurde?",
+              enableWhen: [
+                {
+                  question: "1",
+                  operator: "=",
+                  answerString: "Behandlung 1"
+                },
+                {
+                  question: "1",
+                  operator: "=",
+                  answerString: "Behandlung 2"
+                }
+              ],
+              enableBehavior: "All",
+              item: [
+                {
+                  linkId: "2.1",
+                  prefix: "2.1",
+                  type: "decimal",
+                  text: "Zahl eingeben"
+                },
+                {
+                  linkId: "3",
+                  prefix: "3.",
+                  type: "group",
+                  text: "Ist das true wenn bei Frage 1 Behandlung 2 und Behandlung 3 ausgewählt wurde?",
+                  enableWhen: [
+                    {
+                      question: "1",
+                      operator: "=",
+                      answerString: "Behandlung 3"
+                    }
+                  ],
+                  enableBehavior: "Any",
+                  item: [
+                    {
+                      linkId: "3.1",
+                      prefix: "3.1",
+                      type: "boolean",
+                      text: "Boolean"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          resourceType: "Questionnaire",
           id: "2",
           title: "date test",
           item: [
@@ -134,36 +208,36 @@ export default {
               prefix: "1",
               text: "Datetime",
               required: true,
-              type: "dateTime",
+              type: "dateTime"
             },
             {
               linkId: "2",
               prefix: "2",
               text: "Datetime",
               required: true,
-              type: "dateTime",
+              type: "dateTime"
             },
             {
               linkId: "3",
               prefix: "3",
               text: "Date",
               required: true,
-              type: "date",
-            },
-          ],
+              type: "date"
+            }
+          ]
         },
         {
           resourceType: "Questionnaire",
           id: "1",
           meta: {
             versionId: "1",
-            lastUpdated: "2017-08-23T12:15:33.776+02:00",
+            lastUpdated: "2017-08-23T12:15:33.776+02:00"
           },
           identifier: [
             {
               system: "eu.molit.questionic",
-              value: "epidemiologischerFragebogenSLK",
-            },
+              value: "epidemiologischerFragebogenSLK"
+            }
           ],
           title: "Fragebogen Lang",
           publisher: "SLK-Kliniken Heilbronn",
@@ -176,7 +250,7 @@ export default {
               linkId: "1",
               prefix: "1",
               text: "Geben sie bitte ihre Lieblingszahl ein",
-              type: "integer",
+              type: "integer"
             },
             {
               linkId: "2",
@@ -187,8 +261,8 @@ export default {
                 {
                   question: "1",
                   operator: "=",
-                  answerBoolean: "22",
-                },
+                  answerBoolean: "22"
+                }
               ],
               item: [
                 {
@@ -196,14 +270,14 @@ export default {
                   prefix: "2.1",
                   text: "Name",
                   type: "string",
-                  required: true,
+                  required: true
                 },
                 {
                   linkId: "2.2",
                   prefix: "2.2",
                   text: "Alter",
                   type: "integer",
-                  required: true,
+                  required: true
                 },
                 {
                   linkId: "2.3",
@@ -216,7 +290,7 @@ export default {
                       prefix: "2.3.1",
                       text: "Haben sie Haare auf dem Kopf",
                       type: "boolean",
-                      required: true,
+                      required: true
                     },
                     {
                       linkId: "2.3.2",
@@ -228,29 +302,29 @@ export default {
                         {
                           question: "2.3.1",
                           operator: "=",
-                          answerBoolean: true,
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
+                          answerBoolean: true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             },
             {
               linkId: "3",
               prefix: "2",
               text: "Persönliche Angaben",
-              type: "decimal",
+              type: "decimal"
             },
             {
               linkId: "4",
               prefix: "2.1",
               text: "Persönliche Angaben",
-              type: "decimal",
-            },
-          ],
-        },
-      ],
+              type: "decimal"
+            }
+          ]
+        }
+      ]
     };
   },
 
@@ -260,7 +334,7 @@ export default {
     Patient,
     MolecularReport,
     QuestionnaireList,
-    QuestionnaireResponseList,
+    QuestionnaireResponseList
   },
 
   methods: {
@@ -310,7 +384,7 @@ export default {
       this.show_renderer = true;
       this.edit = false;
       this.indexQuestion = null;
-    },
-  },
+    }
+  }
 };
 </script>

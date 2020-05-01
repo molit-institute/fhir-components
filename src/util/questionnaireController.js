@@ -26,7 +26,7 @@ export function getChoiceOptions(questionnaire, question, valueSets, FHIR_URL) {
         let count = i + 1;
         let option = {
           display: getAnswerOptionValue(question.answerOption[i]),
-          code: "A" + count,
+          code: "A" + count
         };
         optionsList.push(option);
       }
@@ -128,16 +128,49 @@ function handleEnableWhen(currentQuestionnaireResponse, itemList) {
 function addItemToList(answersList, itemList, newItemList) {
   for (let i = 0; i < itemList.length; i++) {
     if (itemList[i].enableWhen) {
+      let results = [];
       for (let x = 0; x < itemList[i].enableWhen.length; x++) {
-        let item = answersList.find(function (element) {
+        let item = answersList.find(function(element) {
           return element.linkId === itemList[i].enableWhen[x].question;
         });
         if (item.answer && item.answer.length !== 0) {
           if (handleEnableWhenLogic(item, itemList[i].enableWhen[x])) {
-            newItemList.push(itemList[i]);
-            if (itemList[i].type === "group") {
-              addItemToList(answersList, itemList[i].item, newItemList);
+            results.push(true);
+          }
+        }
+      }
+      if (itemList[i].enableBehavior) {
+        switch (itemList[i].enableBehavior) {
+          case "All":
+            if (results.length === itemList[i].enableWhen.length) {
+              newItemList.push(itemList[i]);
+              if (itemList[i].type === "group") {
+                addItemToList(answersList, itemList[i].item, newItemList);
+              }
             }
+            break;
+          case "Any":
+            if (results.length > 0) {
+              newItemList.push(itemList[i]);
+              if (itemList[i].type === "group") {
+                addItemToList(answersList, itemList[i].item, newItemList);
+              }
+            }
+            break;
+          default:
+            if (results.length > 0) {
+              newItemList.push(itemList[i]);
+              if (itemList[i].type === "group") {
+                addItemToList(answersList, itemList[i].item, newItemList);
+              }
+            }
+            break;
+        }
+      } else {
+        if (results.length > 0) {
+          newItemList.push(itemList[i]);
+          if (itemList[i].type === "group") {
+            addItemToList(answersList, itemList[i].item, newItemList);
           }
         }
       }
@@ -158,6 +191,7 @@ function addItemToList(answersList, itemList, newItemList) {
  */
 function handleEnableWhenLogic(item, enableWhen) {
   let result = false;
+  //liste mit results
   for (let i = 0; i < item.answer.length; i++) {
     switch (enableWhen.operator) {
       case "exists":
@@ -197,7 +231,6 @@ function handleEnableWhenLogic(item, enableWhen) {
       default:
     }
   }
-  //
   return result;
 }
 
