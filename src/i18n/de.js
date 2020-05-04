@@ -1,6 +1,8 @@
 const de = {
   mandatory_question: "Dies ist eine Pflichtfrage",
   summary: "Zusammenfassung",
+  backtoSummary: "Zurück zur Zusammenfassung",
+  questionDeactivated: "Die ausgewählte Frage ist deaktiviert oder konnte nicht gefunden werden.",
   question: "Frage",
   of: "von",
   placeholder: "Hier Antwort eingeben",
