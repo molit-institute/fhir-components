@@ -48,7 +48,7 @@
   padding: 10px;
 }
 .note-modal {
-  border: lightgrey solid 2px;
+  border: white solid 2px;
   background: white;
   border-radius: 0.25rem;
   max-width: 600px;
