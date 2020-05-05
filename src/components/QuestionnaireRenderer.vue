@@ -52,7 +52,7 @@
   background: white;
   border-radius: 0.25rem;
   max-width: 600px;
-  padding: 15px;
+  padding: 22px;
 }
 </style>
 <script>
