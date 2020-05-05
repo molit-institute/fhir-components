@@ -26,7 +26,7 @@
     <div v-if="modal" class="align-vertical" style="height: calc(100vh - 200px);">
       <div class="note-modal">
         <div>
-          <div>{{language.questionDeactivated}}</div>
+          <div>{{ language.questionDeactivated }}</div>
           <div class="button-container">
             <button class="btn btn-primary" v-on:click="backToSummary()">{{ language.backtoSummary }}</button>
           </div>
@@ -37,18 +37,19 @@
 </template>
 
 <style lang="scss" scoped>
-.align-vertical{
+.align-vertical {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.button-container{
-  display:flex;
+.button-container {
+  display: flex;
   justify-content: center;
   padding: 10px;
 }
 .note-modal {
   border: lightgrey solid 2px;
+  background: white;
   border-radius: 0.25rem;
   max-width: 600px;
   padding: 15px;

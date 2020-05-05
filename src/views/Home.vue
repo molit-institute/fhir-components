@@ -121,7 +121,7 @@ export default {
       lastQuestion: false,
       edit: false,
       indexQuestion: null,
-      baseUrl: "https://fhir.molit.eu/r4/",
+      baseUrl: "https://fhir.molit.eu/fhir/",
       questionnaire: null,
       questionnaires: [
         {
@@ -167,10 +167,11 @@ export default {
               enableBehavior: "All",
               item: [
                 {
-                  linkId: "2.1",
-                  prefix: "2.1",
-                  type: "decimal",
-                  text: "Zahl eingeben"
+                  linkId: "5.2.19",
+                  prefix: "5.2.19.",
+                  text: "Single-Choice Frage 1",
+                  type: "choice",
+                  answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_QLQC30_answers4"
                 },
                 {
                   linkId: "3",
@@ -179,9 +180,9 @@ export default {
                   text: "Ist das true wenn bei Frage 1 Behandlung 2 und Behandlung 3 ausgewählt wurde?",
                   enableWhen: [
                     {
-                      question: "1",
+                      question: "2.1",
                       operator: "=",
-                      answerString: "Behandlung 3"
+                      answerDateTime: "22:22"
                     }
                   ],
                   enableBehavior: "Any",
