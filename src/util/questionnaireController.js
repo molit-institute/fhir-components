@@ -111,7 +111,7 @@ async function getValueSetOptions(reference, valueSets) {
  *
  * @returns itemList
  */
-function handleEnableWhen(currentQuestionnaireResponse, itemList) {
+export function handleEnableWhen(currentQuestionnaireResponse, itemList) {
   let newItemList = [];
   let answersList = questionnaireResponseController.createItemList(currentQuestionnaireResponse);
   addItemToList(answersList, itemList, newItemList);
