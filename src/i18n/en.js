@@ -1,6 +1,8 @@
 const en = {
   mandatory_question: "This is a mandatory question",
   summary: "Summary",
+  backtoSummary: "Back to summary",
+  questionDeactivated: "The selected question is deactivated or was not found",
   question: "Question",
   of: "of",
   questionGroup: "Question group",

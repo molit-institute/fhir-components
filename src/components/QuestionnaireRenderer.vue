@@ -1,6 +1,7 @@
 <template>
   <div>
     <component
+      v-if="!modal"
       :filteredItemList="filteredItemList"
       :questionnaire="currentQuestionnaire"
       :questionnaireResponse="currentQuestionnaireResponse"
@@ -22,10 +23,40 @@
       @return="leaveQuestionnaireRenderer()"
       @answer="handleQuestionnaireResponseEvent($event)"
     ></component>
+    <div v-if="modal" class="align-vertical" style="height: calc(100vh - 200px);">
+      <div class="note-modal">
+        <div>
+          <div>{{ language.questionDeactivated }}</div>
+          <div class="button-container">
+            <button class="btn btn-primary" v-on:click="backToSummary()">{{ language.backtoSummary }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
+<style lang="scss" scoped>
+.align-vertical {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+.note-modal {
+  border: white solid 2px;
+  background: white;
+  border-radius: 0.25rem;
+  max-width: 600px;
+  padding: 22px;
+}
+</style>
 <script>
+import questionnaireController from "./../util/questionnaireController";
 import FullQuestionnaire from "./questionnaire/FullQuestionnaire";
 import GroupedQuestionnaire from "./questionnaire/GroupsQuestionnaire";
 import StepperQuestionnaire from "./questionnaire/StepperQuestionnaire";
@@ -165,7 +196,8 @@ export default {
       spinner: {
         loading: true,
         message: ""
-      }
+      },
+      modal: false
     };
   },
 
@@ -203,7 +235,9 @@ export default {
     },
     currentQuestionnaireResponse: {
       deep: true,
-      handler: function() {
+      handler: async function() {
+        await this.filterItemList();
+        this.handleAnsweredQuestionsList();
         this.$emit("updated", this.currentQuestionnaireResponse);
       }
     }
@@ -226,6 +260,7 @@ export default {
      *
      */
     backToSummary() {
+      this.modal = false;
       this.$emit("finished", this.currentQuestionnaireResponse);
     },
 
@@ -446,8 +481,7 @@ export default {
               questionItem = this.filteredItemList[i];
             }
           }
-          if (questionItem.groupId) {
-            //get groupId
+          if (questionItem && questionItem.groupId) {
             let groupQuestion = this.getParentGroupQuestion(questionItem.groupId);
             this.handleCurrentStartCount(groupQuestion);
           } else {
@@ -456,9 +490,6 @@ export default {
         } else {
           this.handleCurrentStartCount(question);
         }
-      } else {
-        console.warn("QuestionnaireRenderer|handleStartQuestion: FilteredItemList or startQuestion was null or undefined");
-        //TODO
       }
     },
 
@@ -466,7 +497,6 @@ export default {
      * finds the index of the given question in the filtered ItemList and sets the startCount
      */
     handleCurrentStartCount(question) {
-      //use different list if mode is GroupedQuestionnaire
       if (this.mode === "GroupedQuestionnaire") {
         this.currentStartCount = this.questionnaire.item.findIndex(object => object.linkId === question.linkId);
       } else {
@@ -474,6 +504,7 @@ export default {
       }
 
       if (this.currentStartCount < 0) {
+        this.modal = true;
         this.currentStartCount = 0;
       }
     },
@@ -504,7 +535,8 @@ export default {
     async filterItemList() {
       let newList = [];
       if (this.currentQuestionnaireResponse && this.questionnaire) {
-        newList = await questionnaireResponseController.createItemList(this.currentQuestionnaire);
+        // newList = await questionnaireResponseController.createItemList(this.currentQuestionnaire);
+        newList = await questionnaireController.handleEnableWhen(this.currentQuestionnaireResponse, this.currentQuestionnaire.item);
       }
       this.filteredItemList = newList;
     },

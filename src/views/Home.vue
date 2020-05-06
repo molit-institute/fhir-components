@@ -32,12 +32,12 @@
         :startQuestion="indexQuestion"
       ></questionnaire-renderer>
       <div class="row" v-if="show_summary">
-        <div class="col-sm-4" style="background-color:lightgrey;cursor:pointer;">
+        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer;">
           <div v-if="show_summary" v-on:click="backToRenderer()">
             <pre>{{ this.questionnaireResponse }}</pre>
           </div>
         </div>
-        <div class="col-sm-4" style="background-color:lightgrey;cursor:pointer;">
+        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer;">
           <div v-if="show_summary" v-on:click="backToRenderer()">
             <pre>{{ this.questionnaire }}</pre>
           </div>
@@ -47,7 +47,7 @@
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
               <div>
-                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor:pointer;" v-on:click="editQuestion(item)">
+                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor: pointer;" v-on:click="editQuestion(item)">
             {{ getItemList(questionnaireResponse)[index].answer }}
             </pre
                 >
@@ -121,9 +121,84 @@ export default {
       lastQuestion: false,
       edit: false,
       indexQuestion: null,
-      baseUrl: "https://fhir.molit.eu/r4/",
+      baseUrl: "https://fhir.molit.eu/fhir/",
       questionnaire: null,
       questionnaires: [
+        {
+          resourceType: "Questionnaire",
+          title: "EnableWhen-Test",
+          id: "3",
+          item: [
+            {
+              linkId: "1",
+              prefix: "1.",
+              text: "Bitte wählen Sie eine oder mehrere Untersuchungen aus",
+              type: "choice",
+              repeats: true,
+              answerOption: [
+                {
+                  valueString: "Behandlung 1"
+                },
+                {
+                  valueString: "Behandlung 2"
+                },
+                {
+                  valueString: "Behandlung 3"
+                }
+              ]
+            },
+            {
+              linkId: "2",
+              prefix: "2.",
+              type: "group",
+              text: "Ist das true wenn bei Frage 1 Behandlung 2 und Behandlung 3 ausgewählt wurde?",
+              enableWhen: [
+                {
+                  question: "1",
+                  operator: "=",
+                  answerString: "Behandlung 1"
+                },
+                {
+                  question: "1",
+                  operator: "=",
+                  answerString: "Behandlung 2"
+                }
+              ],
+              enableBehavior: "All",
+              item: [
+                {
+                  linkId: "5.2.19",
+                  prefix: "5.2.19.",
+                  text: "Single-Choice Frage 1",
+                  type: "choice",
+                  answerValueSet: "http://molit.eu/fhir/ValueSet/SLK_QLQC30_answers4"
+                },
+                {
+                  linkId: "3",
+                  prefix: "3.",
+                  type: "group",
+                  text: "Ist das true wenn bei Frage 1 Behandlung 2 und Behandlung 3 ausgewählt wurde?",
+                  enableWhen: [
+                    {
+                      question: "2.1",
+                      operator: "=",
+                      answerDateTime: "22:22"
+                    }
+                  ],
+                  enableBehavior: "Any",
+                  item: [
+                    {
+                      linkId: "3.1",
+                      prefix: "3.1",
+                      type: "boolean",
+                      text: "Boolean"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         {
           resourceType: "Questionnaire",
           id: "2",
@@ -183,6 +258,13 @@ export default {
               prefix: "1.1",
               text: "Persönliche Angaben",
               type: "group",
+              enableWhen: [
+                {
+                  question: "1",
+                  operator: "=",
+                  answerBoolean: "22"
+                }
+              ],
               item: [
                 {
                   linkId: "2.1",
@@ -216,7 +298,14 @@ export default {
                       prefix: "2.3.2",
                       text: "Wieviele Haare?",
                       type: "integer",
-                      required: true
+                      required: true,
+                      enableWhen: [
+                        {
+                          question: "2.3.1",
+                          operator: "=",
+                          answerBoolean: true
+                        }
+                      ]
                     }
                   ]
                 }
