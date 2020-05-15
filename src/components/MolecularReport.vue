@@ -7,43 +7,43 @@
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showGene" />
-        <label class="form-check-label">Gen</label>
+        <label class="form-check-label">Gene Symbol</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'CNV'">
         <input class="form-check-input" type="checkbox" v-model="showLocation" />
-        <label class="form-check-label">Lokation</label>
+        <label class="form-check-label">Location</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'CNV'">
         <input class="form-check-input" type="checkbox" v-model="showRegion" />
-        <label class="form-check-label">Chromosomale Region</label>
+        <label class="form-check-label">Region</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'CNV'">
         <input class="form-check-input" type="checkbox" v-model="showEffect" />
-        <label class="form-check-label">Effekt</label>
+        <label class="form-check-label">Effect</label>
       </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" v-model="showReference" />
-        <label class="form-check-label">Referenz</label>
+        <label class="form-check-label">Reference</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showType" />
-        <label class="form-check-label">Typ</label>
+        <label class="form-check-label">DNA Change Type</label>
       </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" v-model="showSource" />
-        <label class="form-check-label">Source</label>
+        <label class="form-check-label">Genomic Source Class</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showFunctionalClass" />
-        <label class="form-check-label">Funkt. Klasse</label>
+        <label class="form-check-label">Functional Class</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showVariant" />
-        <label class="form-check-label">Variante</label>
+        <label class="form-check-label">DNA Change (c.HGVS)</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showTranscript" />
-        <label class="form-check-label">Transkript</label>
+        <label class="form-check-label">Transcript</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showNaf" />
@@ -55,11 +55,11 @@
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'CNV'">
         <input class="form-check-input" type="checkbox" v-model="showCnvSize" />
-        <label class="form-check-label">Variante</label>
+        <label class="form-check-label">Variant</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'CNV'">
         <input class="form-check-input" type="checkbox" v-model="showCopyNumber" />
-        <label class="form-check-label">Kopienzahl</label>
+        <label class="form-check-label">Copy Number</label>
       </div>
       <div class="form-check form-check-inline" v-if="variantType === 'SNV'">
         <input class="form-check-input" type="checkbox" v-model="showLinks" />
@@ -70,20 +70,20 @@
       <thead>
         <tr>
           <th v-if="showId">Id</th>
-          <th v-if="showGene && variantType === 'SNV'">Gen</th>
-          <th v-if="showLocation && variantType === 'CNV'">Lokation</th>
-          <th v-if="showRegion && variantType === 'CNV'">Chromosomale Region</th>
-          <th v-if="showEffect && variantType === 'CNV'">Effekt</th>
-          <th v-if="showReference">Referenz</th>
-          <th v-if="showType && variantType === 'SNV'">Typ</th>
-          <th v-if="showSource">Source</th>
-          <th v-if="showFunctionalClass && variantType === 'SNV'">Funkt. Klasse</th>
-          <th v-if="showVariant && variantType === 'SNV'">Variante</th>
-          <th v-if="showTranscript && variantType === 'SNV'">Transkript</th>
+          <th v-if="showGene && variantType === 'SNV'">Gene Symbol</th>
+          <th v-if="showLocation && variantType === 'CNV'">Location</th>
+          <th v-if="showRegion && variantType === 'CNV'">Region</th>
+          <th v-if="showEffect && variantType === 'CNV'">Effect</th>
+          <th v-if="showReference">Reference</th>
+          <th v-if="showType && variantType === 'SNV'">DNA Change Type</th>
+          <th v-if="showSource">Genomic Source Class</th>
+          <th v-if="showFunctionalClass && variantType === 'SNV'">Functional Class</th>
+          <th v-if="showVariant && variantType === 'SNV'">DNA Change (c.HGVS)</th>
+          <th v-if="showTranscript && variantType === 'SNV'">Transcript</th>
           <th v-if="showNaf && variantType === 'SNV'">NAF</th>
           <th v-if="showReadDepth && variantType === 'SNV'">Read Depth</th>
-          <th v-if="showCnvSize && variantType === 'CNV'">Variante</th>
-          <th v-if="showCopyNumber && variantType === 'CNV'">Kopienzahl</th>
+          <th v-if="showCnvSize && variantType === 'CNV'">Variant</th>
+          <th v-if="showCopyNumber && variantType === 'CNV'">Copy Number</th>
           <th v-if="showLinks && variantType === 'SNV'">Links</th>
         </tr>
       </thead>
