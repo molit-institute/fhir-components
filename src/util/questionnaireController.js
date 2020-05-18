@@ -133,7 +133,7 @@ function addItemToList(answersList, itemList, newItemList) {
         let item = answersList.find(function(element) {
           return element.linkId === itemList[i].enableWhen[x].question;
         });
-        if (item.answer && item.answer.length !== 0) {
+        if (item && item.answer && item.answer.length !== 0) {
           if (handleEnableWhenLogic(item, itemList[i].enableWhen[x])) {
             results.push(true);
           }

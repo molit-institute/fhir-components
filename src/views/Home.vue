@@ -44,6 +44,7 @@
         </div>
         <div class="col-sm-4">
           <div>
+            <!-- TODO FIX INDEX zu ID -->
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
               <div>
@@ -164,7 +165,7 @@ export default {
                   answerString: "Behandlung 2"
                 }
               ],
-              enableBehavior: "All",
+              enableBehavior: "Any",
               item: [
                 {
                   linkId: "5.2.19",
@@ -180,9 +181,9 @@ export default {
                   text: "Ist das true wenn bei Frage 1 Behandlung 2 und Behandlung 3 ausgewählt wurde?",
                   enableWhen: [
                     {
-                      question: "2.1",
+                      question: "1",
                       operator: "=",
-                      answerDateTime: "22:22"
+                      answerDateTime: "Behandlung 3"
                     }
                   ],
                   enableBehavior: "Any",

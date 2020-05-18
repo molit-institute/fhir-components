@@ -28,7 +28,10 @@
         <div>
           <div>{{ language.questionDeactivated }}</div>
           <div class="button-container">
-            <button class="btn btn-primary" v-on:click="backToSummary()">{{ language.backtoSummary }}</button>
+            <button
+              class="btn btn-primary"
+              v-on:click="backToSummary()"
+            >{{ language.backtoSummary }}</button>
           </div>
         </div>
       </div>
@@ -64,6 +67,7 @@ import * as fhirApi from "@molit/fhir-api";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
 import valueSetController from "./../util/valueSetController";
 import Spinner from "vue-simple-spinner";
+import { cloneDeep } from "lodash";
 import de from "./../i18n/de";
 import en from "./../i18n/en";
 
@@ -82,6 +86,13 @@ export default {
     questionnaireResponse: {
       type: Object,
       default: null
+    },
+    /**
+     * If true the Renderer will return a QuestionnaireResponse with all items, even if some items have been deactivated by enableWhen
+     */
+    enableFullQuestionnaireResponse: {
+      type: Boolean,
+      default: false
     },
     /**
      * FHIR-Resource Questionnaire
@@ -238,7 +249,12 @@ export default {
       handler: async function() {
         await this.filterItemList();
         this.handleAnsweredQuestionsList();
-        this.$emit("updated", this.currentQuestionnaireResponse);
+        if (this.enableFullQuestionnaireResponse) {
+          this.$emit("updated", this.currentQuestionnaireResponse);
+        } else {
+          //TODO Gefilterte Response emitten
+          this.$emit("updated", this.filterQuestionnaireResponse());
+        }
       }
     }
   },
@@ -261,11 +277,38 @@ export default {
      */
     backToSummary() {
       this.modal = false;
-      this.$emit("finished", this.currentQuestionnaireResponse);
+      if (this.enableFullQuestionnaireResponse) {
+        this.$emit("finished", this.currentQuestionnaireResponse);
+      } else {
+        //TODO
+        this.$emit("finished", this.filterQuestionnaireResponse());
+      }
+    },
+
+    filterQuestionnaireResponse() {
+      let filteredQuestionnaireResponse = cloneDeep(this.currentQuestionnaireResponse);
+      this. filterQuestionnaireResponseItems(this.filteredItemList, filteredQuestionnaireResponse.item);
+      console.log(filteredQuestionnaireResponse);
+      // return filteredQuestionnaireResponse;
+    },
+
+    //TODO fix group in group still there
+    filterQuestionnaireResponseItems(filteredList, itemList) {
+      let clonedItemList = cloneDeep(itemList);
+      clonedItemList.forEach((element, index) => {
+        let result = filteredList.find(item => item.linkId === element.linkId);
+        if (result === undefined) {
+          itemList.splice(index, 1);
+        } else {
+          if (element.type === "group") {
+             filterQuestionnaireResponseItems(filteredList, element.item);
+          }
+        }
+      });
     },
 
     /**
-     * Takes the given object, adds new answers to the curren QuestionnaireRespons and saves the question as the last answered Question
+     * Takes the given object, adds new answers to the current QuestionnaireResponse and saves the question as the last answered Question
      */
     async handleQuestionnaireResponseEvent(object) {
       this.lastAnsweredQuestion = object.question;
