@@ -40,7 +40,6 @@
 <script>
 import BaseResource from "./BaseResource";
 import DtArray from "../data-types/helper/DtArray";
-import DtAttachment from "../data-types/complex/DtAttachment";
 import DtBoolean from "../data-types/primitive/DtBoolean";
 import DtCode from "../data-types/primitive/DtCode";
 import DtDate from "../data-types/primitive/DtDate";
@@ -81,7 +80,6 @@ export default {
 
   components: {
     DtArray,
-    DtAttachment,
     DtBoolean,
     DtCode,
     DtDate

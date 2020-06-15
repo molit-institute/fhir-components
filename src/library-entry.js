@@ -24,6 +24,8 @@ import DtStringArray from "./components/data-types/primitive/DtStringArray";
 import DtUri from "./components/data-types/primitive/DtUri";
 import ResourceSelector from "./components/ResourceSelector";
 import MolecularReport from "./components/MolecularReport";
+import GeneticReport from "./components/GeneticReport";
+import GeneticVariantTable from "./components/GeneticVariantTable";
 
 export {
   PaginatedList,
@@ -51,5 +53,7 @@ export {
   DtStringArray,
   DtUri,
   ResourceSelector,
-  MolecularReport
+  MolecularReport,
+  GeneticReport,
+  GeneticVariantTable
 };

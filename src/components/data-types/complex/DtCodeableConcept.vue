@@ -18,7 +18,6 @@ export default {
   extends: BaseDataType,
 
   components: {
-    BaseDataType,
     DtCoding,
     DtString
   }

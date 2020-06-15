@@ -30,7 +30,6 @@
 
 <script>
 import DtBase from "./DtBase";
-import DtString from "./DtString";
 import singleChoiceType from "./../../../util/enums/single-choice-type.js";
 
 export default {
@@ -54,10 +53,6 @@ export default {
     singleChoiceType() {
       return singleChoiceType;
     }
-  },
-
-  components: {
-    DtString
   }
 };
 </script>
