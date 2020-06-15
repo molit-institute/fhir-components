@@ -59,6 +59,10 @@
         </div>
       </div>
     </div>
+    <p></p>
+    <div class="container">
+      <genetic-report fhirBaseUrl="https://fhir.molit.eu/fhir" id="413" />
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -92,15 +96,11 @@
 </style>
 <script>
 import QuestionnaireRenderer from "@/components/QuestionnaireRenderer";
-import PatientList from "@/components/PatientList";
-import Patient from "@/components/resources/Patient-de-basis";
 import examplePatient from "@/assets/fhir/resources/patient-example.json";
 import exampleReport from "@/assets/fhir/resources/genomics-observation-example.json";
 import exampleReport2 from "@/assets/fhir/resources/genomics-observation-example-2.json";
-import MolecularReport from "@/components/MolecularReport";
-import QuestionnaireList from "@/components/QuestionnaireList";
-import QuestionnaireResponseList from "@/components/QuestionnaireResponseList";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
+import GeneticReport from "@/components/GeneticReport";
 
 export default {
   computed: {
@@ -332,11 +332,7 @@ export default {
 
   components: {
     QuestionnaireRenderer,
-    PatientList,
-    Patient,
-    MolecularReport,
-    QuestionnaireList,
-    QuestionnaireResponseList
+    GeneticReport
   },
 
   methods: {

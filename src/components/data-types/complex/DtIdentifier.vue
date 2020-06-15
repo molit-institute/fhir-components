@@ -50,7 +50,6 @@ export default {
   },
 
   components: {
-    BaseDataType,
     DtCode,
     DtCodeableConcept,
     DtPeriod,

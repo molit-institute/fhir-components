@@ -257,7 +257,10 @@ export default {
     /**
      *
      */
-    lastQuestion: false,
+    lastQuestion: {
+      type: Boolean,
+      default: false
+    },
     /**
      * Primary color
      */

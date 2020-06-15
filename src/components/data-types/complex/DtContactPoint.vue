@@ -33,7 +33,6 @@ export default {
   },
 
   components: {
-    BaseDataType,
     DtCode,
     DtPeriod,
     DtString

@@ -23,7 +23,6 @@ export default {
   extends: BaseDataType,
 
   components: {
-    BaseDataType,
     DtBoolean,
     DtCode,
     DtString,

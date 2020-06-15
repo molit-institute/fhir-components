@@ -14,9 +14,6 @@
 
 <script>
 import BaseDataType from "./BaseDataType";
-import DtBase64Binary from "./../primitive/DtBase64Binary";
-import DtCoding from "./DtCoding";
-import DtString from "./../primitive/DtString";
 import DtUri from "./../primitive/DtUri";
 
 export default {
@@ -56,10 +53,6 @@ export default {
   },
 
   components: {
-    BaseDataType,
-    DtBase64Binary,
-    DtCoding,
-    DtString,
     DtUri
   }
 };

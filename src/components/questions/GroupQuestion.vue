@@ -165,7 +165,10 @@ export default {
       default: false
     },
     startCount: Number,
-    lastQuestion: false,
+    lastQuestion: {
+      type: Boolean,
+      default: false
+    },
     /**
      * Primary color
      */
