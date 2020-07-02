@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     validate() {
-      return this.selected || this.selected === [];
+      return this.dateTime || this.dateTime === [];
     }
   },
   methods: {

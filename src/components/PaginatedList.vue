@@ -374,6 +374,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-item{
+  z-index: 2;
+}
 .pagination {
   justify-content: center;
   margin-top: 1rem;

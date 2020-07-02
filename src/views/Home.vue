@@ -6,14 +6,30 @@
       <!-- QUESTIONNAIRE RENDERER -->
       <div v-if="show_renderer" style="display: flex;"></div>
 
-      <span class="flex"
-        ><div class="item" v-on:click="setQuestionnaireMode('StepperQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'StepperQuestionnaire' }]">Stepper</div>
-        <div class="item" v-on:click="setQuestionnaireMode('GroupedQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'GroupedQuestionnaire' }]">Grouped</div>
-        <div class="item" v-on:click="setQuestionnaireMode('FullQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'FullQuestionnaire' }]">Full</div></span
-      >
+      <span class="flex">
+        <div
+          class="item"
+          v-on:click="setQuestionnaireMode('StepperQuestionnaire')"
+          :class="[{ 'item-selected': questionnaireMode === 'StepperQuestionnaire' }]"
+        >Stepper</div>
+        <div
+          class="item"
+          v-on:click="setQuestionnaireMode('GroupedQuestionnaire')"
+          :class="[{ 'item-selected': questionnaireMode === 'GroupedQuestionnaire' }]"
+        >Grouped</div>
+        <div
+          class="item"
+          v-on:click="setQuestionnaireMode('FullQuestionnaire')"
+          :class="[{ 'item-selected': questionnaireMode === 'FullQuestionnaire' }]"
+        >Full</div>
+      </span>
 
       <div v-if="show_questionnaire_list">
-        <div v-for="questionnaire in questionnaires" :key="questionnaire.id" v-on:click="openSelectedQuestionnaire(questionnaire)">
+        <div
+          v-for="questionnaire in questionnaires"
+          :key="questionnaire.id"
+          v-on:click="openSelectedQuestionnaire(questionnaire)"
+        >
           <div>{{ questionnaire.title }}</div>
         </div>
       </div>
@@ -47,10 +63,13 @@
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
               <div>
-                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor: pointer;" v-on:click="editQuestion(item)">
-            {{ getItemList(questionnaireResponse)[index].answer }}
-            </pre
+                <pre
+                  v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'"
+                  style="cursor: pointer;"
+                  v-on:click="editQuestion(item)"
                 >
+            {{ getItemList(questionnaireResponse)[index].answer }}
+            </pre>
               </div>
               <hr />
             </div>
@@ -124,6 +143,47 @@ export default {
       baseUrl: "https://fhir.molit.eu/fhir/",
       questionnaire: null,
       questionnaires: [
+        {
+          resourceType: "Questionnaire",
+          title: "Boolean-Test",
+          id: "33",
+          item: [
+            {
+              linkId: "1",
+              prefix: "1",
+              type: "integer",
+              text: "integer"
+            },
+            {
+              linkId: "3",
+              prefix: "3.",
+              type: "group",
+              text: "Ist das true wenn bei Frage 1 Behandlung 2 und Behandlung 3 ausgewählt wurde?",
+              enableWhen: [
+                {
+                  question: "1",
+                  operator: "=",
+                  answerString: "22"
+                }
+              ],
+              item:[
+                {
+              linkId: "4",
+              prefix: "4",
+              type: "boolean",
+              text: "Boolean"
+            }
+              ]
+            },
+
+            {
+              linkId: "2",
+              prefix: "2",
+              type: "boolean",
+              text: "Boolean"
+            }
+          ]
+        },
         {
           resourceType: "Questionnaire",
           title: "EnableWhen-Test",
