@@ -7,29 +7,13 @@
       <div v-if="show_renderer" style="display: flex;"></div>
 
       <span class="flex">
-        <div
-          class="item"
-          v-on:click="setQuestionnaireMode('StepperQuestionnaire')"
-          :class="[{ 'item-selected': questionnaireMode === 'StepperQuestionnaire' }]"
-        >Stepper</div>
-        <div
-          class="item"
-          v-on:click="setQuestionnaireMode('GroupedQuestionnaire')"
-          :class="[{ 'item-selected': questionnaireMode === 'GroupedQuestionnaire' }]"
-        >Grouped</div>
-        <div
-          class="item"
-          v-on:click="setQuestionnaireMode('FullQuestionnaire')"
-          :class="[{ 'item-selected': questionnaireMode === 'FullQuestionnaire' }]"
-        >Full</div>
+        <div class="item" v-on:click="setQuestionnaireMode('StepperQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'StepperQuestionnaire' }]">Stepper</div>
+        <div class="item" v-on:click="setQuestionnaireMode('GroupedQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'GroupedQuestionnaire' }]">Grouped</div>
+        <div class="item" v-on:click="setQuestionnaireMode('FullQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'FullQuestionnaire' }]">Full</div>
       </span>
 
       <div v-if="show_questionnaire_list">
-        <div
-          v-for="questionnaire in questionnaires"
-          :key="questionnaire.id"
-          v-on:click="openSelectedQuestionnaire(questionnaire)"
-        >
+        <div v-for="questionnaire in questionnaires" :key="questionnaire.id" v-on:click="openSelectedQuestionnaire(questionnaire)">
           <div>{{ questionnaire.title }}</div>
         </div>
       </div>
@@ -63,13 +47,10 @@
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
               <div>
-                <pre
-                  v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'"
-                  style="cursor: pointer;"
-                  v-on:click="editQuestion(item)"
-                >
+                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor: pointer;" v-on:click="editQuestion(item)">
             {{ getItemList(questionnaireResponse)[index].answer }}
-            </pre>
+            </pre
+                >
               </div>
               <hr />
             </div>
@@ -166,13 +147,13 @@ export default {
                   answerString: "22"
                 }
               ],
-              item:[
+              item: [
                 {
-              linkId: "4",
-              prefix: "4",
-              type: "boolean",
-              text: "Boolean"
-            }
+                  linkId: "4",
+                  prefix: "4",
+                  type: "boolean",
+                  text: "Boolean"
+                }
               ]
             },
 

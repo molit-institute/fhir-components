@@ -374,7 +374,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-item{
+.page-item {
   z-index: 2;
 }
 .pagination {

@@ -31,14 +31,14 @@
     <table class="table table-sm" :style="{ background: tableBackground }">
       <thead>
         <tr :style="{ background: tableHeaderBackground }">
-          <!-- <th></th> -->
+          <th></th>
           <th v-if="showId">Id</th>
           <th v-for="component in visibleComponents" :key="component.system + '/' + component.code">{{ component.display }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="resource in geneticObservations" :key="resource.id">
-          <!-- <td></td> -->
+          <td>&star;</td>
           <td v-if="showId">{{ resource.id }}</td>
           <td v-for="component in visibleComponents" :key="component.system + '/' + component.code">
             <span v-for="value in getComponentValues(resource, component.expression)" :key="value">

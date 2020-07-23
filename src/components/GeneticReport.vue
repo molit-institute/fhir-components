@@ -1,36 +1,60 @@
 <template>
   <div>
     <div v-if="diagnosticReport">
-      <h5>Report</h5>
-      <div>Issued: {{ diagnosticReport.issued }}</div>
-      <div>Status: {{ diagnosticReport.status }}</div>
-      <div>
-        Documents: <a v-for="(document, index) in presentedForms" :href="getDocumentUrl(document.url)" :key="document.url" target="_blank">{{ index + 1 }}</a>
-      </div>
-      <hr />
-      <h5>Meta</h5>
-      <div>Chromosomal Instability: {{ chromosomalInstability }}</div>
-      <div>Germline Pathogenicity: {{ germlinePathogenicity }}</div>
-      <div>Percentage Tumor Tissue: {{ percentTumorTissue }}</div>
-      <div>Quality: {{ qualityFlags }}</div>
-      <div>MSI: {{ msi }}</div>
-      <div>TMB: {{ tmb }}</div>
+      <h4>Report</h4>
+      <table class="table table-sm table-hover meta-table">
+        <tbody>
+          <tr>
+            <th>Issued</th>
+            <td>
+              <span v-if="diagnosticReport.issued">{{ new Date(diagnosticReport.issued).toLocaleString() }}</span>
+            </td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td>{{ diagnosticReport.status }}</td>
+          </tr>
+          <tr>
+            <th>Chromosomal Instability</th>
+            <td>{{ chromosomalInstability }}</td>
+          </tr>
+          <tr>
+            <th>Germline Pathogenicity</th>
+            <td>{{ germlinePathogenicity }}</td>
+          </tr>
+          <tr>
+            <th>Percentage Tumor Tissue</th>
+            <td>{{ percentTumorTissue }}</td>
+          </tr>
+          <tr>
+            <th>Quality</th>
+            <td>{{ qualityFlags }}</td>
+          </tr>
+          <tr>
+            <th>MSI</th>
+            <td>{{ msi }}</td>
+          </tr>
+          <tr>
+            <th>TMB</th>
+            <td>{{ tmb }}</td>
+          </tr>
+          <tr>
+            <th>Documents</th>
+            <td>
+              <a v-for="(document, index) in presentedForms" :href="getDocumentUrl(document.url)" :key="document.url" target="_blank">{{ index + 1 }}</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
       <hr />
       <!-- <div>
         <h4>Relevant Variants</h4>
-        <div v-if="snvs && snvs.length">
-          <genetic-variant-table :geneticObservations="snvs" type="snv" title="SNVs"/>
-          <hr />
-        </div>
-        <div v-if="cnvs && cnvs.length">
-          <genetic-variant-table :geneticObservations="cnvs" type="cnv" title="CNVs" />
-          <hr />
-        </div>
-        <div v-if="svs && svs.length">
-          <genetic-variant-table :geneticObservations="svs" type="sv" title="SVs" />
-          <hr />
-        </div>
-      </div> -->
+        <genetic-variant-table v-if="snvs && snvs.length" :geneticObservations="snvs" type="snv" title="SNVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
+        <genetic-variant-table v-if="cnvs && cnvs.length" :geneticObservations="cnvs" type="cnv" title="CNVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
+        <genetic-variant-table v-if="svs && svs.length" :geneticObservations="svs" type="sv" title="SVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
+      </div>
+      <hr /> -->
       <div>
         <h4>All Variants</h4>
         <genetic-variant-table v-if="snvs && snvs.length" :geneticObservations="snvs" type="snv" title="SNVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
@@ -219,4 +243,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.meta-table {
+  table-layout: fixed;
+}
+</style>
