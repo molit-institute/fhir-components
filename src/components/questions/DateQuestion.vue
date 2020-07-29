@@ -50,7 +50,11 @@ export default {
       /**
        * Allows events to be emitted if true
        */
-      allow_events: false
+      allow_events: false,
+      /**
+       * Official FHIR-Date Regex
+       */
+      dateRegex: "^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?$"
     };
   },
 
@@ -89,7 +93,8 @@ export default {
 
   computed: {
     validate() {
-      return this.selected || this.selected === [];
+      let regex = new RegExp(this.dateRegex);
+      return (this.selected || this.selected === []) && regex.test(this.selected);
     }
   },
 

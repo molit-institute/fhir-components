@@ -250,7 +250,7 @@ export default {
               prefix: "1",
               text: "Datetime",
               required: true,
-              type: "string"
+              type: "date"
             },
             {
               linkId: "2",
