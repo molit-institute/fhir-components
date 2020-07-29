@@ -126,6 +126,9 @@ export default {
     selected() {
       if (this.allow_events) {
         let object = null;
+        if (this.selected === " ") {
+          this.selected = null;
+        }
         if (this.selected) {
           object = {
             type: "text",
