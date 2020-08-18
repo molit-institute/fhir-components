@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="genetic-header">
-      <h5>{{ title }}</h5>
+      <h6>{{ title }}</h6>
       <div class="column-hide-options" v-if="showColumnHideOptions">
         <button type="button" class="btn btn-link" @click="toggleDropdown">Column selection &#9662;</button>
       </div>
