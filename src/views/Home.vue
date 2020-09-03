@@ -132,8 +132,16 @@ export default {
             {
               linkId: "1",
               prefix: "1",
-              type: "integer",
-              text: "integer"
+              type: "date",
+              text: "date",
+              required: true
+            },
+            {
+              linkId: "22",
+              prefix: "22",
+              type: "dateTime",
+              text: "dateTime",
+              required: true
             },
             {
               linkId: "3",

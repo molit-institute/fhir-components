@@ -6,7 +6,6 @@
         {{ language.mandatory_question }}
       </div>
     </div>
-
     <hr />
     <div class="card option-card">
       <div class="container-fluid">
@@ -61,7 +60,11 @@ export default {
       /**
        * Allows events to be emitted if true
        */
-      allow_events: false
+      allow_events: false,
+      /**
+       * Official FHIR-Date Regex
+       */
+      dateRegex: "^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1]))?)?$"
     };
   },
 
@@ -112,7 +115,7 @@ export default {
     dateTime() {
       if (this.allow_events) {
         let object = null;
-        if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "") {
+        if (this.dateTime && this.dateTime !== "" && this.time !== "" && this.date !== "" && this.validate) {
           object = {
             type: "dateTime",
             question: this.question,
@@ -134,7 +137,8 @@ export default {
   },
   computed: {
     validate() {
-      return this.dateTime || this.dateTime === [];
+      let regex = new RegExp(this.dateRegex);
+      return (this.dateTime || this.dateTime === []) && regex.test(this.date);
     }
   },
   methods: {

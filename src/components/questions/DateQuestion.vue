@@ -6,7 +6,6 @@
         {{ language.mandatory_question }}
       </div>
     </div>
-
     <hr />
     <div class="option-card">
       <label v-if="language" class="" for="date">{{ language.date.text }}:</label>
@@ -112,7 +111,7 @@ export default {
     },
     selected() {
       let object = null;
-      if (this.selected) {
+      if (this.validate) {
         object = {
           type: "date",
           question: this.question,
