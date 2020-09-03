@@ -1,53 +1,93 @@
 <template>
   <div>
     <div v-if="diagnosticReport">
-      <h4>Report</h4>
-      <table class="table table-sm table-hover meta-table">
-        <tbody>
-          <tr>
-            <th>Issued</th>
-            <td>
-              <span v-if="diagnosticReport.issued">{{ new Date(diagnosticReport.issued).toLocaleString() }}</span>
-            </td>
-          </tr>
-          <tr>
-            <th>Status</th>
-            <td>{{ diagnosticReport.status }}</td>
-          </tr>
-          <tr>
-            <th>Chromosomal Instability</th>
-            <td>{{ chromosomalInstability }}</td>
-          </tr>
-          <tr>
-            <th>Germline Pathogenicity</th>
-            <td>{{ germlinePathogenicity }}</td>
-          </tr>
-          <tr>
-            <th>Percentage Tumor Tissue</th>
-            <td>{{ percentTumorTissue }}</td>
-          </tr>
-          <tr>
-            <th>Quality</th>
-            <td>{{ qualityFlags }}</td>
-          </tr>
-          <tr>
-            <th>MSI</th>
-            <td>{{ msi }}</td>
-          </tr>
-          <tr>
-            <th>TMB</th>
-            <td>{{ tmb }}</td>
-          </tr>
-          <tr>
-            <th>Documents</th>
-            <td>
+      <h4>Genetic Report</h4>
+      <div>
+        <div v-if="!metaAsTable">
+          <h5>Meta</h5>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">Issued</label>
+            <label class="col-md-9 col-form-label" v-if="diagnosticReport.issued">{{ new Date(diagnosticReport.issued).toLocaleString() }}</label>
+          </div>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">Status</label>
+            <label class="col-md-9 col-form-label">{{ diagnosticReport.status }}</label>
+          </div>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">Documents</label>
+            <label class="col-md-9 col-form-label">
               <a v-for="(document, index) in presentedForms" :href="getDocumentUrl(document.url)" :key="document.url" target="_blank">{{ index + 1 }}</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </label>
+          </div>
 
-      <hr />
+          <h5>Other Observations</h5>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">Chromosomal Instability</label>
+            <label class="col-md-9 col-form-label">{{ chromosomalInstability }}</label>
+          </div>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">Germline Pathogenicity</label>
+            <label class="col-md-9 col-form-label">{{ germlinePathogenicity }}</label>
+          </div>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">Percentage Tumor Tissue</label>
+            <label class="col-md-9 col-form-label">{{ percentTumorTissue }}</label>
+          </div>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">Quality</label>
+            <label class="col-md-9 col-form-label">{{ qualityFlags }}</label>
+          </div>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">MSI</label>
+            <label class="col-md-9 col-form-label">{{ msi }}</label>
+          </div>
+        </div>
+        <table class="table table-sm table-hover meta-table" v-else>
+          <tbody>
+            <tr>
+              <th>Issued</th>
+              <td>
+                <span v-if="diagnosticReport.issued">{{ new Date(diagnosticReport.issued).toLocaleString() }}</span>
+              </td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td>{{ diagnosticReport.status }}</td>
+            </tr>
+            <tr>
+              <th>Documents</th>
+              <td>
+                <a v-for="(document, index) in presentedForms" :href="getDocumentUrl(document.url)" :key="document.url" target="_blank">{{ index + 1 }}</a>
+              </td>
+            </tr>
+            <tr>
+              <th>Chromosomal Instability</th>
+              <td>{{ chromosomalInstability }}</td>
+            </tr>
+            <tr>
+              <th>Germline Pathogenicity</th>
+              <td>{{ germlinePathogenicity }}</td>
+            </tr>
+            <tr>
+              <th>Percentage Tumor Tissue</th>
+              <td>{{ percentTumorTissue }}</td>
+            </tr>
+            <tr>
+              <th>Quality</th>
+              <td>{{ qualityFlags }}</td>
+            </tr>
+            <tr>
+              <th>MSI</th>
+              <td>{{ msi }}</td>
+            </tr>
+            <tr>
+              <th>TMB</th>
+              <td>{{ tmb }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <!-- <div>
         <h4>Relevant Variants</h4>
         <genetic-variant-table v-if="snvs && snvs.length" :geneticObservations="snvs" type="snv" title="SNVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
@@ -56,7 +96,7 @@
       </div>
       <hr /> -->
       <div>
-        <h4>All Variants</h4>
+        <h5>All Variants</h5>
         <genetic-variant-table v-if="snvs && snvs.length" :geneticObservations="snvs" type="snv" title="SNVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
         <genetic-variant-table v-if="cnvs && cnvs.length" :geneticObservations="cnvs" type="cnv" title="CNVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
         <genetic-variant-table v-if="svs && svs.length" :geneticObservations="svs" type="sv" title="SVs" :tableBackground="tableBackground" :tableHeaderBackground="tableHeaderBackground" />
@@ -126,6 +166,10 @@ export default {
       default: "#ecf0f1"
     },
     enableRelevantVariants: {
+      type: Boolean,
+      default: false
+    },
+    metaAsTable: {
       type: Boolean,
       default: false
     }
@@ -246,5 +290,31 @@ export default {
 <style lang="scss" scoped>
 .meta-table {
   table-layout: fixed;
+}
+
+.form-row {
+  margin-bottom: 0.2rem;
+
+  label:first-child {
+    padding-right: 1rem;
+  }
+
+  label:nth-child(2) {
+    font-weight: 500;
+  }
+
+  &:hover {
+    background: #f6f8f9;
+  }
+
+  .col-form-label {
+    padding: 0.2rem 5px;
+  }
+}
+
+@media (min-width: 768px) {
+  .form-row label:first-child {
+    text-align: end;
+  }
 }
 </style>
