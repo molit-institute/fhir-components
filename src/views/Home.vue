@@ -59,9 +59,9 @@
       </div>
     </div>
     <p></p>
-    <div class="container">
+    <!-- <div class="container">
       <genetic-report fhirBaseUrl="https://fhir.molit.eu/fhir" id="413" />
-    </div>
+    </div> -->
   </div>
 </template>
 <style lang="scss" scoped>
@@ -99,7 +99,7 @@ import examplePatient from "@/assets/fhir/resources/patient-example.json";
 import exampleReport from "@/assets/fhir/resources/genomics-observation-example.json";
 import exampleReport2 from "@/assets/fhir/resources/genomics-observation-example-2.json";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
-import GeneticReport from "@/components/GeneticReport";
+// import GeneticReport from "@/components/GeneticReport";
 
 export default {
   computed: {
@@ -132,8 +132,16 @@ export default {
             {
               linkId: "1",
               prefix: "1",
-              type: "integer",
-              text: "integer"
+              type: "date",
+              text: "date",
+              required: true
+            },
+            {
+              linkId: "22",
+              prefix: "22",
+              type: "dateTime",
+              text: "dateTime",
+              required: true
             },
             {
               linkId: "3",
@@ -250,21 +258,21 @@ export default {
               prefix: "1",
               text: "Datetime",
               required: true,
-              type: "dateTime"
+              type: "date"
             },
             {
               linkId: "2",
               prefix: "2",
               text: "Datetime",
               required: true,
-              type: "dateTime"
+              type: "text"
             },
             {
               linkId: "3",
               prefix: "3",
               text: "Date",
               required: true,
-              type: "date"
+              type: "integer"
             }
           ]
         },
@@ -372,7 +380,7 @@ export default {
 
   components: {
     QuestionnaireRenderer,
-    GeneticReport
+    // GeneticReport
   },
 
   methods: {

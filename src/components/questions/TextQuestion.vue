@@ -127,6 +127,7 @@ export default {
       if (this.allow_events) {
         let object = null;
         if (this.selected) {
+          this.selected = this.selected.trimLeft();
           object = {
             type: "text",
             question: this.question,
