@@ -127,8 +127,8 @@ export default {
     selected() {
       if (this.allow_events) {
         let object = null;
-        this.selected = this.selected.trimLeft();
         if (this.selected) {
+          this.selected = this.selected.trimLeft();
           object = {
             type: "string",
             question: this.question,
