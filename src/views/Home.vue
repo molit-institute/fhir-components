@@ -256,22 +256,19 @@ export default {
             {
               linkId: "1",
               prefix: "1",
-              text: "Datetime",
-              required: true,
-              type: "date"
+              text: "Integer",
+              type: "integer"
             },
             {
               linkId: "2",
               prefix: "2",
-              text: "Datetime",
-              required: true,
-              type: "text"
+              text: "Integer 2",
+              type: "integer"
             },
             {
               linkId: "3",
               prefix: "3",
-              text: "Date",
-              required: true,
+              text: "Integer 3",
               type: "integer"
             }
           ]

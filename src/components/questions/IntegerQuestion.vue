@@ -167,6 +167,9 @@ export default {
       }
     },
     question() {
+      if (this.selected === "") {
+        document.getElementById("integerInput").value = "";
+      }
       this.setSelected();
     }
   },
