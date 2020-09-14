@@ -7,7 +7,8 @@
 
     <hr />
     <div class="class option-card">
-      <div class="form-row">
+      <vas-question v-if="question.code[0].code === '38214-3'" :selected="selected" v-on:selected-value="handleInputVas"></vas-question>
+      <div v-else class="form-row">
         <div :id="'integer' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="integerInput">{{ language.integer.text }}:</label>
           <input
@@ -57,6 +58,7 @@
  * This Component adds a single Integer-Question and reacts to the users input
  */
 import questionnaireResponseController from "./../../util/questionnaireResponseController";
+import VasQuestion from "./VasQuestion";
 export default {
   data: function() {
     return {
@@ -70,7 +72,9 @@ export default {
       allow_events: false
     };
   },
-
+  components: {
+    VasQuestion
+  },
   props: {
     question: Object,
     mode: String,
@@ -111,6 +115,9 @@ export default {
   },
 
   methods: {
+    handleInputVas(value) {
+      this.selected = value;
+    },
     emitEvent(string) {
       this.$emit(string);
     },

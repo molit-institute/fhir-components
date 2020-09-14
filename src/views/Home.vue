@@ -59,9 +59,10 @@
       </div>
     </div>
     <p></p>
-    <div class="container">
+    <integer-question :question="obj.item[0]"></integer-question>
+    <!-- <div class="container">
       <genetic-report fhirBaseUrl="https://fhir.molit.eu/fhir" id="413" />
-    </div>
+    </div> -->
   </div>
 </template>
 <style lang="scss" scoped>
@@ -99,7 +100,8 @@ import examplePatient from "@/assets/fhir/resources/patient-example.json";
 import exampleReport from "@/assets/fhir/resources/genomics-observation-example.json";
 import exampleReport2 from "@/assets/fhir/resources/genomics-observation-example-2.json";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
-import GeneticReport from "@/components/GeneticReport";
+// import GeneticReport from "@/components/GeneticReport";
+import IntegerQuestion from "@/components/questions/IntegerQuestion";
 
 export default {
   computed: {
@@ -113,6 +115,26 @@ export default {
   },
   data() {
     return {
+      obj: {
+        resourceType: "Questionnaire",
+        title: "Vas-Test",
+        id: "4444",
+        item: [
+          {
+            linkId: "1",
+            prefix: "1.",
+            text: "Click on the scale below to indicate how severe your pain is",
+            type: "integer",
+            code: [
+              {
+                system: "http://loinc.org",
+                code: "38214-3",
+                display: "Pain severity [Score] Visual analog score"
+              }
+            ]
+          }
+        ]
+      },
       questionnaireMode: "StepperQuestionnaire",
       questionnaireResponse: null,
       show_questionnaire_list: true,
@@ -372,7 +394,8 @@ export default {
 
   components: {
     QuestionnaireRenderer,
-    GeneticReport
+    // GeneticReport,
+    IntegerQuestion
   },
 
   methods: {
