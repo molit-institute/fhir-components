@@ -11,7 +11,7 @@
         <div :id="'integer' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="integerInput">{{ language.integer.text }}:</label>
           <input
-            id="integerInput"
+            ref="integerInput"
             type="number"
             step="1"
             onkeypress="return (event.charCode !== 44 && event.charCode !== 46)"
@@ -168,7 +168,7 @@ export default {
     },
     question() {
       if (this.selected === "") {
-        document.getElementById("integerInput").value = "";
+        this.$refs.integerInput.value = "";
       }
       this.setSelected();
     }
