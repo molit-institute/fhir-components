@@ -11,7 +11,7 @@
         <div :id="'integer' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="integerInput">{{ language.integer.text }}:</label>
           <input
-            id="integerInput"
+            ref="integerInput"
             type="number"
             step="1"
             onkeypress="return (event.charCode !== 44 && event.charCode !== 46)"
@@ -167,6 +167,13 @@ export default {
       }
     },
     question() {
+      /**Note: This code prevents the input from showing the invalid value as long as the type of the question
+       * doesnt change. If a invalid Number is entered, selected is "" - the code will then force the input
+       * to have the value "" aswell
+       **/
+      if (this.selected === "") {
+        this.$refs.integerInput.value = "";
+      }
       this.setSelected();
     }
   },
