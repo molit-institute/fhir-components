@@ -167,6 +167,10 @@ export default {
       }
     },
     question() {
+      /**Note: This code prevents the input from showing the invalid value as long as the type of the question
+       * doesnt change. If a invalid Number is entered, selected is "" - the code will then force the input
+       * to have the value "" aswell
+       **/
       if (this.selected === "") {
         this.$refs.integerInput.value = "";
       }
