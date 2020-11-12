@@ -98,7 +98,7 @@ import examplePatient from "@/assets/fhir/resources/patient-example.json";
 import exampleReport from "@/assets/fhir/resources/genomics-observation-example.json";
 import exampleReport2 from "@/assets/fhir/resources/genomics-observation-example-2.json";
 import questionnaireResponseController from "./../util/questionnaireResponseController";
-import enableQuestionnaire from "@/assets/fhir/resources/questionnaire-enable-when.json";
+import enableQuestionnaire from "@/assets/fhir/resources/questionnaire-lang-enable.json";
 // import GeneticReport from "@/components/GeneticReport";
 
 export default {
