@@ -11,8 +11,8 @@
     <div class="card option-card">
       <div class="form-row">
         <div :id="'decimal' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
-          <label class="" for="url-text">{{ language.decimal.text }}:</label>
-          <input step="any" value="selected" type="number" v-model="selected" class="form-control" id="decimal" />
+          <label class="" for="decimalInput">{{ language.decimal.text }}:</label>
+          <input ref="decimalInput" step="any" value="selected" type="number" v-model="selected" class="form-control" id="decimal" />
           <div v-if="language" class="invalid-feedback">
             {{ language.decimal.invalid }}
           </div>
@@ -50,7 +50,7 @@
  */
 import questionnaireResponseController from "./../../util/questionnaireResponseController";
 export default {
-  data: function() {
+  data: function () {
     return {
       /**
        * Variable to store the value of the input
@@ -60,7 +60,7 @@ export default {
        * Allows events to be emitted if true
        */
       allow_events: false,
-      started: false
+      started: false,
     };
   },
 
@@ -69,32 +69,32 @@ export default {
     mode: String,
     questionnaireResponse: {
       type: Object,
-      default: null
+      default: null,
     },
     /**
      * Primary color
      */
     primary: {
-      type: String
+      type: String,
     },
     /**
      * Secondary color
      */
     secondary: {
-      type: String
+      type: String,
     },
     /**
      * Color used to symbolise danger
      */
     danger: {
-      type: String
+      type: String,
     },
     /**
      *  Object containing the translations for the current locale
      */
     language: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   methods: {
     /**
@@ -103,7 +103,7 @@ export default {
     handleKeyPress() {
       let input = document.getElementById("decimal" + this.question.linkId);
       let object = this;
-      input.addEventListener("keyup", function(event) {
+      input.addEventListener("keyup", function (event) {
         event.preventDefault();
         if (event.keyCode === 13) {
           object.$emit("next");
@@ -115,7 +115,7 @@ export default {
      */
     setSelected() {
       this.selected = questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "decimal");
-    }
+    },
   },
   watch: {
     async questionnaireResponse() {
@@ -130,21 +130,28 @@ export default {
           object = {
             type: "decimal",
             question: this.question,
-            value: [this.selected]
+            value: [this.selected],
           };
         } else {
           object = {
             type: "decimal",
             question: this.question,
-            value: []
+            value: [],
           };
         }
         this.$emit("answer", object);
       }
     },
     question() {
+      /**Note: This code prevents the input from showing the invalid value as long as the type of the question
+       * doesnt change. If a invalid Number is entered, selected is "" - the code will then force the input
+       * to have the value "" aswell
+       **/
+      if (this.selected === "") {
+        this.$refs.decimalInput.value = "";
+      }
       this.setSelected();
-    }
+    },
   },
   mounted() {
     this.handleKeyPress();
@@ -153,6 +160,6 @@ export default {
   async created() {
     await this.setSelected();
     this.allow_events = true;
-  }
+  },
 };
 </script>
