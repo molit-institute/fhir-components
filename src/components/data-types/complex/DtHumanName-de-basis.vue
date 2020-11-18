@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="edit">
-      <div class="form-row">
+      <div class="form-row" v-if="viewUse">
         <dt-code label="Use" class="col-md-12" :value.sync="resourceData.use" :valueSet="nameUse" :edit="edit" />
       </div>
       <div class="form-row">
@@ -24,7 +24,7 @@
         {{ getDisplayForArray(resourceData.given) }} {{ resourceData.family }}
         {{ getDisplayForArray(resourceData.suffix) }}
       </div>
-      <div class="text-muted">
+      <div class="text-muted" v-if="viewUse">
         {{ getDisplayForCode(nameUse, resourceData.use) }}
       </div>
     </div>
@@ -53,6 +53,10 @@ export default {
     prefix: {
       type: String,
       default: "Prefix"
+    },
+    viewUse: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
