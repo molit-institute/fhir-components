@@ -33,7 +33,7 @@ jobs:
           ${{ runner.OS }}-
     #tasks to create build
     - run: npm ci
-    - run: npm run build --if-present
+    - run: npm run build:lib
     #testing
     - name: eslint
       run: npm run lint
@@ -64,11 +64,11 @@ jobs:
       - name: Install and Build 🔧 
         run: |
           npm ci
-          npm run build
+          npm run build:lib
 
       - run: npm i -g vuese
       - run: vuese gen
-      
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
