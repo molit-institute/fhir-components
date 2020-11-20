@@ -71,7 +71,7 @@ jobs:
       - name: generate documentation 
         run: |
           npm i @vuese/cli
-          vuese gen
+          node_modules/.bin/vuese gen 
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
