@@ -3,83 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>My Docs</title>
-    <link rel="stylesheet" href="https://unpkg.com/docute@4/dist/docute.css">
+    <title>@molit/fhir-components</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docute@4/dist/docute.css">
   </head>
   <body>
     <div id="docute"></div>
-    <script src="https://unpkg.com/docute@4/dist/docute.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docute@4/dist/docute.js"></script>
     <script>
       new Docute({
         target: '#docute',
-        sidebar: [
-          {
-            title: '@molit/fhir-components',
-            links: [
-              
-                {
-                  title: 'BaseList',
-                  link: '/components/BaseList'
-                },
-              
-                {
-                  title: 'GeneticReport',
-                  link: '/components/GeneticReport'
-                },
-              
-                {
-                  title: 'GeneticVariantTable',
-                  link: '/components/GeneticVariantTable'
-                },
-              
-                {
-                  title: 'ListItem',
-                  link: '/components/ListItem'
-                },
-              
-                {
-                  title: 'ListView',
-                  link: '/components/ListView'
-                },
-              
-                {
-                  title: 'MolecularReport',
-                  link: '/components/MolecularReport'
-                },
-              
-                {
-                  title: 'PaginatedList',
-                  link: '/components/PaginatedList'
-                },
-              
-                {
-                  title: 'PatientList',
-                  link: '/components/PatientList'
-                },
-              
-                {
-                  title: 'QuestionnaireList',
-                  link: '/components/QuestionnaireList'
-                },
-              
-                {
-                  title: 'QuestionnaireRenderer',
-                  link: '/components/QuestionnaireRenderer'
-                },
-              
-                {
-                  title: 'QuestionnaireResponseList',
-                  link: '/components/QuestionnaireResponseList'
-                },
-              
-                {
-                  title: 'ResourceSelector',
-                  link: '/components/ResourceSelector'
-                }
-              
-            ]
-          }
-        ]
+        sidebar: JSON.parse('[{&#34;title&#34;:&#34;BASIC&#34;,&#34;links&#34;:[{&#34;title&#34;:&#34;BaseList&#34;,&#34;link&#34;:&#34;/components/BaseList&#34;},{&#34;title&#34;:&#34;GeneticReport&#34;,&#34;link&#34;:&#34;/components/GeneticReport&#34;},{&#34;title&#34;:&#34;GeneticVariantTable&#34;,&#34;link&#34;:&#34;/components/GeneticVariantTable&#34;},{&#34;title&#34;:&#34;ListItem&#34;,&#34;link&#34;:&#34;/components/ListItem&#34;},{&#34;title&#34;:&#34;ListView&#34;,&#34;link&#34;:&#34;/components/ListView&#34;},{&#34;title&#34;:&#34;MolecularReport&#34;,&#34;link&#34;:&#34;/components/MolecularReport&#34;},{&#34;title&#34;:&#34;PaginatedList&#34;,&#34;link&#34;:&#34;/components/PaginatedList&#34;},{&#34;title&#34;:&#34;PatientList&#34;,&#34;link&#34;:&#34;/components/PatientList&#34;},{&#34;title&#34;:&#34;QuestionnaireList&#34;,&#34;link&#34;:&#34;/components/QuestionnaireList&#34;},{&#34;title&#34;:&#34;QuestionnaireRenderer&#34;,&#34;link&#34;:&#34;/components/QuestionnaireRenderer&#34;},{&#34;title&#34;:&#34;QuestionnaireResponseList&#34;,&#34;link&#34;:&#34;/components/QuestionnaireResponseList&#34;},{&#34;title&#34;:&#34;ResourceSelector&#34;,&#34;link&#34;:&#34;/components/ResourceSelector&#34;}]}]'.replace(/\&\#34\;/g, '"'))
       })
     </script>
   </body>

@@ -7,38 +7,29 @@
 |---|---|---|---|---|
 |fhirBaseUrl|-|`String`|`true`|-|
 |pageCount|-|`Number`|`false`|20|
-|searchParams|-|`Object`|`false`|default() {
-  return {};
-}|
+|searchParams|-|`Object`|`false`|{}|
 |useQueryParams|-|`Boolean`|`false`|false|
 |resourceName|-|`String`|`true`|-|
-|titleAttributes|-|`Array`|`false`|default() {
-  return [{
-    value: "id",
-    type: ""
-  }];
-}|
-|subtitleAttributes|-|`Array`|`false`|default() {
-  return [];
-}|
+|titleAttributes|-|`Array`|`false`|[{"value":"id","type":""}]|
+|subtitleAttributes|-|`Array`|`false`|[]|
 |sortable|-|`Boolean`|`false`|false|
-|sortAttributes|-|`Array`|`false`|default() {
-  return [{
-    name: "ID",
-    value: "_id"
-  }];
-}|
+|sortAttributes|-|`Array`|`false`|[{"name":"ID","value":"_id"}]|
 |searchable|-|`Boolean`|`false`|true|
-|searchAttributes|-|`Array`|`false`|default() {
-  return [{
-    name: "ID",
-    value: "_id"
-  }];
-}|
+|searchAttributes|-|`Array`|`false`|[{"name":"ID","value":"_id"}]|
 |searchDebounceTime|-|`Number`|`false`|500|
 |detailPageName|-|`String`|`false`|-|
-|viewBehavior|-|`String`|`false`|"href"|
+|viewBehavior|-|`String`|`false`|href|
 
 <!-- @vuese:ListView:props:end -->
+
+
+## Events
+
+<!-- @vuese:ListView:events:start -->
+|Event Name|Description|Parameters|
+|---|---|---|
+|view|-|-|
+
+<!-- @vuese:ListView:events:end -->
 
 

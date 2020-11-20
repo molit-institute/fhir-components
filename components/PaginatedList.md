@@ -13,16 +13,11 @@
 |useQueryParams|Whether to use url query params|`Boolean`|`false`|false|
 |resourceName|Name of the resource|`String`|`true`|-|
 |searchable|Whether the list is searchable|`Boolean`|`false`|true|
-|searchAttributes|-|`Array`|`false`|default() {
-  return [{
-    name: "ID",
-    value: "_id"
-  }];
-}|
+|searchAttributes|-|`Array`|`false`|[{"name":"ID","value":"_id"}]|
 |searchDebounceTime|-|`Number`|`false`|500|
 |detailPageName|-|`String`|`false`|-|
-|viewBehavior|-|`String`|`false`|"href"|
-|searchInputPlaceholder|-|`String`|`false`|"Search.."|
+|viewBehavior|-|`String`|`false`|href|
+|searchInputPlaceholder|-|`String`|`false`|Search..|
 
 <!-- @vuese:PaginatedList:props:end -->
 
@@ -45,8 +40,12 @@
 |---|---|---|
 |default|-|-|
 |firstPage|-|-|
+|firstPage|-|-|
+|previousPage|-|-|
 |previousPage|-|-|
 |nextPage|-|-|
+|nextPage|-|-|
+|lastPage|-|-|
 |lastPage|-|-|
 
 <!-- @vuese:PaginatedList:slots:end -->

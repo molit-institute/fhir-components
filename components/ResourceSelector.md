@@ -8,28 +8,15 @@
 |resourceName|-|`String`|`true`|-|
 |fhirBaseUrl|-|`String`|`true`|-|
 |modalDialog|-|`Boolean`|`false`|true|
-|queryParams|-|`Object`|`false`|default() {
-  return {};
-}|
-|searchAttributes|-|`Array`|`false`|default() {
-  return [{
-    name: "ID",
-    value: "_id"
-  }];
-}|
-|titleAttribute|-|`Object`|`false`|default() {
-  return {
-    value: "id"
-  };
-}|
-|subtitleAttributes|-|`Array`|`false`|default() {
-  return [];
-}|
+|queryParams|-|`Object`|`false`|{}|
+|searchAttributes|-|`Array`|`false`|[{"name":"ID","value":"_id"}]|
+|titleAttribute|-|`Object`|`false`|{"value":"id"}|
+|subtitleAttributes|-|`Array`|`false`|[]|
 |token|-|`String`|`false`|null|
-|title|-|`String`|`false`|"Choose..."|
-|cancelText|-|`String`|`false`|"Cancel"|
-|okText|-|`String`|`false`|"OK"|
-|searchInputPlaceholder|-|`String`|`false`|"Search.."|
+|title|-|`String`|`false`|Choose...|
+|cancelText|-|`String`|`false`|Cancel|
+|okText|-|`String`|`false`|OK|
+|searchInputPlaceholder|-|`String`|`false`|Search..|
 
 <!-- @vuese:ResourceSelector:props:end -->
 

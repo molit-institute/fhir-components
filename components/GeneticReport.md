@@ -8,10 +8,10 @@
 |fhirBaseUrl|-|`String`|`true`|-|
 |id|-|`String`|`true`|-|
 |token|-|`String`|`false`|-|
-|tableBackground|-|`String`|`false`|"#ecf0f1"|
-|tableHeaderBackground|-|`String`|`false`|"#ecf0f1"|
-|tableRelevantBackground|-|`String`|`false`|"#ecf0f1"|
-|tableRelevantHeaderBackground|-|`String`|`false`|"#ecf0f1"|
+|tableBackground|-|`String`|`false`|#ecf0f1|
+|tableHeaderBackground|-|`String`|`false`|#ecf0f1|
+|tableRelevantBackground|-|`String`|`false`|#ecf0f1|
+|tableRelevantHeaderBackground|-|`String`|`false`|#ecf0f1|
 |enableRelevantVariants|-|`Boolean`|`false`|false|
 |metaAsTable|-|`Boolean`|`false`|false|
 

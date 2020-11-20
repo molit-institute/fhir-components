@@ -5,10 +5,8 @@
 <!-- @vuese:MolecularReport:props:start -->
 |Name|Description|Type|Required|Default|
 |---|---|---|---|---|
-|resources|-|`Array`|`false`|default() {
-  return [];
-}|
-|variantType|-|`String`|`false`|"SNV"|
+|resources|-|`Array`|`false`|[]|
+|variantType|-|`String`|`false`|SNV|
 |showColumnHideOptions|-|`Boolean`|`false`|true|
 |columnHideOptionsRight|-|`Boolean`|`false`|true|
 |hideId|-|`Boolean`|`false`|false|
