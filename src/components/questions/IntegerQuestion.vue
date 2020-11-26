@@ -6,8 +6,18 @@
     </div>
 
     <hr />
+    <!-- TODO labels -->
     <div class="class option-card">
-      <vas-question v-if="question.code[0].code === '38214-3'" :selected="selected" v-on:selected-value="handleInputVas"></vas-question>
+      <vas-question
+        v-if="isVasQuestion === true"
+        :min="minVas"
+        :max="maxVas"
+        :step="stepVas"
+        v-bind:selected="selected"
+        labelLow="No Pain"
+        labelHigh="Worst Pain Ever"
+        v-on:selected-value="handleInputVas"
+      />
       <div v-else class="form-row">
         <div :id="'integer' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="integerInput">{{ language.integer.text }}:</label>
@@ -59,6 +69,13 @@
  */
 import questionnaireResponseController from "./../../util/questionnaireResponseController";
 import VasQuestion from "./VasQuestion";
+import fhirpath from "@/assets/js/fhirpath.min.js";
+
+const FHIRPATH_SLIDER = `extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl' and valueCodeableConcept.coding.code = 'slider')`;
+const FHIRPATH_SLIDER_MIN = `extension.where(url='http://hl7.org/fhir/StructureDefinition/minValue').valueInteger`;
+const FHIRPATH_SLIDER_MAX = `extension.where(url='http://hl7.org/fhir/StructureDefinition/maxValue').valueInteger`;
+const FHIRPATH_SLIDER_STEP = `extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue').valueInteger`;
+
 export default {
   data: function() {
     return {
@@ -111,12 +128,42 @@ export default {
   computed: {
     validate() {
       return this.selected || this.selected === [];
+    },
+    isVasQuestion() {
+      const vas = fhirpath.evaluate(this.question, FHIRPATH_SLIDER);
+      console.log(vas);
+      if (vas.length) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    minVas() {
+      if (this.isVasQuestion === true) {
+        return fhirpath.evaluate(this.question, FHIRPATH_SLIDER_MIN)[0];
+      } else {
+        return null;
+      }
+    },
+    maxVas() {
+      if (this.isVasQuestion === true) {
+        return fhirpath.evaluate(this.question, FHIRPATH_SLIDER_MAX)[0];
+      } else {
+        return null;
+      }
+    },
+    stepVas() {
+      if (this.isVasQuestion === true) {
+        return fhirpath.evaluate(this.question, FHIRPATH_SLIDER_STEP)[0];
+      } else {
+        return null;
+      }
     }
   },
 
   methods: {
     handleInputVas(value) {
-      this.selected = value;
+      this.selected = parseInt(value, 10);
     },
     emitEvent(string) {
       this.$emit(string);

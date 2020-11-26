@@ -2,11 +2,10 @@
   <div>
     <div class="class option-card">
       <div class="labels">
-        <p>No Pain</p>
-        <p>Worst Pain Ever</p>
+        <p>{{ labelLow }}</p>
+        <p>{{ labelHigh }}</p>
       </div>
-      <input name="vas" type="range" :min="min" :max="max" step="0.1" class="range" :value="selected / 10" @input="$emit('selected-value', value * 10)" />
-      <!--  v-model="selected"-->
+      <input name="vas" type="range" :min="min" :max="max" :step="step" class="range" v-model="value" @input="$emit('selected-value', value)" />
       <div class="sliderticks">
         <p v-for="n in range" :key="n">{{ n }}</p>
       </div>
@@ -166,6 +165,26 @@ export default {
     selected: {
       type: Number,
       default: 0
+    },
+    min: {
+      type: Number,
+      default: 0
+    },
+    max: {
+      type: Number,
+      default: 100
+    },
+    step: {
+      type: Number,
+      default: 1
+    },
+    labelLow: {
+      type: String,
+      default: "No Pain"
+    },
+    labelHigh: {
+      type: String,
+      default: "Worst Pain Ever"
     }
   },
   data() {
@@ -174,16 +193,9 @@ export default {
     };
   },
   computed: {
-    min() {
-      return 0; //fhir-minValue?
-    },
-    max() {
-      return 10; //fhir-minValue?
-      // return this.question.answerOption[question.answerOption.length-1].valueString;
-    },
     range() {
       let range = [];
-      for (let i = this.min; i < this.max + 1; i++) {
+      for (let i = this.min; i < this.max / 10 + 1; i++) {
         range = [...range, i];
       }
       return range;
