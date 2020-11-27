@@ -2,8 +2,8 @@
   <div>
     <div class="class option-card">
       <div class="labels">
-        <p>{{ labelLow }}</p>
-        <p>{{ labelHigh }}</p>
+        <p>{{ labelLower }}</p>
+        <p>{{ labelUpper }}</p>
       </div>
       <input name="vas" type="range" :min="min" :max="max" :step="step" class="range" v-model="value" @input="$emit('selected-value', value)" />
       <div class="sliderticks">
@@ -178,13 +178,13 @@ export default {
       type: Number,
       default: 1
     },
-    labelLow: {
+    labelLower: {
       type: String,
-      default: "No Pain"
+      default: "Lower-bound"
     },
-    labelHigh: {
+    labelUpper: {
       type: String,
-      default: "Worst Pain Ever"
+      default: "Upper-bound"
     }
   },
   data() {

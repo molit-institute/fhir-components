@@ -14,8 +14,8 @@
         :max="maxVas"
         :step="stepVas"
         v-bind:selected="selected"
-        labelLow="No Pain"
-        labelHigh="Worst Pain Ever"
+        :labelLower="labelLowerVas"
+        :labelUpper="labelUpperVas"
         v-on:selected-value="handleInputVas"
       />
       <div v-else class="form-row">
@@ -75,6 +75,8 @@ const FHIRPATH_SLIDER = `extension.where(url='http://hl7.org/fhir/StructureDefin
 const FHIRPATH_SLIDER_MIN = `extension.where(url='http://hl7.org/fhir/StructureDefinition/minValue').valueInteger`;
 const FHIRPATH_SLIDER_MAX = `extension.where(url='http://hl7.org/fhir/StructureDefinition/maxValue').valueInteger`;
 const FHIRPATH_SLIDER_STEP = `extension.where(url='http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue').valueInteger`;
+const FHIRPATH_SLIDER_LOWER = `item.where(extension.url='http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl' and extension.valueCodeableConcept.coding.code = 'lower').text`;
+const FHIRPATH_SLIDER_UPPER = `item.where(extension.url='http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl' and extension.valueCodeableConcept.coding.code = 'upper').text`;
 
 export default {
   data: function() {
@@ -155,6 +157,20 @@ export default {
     stepVas() {
       if (this.isVasQuestion === true) {
         return fhirpath.evaluate(this.question, FHIRPATH_SLIDER_STEP)[0];
+      } else {
+        return null;
+      }
+    },
+    labelLowerVas() {
+      if (this.isVasQuestion === true) {
+        return fhirpath.evaluate(this.question, FHIRPATH_SLIDER_LOWER)[0];
+      } else {
+        return null;
+      }
+    },
+    labelUpperVas() {
+      if (this.isVasQuestion === true) {
+        return fhirpath.evaluate(this.question, FHIRPATH_SLIDER_UPPER)[0];
       } else {
         return null;
       }
