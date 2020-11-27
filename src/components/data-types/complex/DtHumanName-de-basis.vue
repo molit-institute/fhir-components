@@ -1,13 +1,13 @@
 <template>
   <div>
     <div v-if="edit">
-      <div class="form-row">
+      <div class="form-row" v-if="viewUse">
         <dt-code label="Use" class="col-md-12" :value.sync="resourceData.use" :valueSet="nameUse" :edit="edit" />
       </div>
       <div class="form-row">
-        <dt-string label= {{prefix}} class="col-md-2" :value.sync="resourceData.prefix" :edit="edit" />
-        <dt-string-array label= {{firstname}} class="col-md-4" :value.sync="resourceData.given" :edit="edit" />
-        <dt-string label= {{lastname}} class="col-md-4" :value.sync="resourceData.family" :edit="edit" />
+        <dt-string :label="prefix" class="col-md-2" :value.sync="resourceData.prefix" :edit="edit" />
+        <dt-string-array :label="firstname" class="col-md-4" :value.sync="resourceData.given" :edit="edit" />
+        <dt-string :label="lastname" class="col-md-4" :value.sync="resourceData.family" :edit="edit" />
         <dt-string-array label="Suffix" class="col-md-2" :value.sync="resourceData.suffix" :edit="edit" />
       </div>
 
@@ -24,7 +24,7 @@
         {{ getDisplayForArray(resourceData.given) }} {{ resourceData.family }}
         {{ getDisplayForArray(resourceData.suffix) }}
       </div>
-      <div class="text-muted">
+      <div class="text-muted" v-if="viewUse">
         {{ getDisplayForCode(nameUse, resourceData.use) }}
       </div>
     </div>
@@ -53,6 +53,10 @@ export default {
     prefix: {
       type: String,
       default: "Prefix"
+    },
+    viewUse: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -70,8 +74,6 @@ export default {
     //     : "";
     // }
   },
-
-
 
   watch: {
     text(newText) {
