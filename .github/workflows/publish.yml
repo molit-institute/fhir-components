@@ -44,7 +44,7 @@ jobs:
       if: ${{ success() }}
       run: |
         echo "Deploying to npm ..."
-        npm run build:lib
+        npm publish --access public
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
