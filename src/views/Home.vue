@@ -128,7 +128,7 @@ export default {
   },
 
   components: {
-    QuestionnaireRenderer,
+    QuestionnaireRenderer //,
     // GeneticReport
   },
 
