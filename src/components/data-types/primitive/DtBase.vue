@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <label :for="localId" v-if="label">{{ label }}</label>
-    <input :type="type" class="form-control" :id="localId" :placeholder="localPlaceholder" v-model="localValue" v-if="edit" />
+    <input :type="type" class="form-control" v-bind:class="{'is-invalid': (invalid === true)}" :id="localId" :placeholder="localPlaceholder" v-model="localValue" v-if="edit" :max="max" :min="min" />
     <div v-if="!edit && localValue">{{ localValue }}</div>
     <div v-if="!edit && !localValue">-</div>
   </div>
@@ -22,6 +22,10 @@ export default {
       type: String
     },
     edit: {
+      type: Boolean,
+      default: false
+    },
+    invalid: {
       type: Boolean,
       default: false
     }

@@ -3,7 +3,7 @@
     <div class="form-group" v-if="edit">
       <label :for="localId" v-if="label">{{ label }}</label>
       <div v-if="valueSet">
-        <select class="form-control" :id="localId" v-model="localValue" v-if="inputType === singleChoiceType.SELECT">
+        <select class="form-control" v-bind:class="{'is-invalid': (invalid === true)}" style="background-position: right calc(0.375em + 0.85rem) center;" :id="localId" v-model="localValue" v-if="inputType === singleChoiceType.SELECT">
           <option disabled selected :value="undefined">{{ selectText }}</option>
           <option v-for="v in valueSet.expansion.contains" :key="v.code" :value="v.code">{{ v.display }}</option>
         </select>
