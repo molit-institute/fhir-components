@@ -66,6 +66,7 @@ import valueSetController from "./../util/valueSetController";
 import Spinner from "vue-simple-spinner";
 import de from "./../i18n/de";
 import en from "./../i18n/en";
+import es from "./../i18n/es";
 
 export default {
   components: {
@@ -179,6 +180,18 @@ export default {
     locale: {
       type: String,
       default: "de"
+    },
+    /**
+     * Text for back-button
+     */
+    back: {
+      type: String,
+    },
+    /**
+     * Text for next-button
+     */
+    next: {
+      type: String,
     }
   },
 
@@ -251,9 +264,18 @@ export default {
         case "de":
           this.language = de;
           break;
+        case "es":
+          this.language = es;
+          break;
         default:
           break;
-      }
+      };
+      if(this.back != null){
+        this.language.back = this.back;
+      };
+      if(this.next != null){
+        this.language.next = this.next;
+      };
     },
 
     /**
