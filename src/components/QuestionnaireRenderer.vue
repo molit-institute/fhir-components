@@ -185,13 +185,13 @@ export default {
      * Text for back-button
      */
     back: {
-      type: String,
+      type: String
     },
     /**
      * Text for next-button
      */
     next: {
-      type: String,
+      type: String
     }
   },
 
@@ -269,13 +269,13 @@ export default {
           break;
         default:
           break;
-      };
-      if(this.back != null){
+      }
+      if (this.back != null) {
         this.language.back = this.back;
-      };
-      if(this.next != null){
+      }
+      if (this.next != null) {
         this.language.next = this.next;
-      };
+      }
     },
 
     /**
