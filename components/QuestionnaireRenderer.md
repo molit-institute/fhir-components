@@ -20,6 +20,8 @@
 |secondary|Secondary color|`String`|`false`|-|
 |danger|Color used to symbolise danger|`String`|`false`|red|
 |locale|Current locale|`String`|`false`|de|
+|back|Text for back-button|`String`|`false`|-|
+|next|Text for next-button|`String`|`false`|-|
 
 <!-- @vuese:QuestionnaireRenderer:props:end -->
 
