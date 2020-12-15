@@ -41,6 +41,10 @@
             <label class="col-md-3 col-form-label">MSI</label>
             <label class="col-md-9 col-form-label">{{ msi }}</label>
           </div>
+          <div class="form-row">
+            <label class="col-md-3 col-form-label">TMB</label>
+            <label class="col-md-9 col-form-label">{{ tmb }}</label>
+          </div>
         </div>
         <table class="table table-sm table-hover meta-table" v-else>
           <tbody>
