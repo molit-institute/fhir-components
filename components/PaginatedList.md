@@ -27,6 +27,7 @@
 <!-- @vuese:PaginatedList:events:start -->
 |Event Name|Description|Parameters|
 |---|---|---|
+|updateStart|-|-|
 |error|-|-|
 |update|-|-|
 
