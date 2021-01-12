@@ -262,6 +262,7 @@ export default {
 
     async fetchResources() {
       try {
+        this.$emit("updateStart");
         this.bundle = (await fhirApi.fetchResources(this.fhirBaseUrl, this.resourceName, this.params, this.token)).data;
       } catch (e) {
         this.$emit("error", e);
