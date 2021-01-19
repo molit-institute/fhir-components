@@ -66,20 +66,21 @@ jobs:
         with:
           node-version: 12
 
-      - name: Install and Build 🔧 
+      - name: Install and Build 🔧
         run: |
           npm ci
           npm run build:lib
 
-      - name: generate documentation 
+      - name: generate documentation
         run: |
           npm i @vuese/cli
-          node_modules/.bin/vuese gen 
+          node_modules/.bin/vuese gen
+          cp README.md doc/
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: doc # The folder the action should deploy. 
-          CLEAN: true # Automatically remove deleted files from the deploy branch.  
+          FOLDER: doc # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch.
