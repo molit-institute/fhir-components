@@ -71,7 +71,7 @@ jobs:
           npm ci
           npm run build:lib
 
-      - name: generate documentation
+      - name: Generate documentation
         run: |
           npm i @vuese/cli
           node_modules/.bin/vuese gen

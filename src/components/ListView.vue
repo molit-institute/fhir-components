@@ -44,6 +44,7 @@ import PaginatedList from "./PaginatedList";
 
 import { getStringFromHumanName } from "@molit/fhir-util";
 
+// @group Lists
 export default {
   props: {
     fhirBaseUrl: {

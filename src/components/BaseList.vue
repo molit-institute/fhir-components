@@ -16,6 +16,7 @@
 <script>
 import ListView from "./ListView";
 
+// @group Lists
 export default {
   props: {
     fhirBaseUrl: {

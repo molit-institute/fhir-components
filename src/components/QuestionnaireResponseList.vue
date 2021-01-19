@@ -1,6 +1,7 @@
 <script>
 import BaseList from "./BaseList";
 
+// @group Questionnaire
 export default {
   extends: BaseList,
 

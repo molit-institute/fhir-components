@@ -68,6 +68,7 @@ import de from "./../i18n/de";
 import en from "./../i18n/en";
 import es from "./../i18n/es";
 
+// @group Questionnaire
 export default {
   components: {
     Spinner,

@@ -1,6 +1,7 @@
 <script>
 import BaseList from "./BaseList";
 
+// @group Lists
 export default {
   extends: BaseList,
 
