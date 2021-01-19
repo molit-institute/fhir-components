@@ -1,8 +1,9 @@
 ## FHIR Components
 
-[![Build Status](https://travis-ci.org/molit-institute/fhir-components.svg?branch=master)](https://travis-ci.org/molit-institute/fhir-components)
-![npm](https://img.shields.io/npm/v/@molit/fhir-components.svg)
-![NPM](https://img.shields.io/npm/l/@molit/fhir-components.svg)
+![build](https://github.com/molit-institute/fhir-components/workflows/Build/badge.svg)
+![publish](https://github.com/molit-institute/fhir-components/workflows/Publish/badge.svg)
+![npm version](https://img.shields.io/npm/v/@molit/fhir-components.svg)
+![npm license](https://img.shields.io/npm/l/@molit/fhir-components.svg)
 
 This is an components library to display/manipulate FHIR resources.
 
