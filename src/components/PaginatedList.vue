@@ -54,6 +54,7 @@
 import * as fhirApi from "@molit/fhir-api";
 import debounce from "debounce";
 
+// @group Lists
 export default {
   props: {
     // The authentication token
