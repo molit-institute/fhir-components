@@ -13,7 +13,7 @@
         <div :id="'decimal' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="decimalInput">{{ language.decimal.text }}:</label>
           <input ref="decimalInput" step="any" value="selected" type="number" v-model="selected" class="form-control" id="decimal" />
-          <div v-if="language" class="invalid-feedback">
+          <div v-if="language" class="my-invalid-feedback" :class="naN === false ? 'hidden' : naN === null ? 'hidden' : 'visible'">
             {{ language.decimal.invalid }}
           </div>
         </div>
@@ -25,6 +25,15 @@
 <style lang="scss" scoped>
 .hidden {
   visibility: hidden;
+}
+.visible {
+  visibility: visible;
+}
+.my-invalid-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
 }
 
 @mixin basic-card {
@@ -60,7 +69,8 @@ export default {
        * Allows events to be emitted if true
        */
       allow_events: false,
-      started: false
+      started: false,
+      naN: null
     };
   },
 
@@ -115,6 +125,9 @@ export default {
      */
     setSelected() {
       this.selected = questionnaireResponseController.getAnswersFromQuestionnaireResponse(this.questionnaireResponse, this.question.linkId, "decimal");
+    },
+    checkInput(input) {
+      this.naN = isNaN(parseFloat(input));
     }
   },
   watch: {
@@ -126,7 +139,8 @@ export default {
     selected() {
       if (this.allow_events) {
         let object = null;
-        if (!isNaN(parseFloat(this.selected))) {
+        this.checkInput(this.selected);
+        if (!this.naN) {
           object = {
             type: "decimal",
             question: this.question,

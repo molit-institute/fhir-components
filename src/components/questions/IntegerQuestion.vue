@@ -31,7 +31,7 @@
             v-model="selected"
             class="form-control"
           />
-          <div v-if="language" class="invalid-feedback">
+          <div v-if="language" class="my-invalid-feedback" :class="validate !== false ? 'hidden' : selected === null ? 'hidden' : 'visible'">
             {{ language.integer.invalid }}
           </div>
         </div>
@@ -45,7 +45,15 @@
 .hidden {
   visibility: hidden;
 }
-
+.visible {
+  visibility: visible;
+}
+.my-invalid-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
 @mixin basic-card {
   border-radius: 20px;
   border: 0;
@@ -133,7 +141,6 @@ export default {
     },
     isVasQuestion() {
       const vas = fhirpath.evaluate(this.question, FHIRPATH_SLIDER);
-      console.log(vas);
       if (vas.length) {
         return true;
       } else {
