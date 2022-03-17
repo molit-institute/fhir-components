@@ -125,6 +125,10 @@ export default {
     searchInputPlaceholder: {
       type: String,
       default: "Search.."
+    },
+    usePostForQuery: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -264,7 +268,11 @@ export default {
     async fetchResources() {
       try {
         this.$emit("updateStart");
-        this.bundle = (await fhirApi.fetchResources(this.fhirBaseUrl, this.resourceName, this.params, this.token)).data;
+        if (this.usePostForQuery) {
+          this.bundle = (await fhirApi.fetchResourcesPost(this.fhirBaseUrl, this.resourceName, this.params, this.token)).data;
+        } else {
+          this.bundle = (await fhirApi.fetchResources(this.fhirBaseUrl, this.resourceName, this.params, this.token)).data;
+        }
       } catch (e) {
         this.$emit("error", e);
         throw new Error(e, "Could not load FHIR resources.");
