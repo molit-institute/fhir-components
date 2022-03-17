@@ -18,6 +18,7 @@
 |detailPageName|-|`String`|`false`|-|
 |viewBehavior|-|`String`|`false`|href|
 |searchInputPlaceholder|-|`String`|`false`|Search..|
+|usePostForQuery|-|`Boolean`|`false`|false|
 
 <!-- @vuese:PaginatedList:props:end -->
 
