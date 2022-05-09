@@ -2,7 +2,7 @@
   <div>
     <div v-if="mode !== 'GROUPS'" :style="{ color: this.primary }">
       <!-- <library-books class="icon" /> -->
-      <svg class="material-design-icon__svg" style="width:80px;height:80px" viewBox="0 0 24 24">
+      <svg class="material-design-icon__svg" style="width: 80px; height: 80px" viewBox="0 0 24 24">
         <path fill="#000000" d="M19,7H9V5H19M15,15H9V13H15M19,11H9V9H19M20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M4,6H2V20A2,2 0 0,0 4,22H18V20H4V6Z"></path>
       </svg>
       <div v-if="language" class="group-subtitle">{{ language.questionGroup }} {{ question.prefix }}</div>
@@ -11,7 +11,7 @@
     <div v-if="mode === 'GROUPS'">
       <div class="card">
         <div class="card-body">
-          <svg class="material-design-icon__svg" style="width:80px;height:80px" viewBox="0 0 24 24">
+          <svg class="material-design-icon__svg" style="width: 80px; height: 80px" viewBox="0 0 24 24">
             <path fill="#000000" d="M19,7H9V5H19M15,15H9V13H15M19,11H9V9H19M20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M4,6H2V20A2,2 0 0,0 4,22H18V20H4V6Z"></path>
           </svg>
 
@@ -24,7 +24,7 @@
         <div class="card-margin-top" v-for="groupquestion in question.item" :key="groupquestion.linkId">
           <div v-if="groupquestion.type == 'group'" class="card">
             <div class="card-body">
-              <svg class="material-design-icon__svg" style="width:80px;height:80px" viewBox="0 0 24 24">
+              <svg class="material-design-icon__svg" style="width: 80px; height: 80px" viewBox="0 0 24 24">
                 <path fill="#000000" d="M19,7H9V5H19M15,15H9V13H15M19,11H9V9H19M20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M4,6H2V20A2,2 0 0,0 4,22H18V20H4V6Z"></path>
               </svg>
               <div v-if="language" class="group-subtitle">{{ language.questionGroup }} {{ groupquestion.prefix }}</div>

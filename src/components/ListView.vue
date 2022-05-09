@@ -140,7 +140,7 @@ export default {
       this.bundle = bundle;
     },
 
-    byString: function(o, s) {
+    byString: function (o, s) {
       s = s.replace(/\[(\w+)\]/g, ".$1"); // https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-with-string-key
       s = s.replace(/^\./, "");
       var a = s.split(".");

@@ -52,12 +52,7 @@
       <div v-if="!spinner.loading" class="spacer"></div>
       <div v-if="!spinner.loading && language" class="button-container">
         <!-- Button Back -->
-        <button
-          type="button"
-          class="btn button btn-outline-primary btn-lg"
-          v-on:click="countDown"
-          v-if="(!this.editMode && this.count !== 0) || (!this.editMode && this.enableReturn && this.count === 0)"
-        >
+        <button type="button" class="btn button btn-outline-primary btn-lg" v-on:click="countDown" v-if="(!this.editMode && this.count !== 0) || (!this.editMode && this.enableReturn && this.count === 0)">
           {{ language.back }}
         </button>
         <button type="button" class="btn button btn-outline-secondary btn-lg" disabled v-if="this.editMode || (this.count === 0 && !this.enableReturn)">
@@ -493,7 +488,7 @@ export default {
 
     filteredItemList: {
       deep: true,
-      handler: function() {
+      handler: function () {
         if (this.filteredItemList[this.count].type !== "group" && this.count === 0) {
           // this.questionCount = 1;
           this.questionCount = this.getQuestionPositionNumber();

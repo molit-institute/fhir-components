@@ -63,7 +63,7 @@
 import questionnaireResponseController from "./../../util/questionnaireResponseController";
 
 export default {
-  data: function() {
+  data: function () {
     return {
       selected: ""
     };
@@ -125,7 +125,7 @@ export default {
       let input = document.getElementById("url" + this.question.linkId);
       let object = this;
       if (input) {
-        input.addEventListener("keyup", function(event) {
+        input.addEventListener("keyup", function (event) {
           event.preventDefault();
           if (event.keyCode === 13) {
             object.$emit("next");

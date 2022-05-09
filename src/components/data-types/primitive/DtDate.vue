@@ -17,17 +17,17 @@ export default {
   },
 
   computed: {
-    max(){
+    max() {
       if (!this.maxValue) {
         return null;
       }
-      return moment(this.maxValue).format("YYYY-MM-DD");;
+      return moment(this.maxValue).format("YYYY-MM-DD");
     },
-    min(){
+    min() {
       if (!this.minValue) {
         return null;
       }
-      return moment(this.maxValue).format("YYYY-MM-DD");;
+      return moment(this.maxValue).format("YYYY-MM-DD");
     }
   },
 

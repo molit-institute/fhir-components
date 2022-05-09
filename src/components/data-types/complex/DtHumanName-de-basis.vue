@@ -6,9 +6,9 @@
       </div>
       <div class="form-row">
         <dt-string :label="prefix" class="col-md-2" :value.sync="resourceData.prefix" :edit="edit" :invalid="prefixInvalid" />
-        <dt-string-array :label="firstname" class="col-md-4" :value.sync="resourceData.given" :edit="edit" :invalid="firstnameInvalid"/>
-        <dt-string :label="lastname" class="col-md-4" :value.sync="resourceData.family" :edit="edit" :invalid="lastnameInvalid"/>
-        <dt-string-array label="Suffix" class="col-md-2" :value.sync="resourceData.suffix" :edit="edit" :invalid="suffixInvalid"/>
+        <dt-string-array :label="firstname" class="col-md-4" :value.sync="resourceData.given" :edit="edit" :invalid="firstnameInvalid" />
+        <dt-string :label="lastname" class="col-md-4" :value.sync="resourceData.family" :edit="edit" :invalid="lastnameInvalid" />
+        <dt-string-array label="Suffix" class="col-md-2" :value.sync="resourceData.suffix" :edit="edit" :invalid="suffixInvalid" />
       </div>
 
       <!-- <div class="form-group">
@@ -74,7 +74,6 @@ export default {
       type: Boolean,
       default: false
     }
-
   },
   computed: {
     nameUse() {

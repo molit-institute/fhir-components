@@ -8,9 +8,22 @@ module.exports = {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
     "vue/max-attributes-per-line": "off",
-    "max-len": ["warn", { code: 200 }]
+    "max-len": [
+      "warn",
+      {
+        code: 240
+      }
+    ]
   },
   parserOptions: {
     parser: "babel-eslint"
-  }
+  },
+  overrides: [
+    {
+      files: ["**/__tests__/*.{j,t}s?(x)", "**/tests/unit/**/*.spec.{j,t}s?(x)"],
+      env: {
+        jest: true
+      }
+    }
+  ]
 };

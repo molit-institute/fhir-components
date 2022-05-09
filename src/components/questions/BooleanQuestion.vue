@@ -85,7 +85,7 @@
  */
 import questionnaireResponseController from "./../../util/questionnaireResponseController";
 export default {
-  data: function() {
+  data: function () {
     return {
       /**
        * Variable to store the value of the input

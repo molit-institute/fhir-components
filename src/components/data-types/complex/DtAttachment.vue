@@ -58,5 +58,4 @@ export default {
 };
 </script>
 
-... language Σ 0..1 code Human language of the content (BCP-47) Common Languages (Extensible but limited to All Languages) ... url Σ 0..1 uri Uri where the data can be found ... hash Σ 0..1
-base64Binary Hash of the data (sha-1, base64ed)
+... language Σ 0..1 code Human language of the content (BCP-47) Common Languages (Extensible but limited to All Languages) ... url Σ 0..1 uri Uri where the data can be found ... hash Σ 0..1 base64Binary Hash of the data (sha-1, base64ed)

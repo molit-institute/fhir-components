@@ -8,29 +8,11 @@
     <hr />
     <!-- TODO labels -->
     <div class="class option-card">
-      <vas-question
-        v-if="isVasQuestion === true"
-        :min="minVas"
-        :max="maxVas"
-        :step="stepVas"
-        v-bind:selected="selected"
-        :labelLower="labelLowerVas"
-        :labelUpper="labelUpperVas"
-        v-on:selected-value="handleInputVas"
-      />
+      <vas-question v-if="isVasQuestion === true" :min="minVas" :max="maxVas" :step="stepVas" v-bind:selected="selected" :labelLower="labelLowerVas" :labelUpper="labelUpperVas" v-on:selected-value="handleInputVas" />
       <div v-else class="form-row">
         <div :id="'integer' + question.linkId" class="size" :class="[{ 'was-validated': selected !== '' && selected }]">
           <label class="" for="integerInput">{{ language.integer.text }}:</label>
-          <input
-            ref="integerInput"
-            type="number"
-            step="1"
-            onkeypress="return (event.charCode !== 44 && event.charCode !== 46)"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            v-model="selected"
-            class="form-control"
-          />
+          <input ref="integerInput" type="number" step="1" onkeypress="return (event.charCode !== 44 && event.charCode !== 46)" inputMode="numeric" pattern="[0-9]*" v-model="selected" class="form-control" />
           <div v-if="language" class="my-invalid-feedback" :class="validate !== false ? 'hidden' : selected === null ? 'hidden' : 'visible'">
             {{ language.integer.invalid }}
           </div>
@@ -87,7 +69,7 @@ const FHIRPATH_SLIDER_LOWER = `item.where(extension.url='http://hl7.org/fhir/Str
 const FHIRPATH_SLIDER_UPPER = `item.where(extension.url='http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl' and extension.valueCodeableConcept.coding.code = 'upper').text`;
 
 export default {
-  data: function() {
+  data: function () {
     return {
       /**
        * Variable to store the value of the input
@@ -197,7 +179,7 @@ export default {
     handleKeyPress() {
       let input = document.getElementById("integer" + this.question.linkId);
       let object = this;
-      input.addEventListener("keyup", function(event) {
+      input.addEventListener("keyup", function (event) {
         event.preventDefault();
         if (event.keyCode === 13) {
           object.$emit("next");

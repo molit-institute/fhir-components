@@ -4,7 +4,7 @@
       <!-- <molecular-report :resources="exampleReport" /> -->
       <!-- <molecular-report :resources="exampleReport" variantType="CNV" /> -->
       <!-- QUESTIONNAIRE RENDERER -->
-      <div v-if="show_renderer" style="display: flex;"></div>
+      <div v-if="show_renderer" style="display: flex"></div>
       <span class="flex">
         <div class="item" v-on:click="setQuestionnaireMode('StepperQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'StepperQuestionnaire' }]">Stepper</div>
         <div class="item" v-on:click="setQuestionnaireMode('GroupedQuestionnaire')" :class="[{ 'item-selected': questionnaireMode === 'GroupedQuestionnaire' }]">Grouped</div>
@@ -31,12 +31,12 @@
         :startQuestion="indexQuestion"
       ></questionnaire-renderer>
       <div class="row" v-if="show_summary">
-        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer;">
+        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer">
           <div v-if="show_summary" v-on:click="backToRenderer()">
             <pre>{{ this.questionnaireResponse }}</pre>
           </div>
         </div>
-        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer;">
+        <div class="col-sm-4" style="background-color: lightgrey; cursor: pointer">
           <div v-if="show_summary" v-on:click="backToRenderer()">
             <pre>{{ this.questionnaire }}</pre>
           </div>
@@ -46,7 +46,7 @@
             <div v-for="(item, index) in getItemList(this.questionnaire)" :key="item.linkId">
               {{ item.text }}
               <div>
-                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor: pointer;" v-on:click="editQuestion(item)">
+                <pre v-if="getItemList(questionnaireResponse)[index] && getItemList(questionnaire)[index].type !== 'group'" style="cursor: pointer" v-on:click="editQuestion(item)">
             {{ getItemList(questionnaireResponse)[index].answer }}
             </pre
                 >

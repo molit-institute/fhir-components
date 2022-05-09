@@ -51,15 +51,7 @@ input[type="range"] {
       color-stop(82%, rgba(251, 125, 2, 1)),
       color-stop(100%, rgba(255, 0, 0, 1))
     );
-    background: -webkit-linear-gradient(
-      45deg,
-      rgba(16, 158, 0, 1) 0%,
-      rgba(242, 237, 98, 1) 44%,
-      rgba(242, 237, 38, 1) 47%,
-      rgba(250, 155, 2, 1) 70%,
-      rgba(251, 125, 2, 1) 82%,
-      rgba(255, 0, 0, 1) 100%
-    );
+    background: -webkit-linear-gradient(45deg, rgba(16, 158, 0, 1) 0%, rgba(242, 237, 98, 1) 44%, rgba(242, 237, 38, 1) 47%, rgba(250, 155, 2, 1) 70%, rgba(251, 125, 2, 1) 82%, rgba(255, 0, 0, 1) 100%);
     background: -o-linear-gradient(45deg, rgba(16, 158, 0, 1) 0%, rgba(242, 237, 98, 1) 44%, rgba(242, 237, 38, 1) 47%, rgba(250, 155, 2, 1) 70%, rgba(251, 125, 2, 1) 82%, rgba(255, 0, 0, 1) 100%);
     background: -ms-linear-gradient(45deg, rgba(16, 158, 0, 1) 0%, rgba(242, 237, 98, 1) 44%, rgba(242, 237, 38, 1) 47%, rgba(250, 155, 2, 1) 70%, rgba(251, 125, 2, 1) 82%, rgba(255, 0, 0, 1) 100%);
     background: linear-gradient(45deg, rgba(16, 158, 0, 1) 0%, rgba(242, 237, 98, 1) 44%, rgba(242, 237, 38, 1) 47%, rgba(250, 155, 2, 1) 70%, rgba(251, 125, 2, 1) 82%, rgba(255, 0, 0, 1) 100%);

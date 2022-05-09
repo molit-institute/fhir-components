@@ -23,7 +23,7 @@
       @return="leaveQuestionnaireRenderer()"
       @answer="handleQuestionnaireResponseEvent($event)"
     ></component>
-    <div v-if="modal" class="align-vertical" style="height: calc(100vh - 200px);">
+    <div v-if="modal" class="align-vertical" style="height: calc(100vh - 200px)">
       <div class="note-modal">
         <div>
           <div>{{ language.questionDeactivated }}</div>
@@ -249,7 +249,7 @@ export default {
     },
     currentQuestionnaireResponse: {
       deep: true,
-      handler: async function() {
+      handler: async function () {
         await this.filterItemList();
         this.handleAnsweredQuestionsList();
         this.$emit("updated", this.currentQuestionnaireResponse);
@@ -421,7 +421,7 @@ export default {
               this.removeQuestionFromRequiredAnsweredQuestionsList(this.filteredItemList[this.filteredItemList.findIndex(item => item.linkId === qr[i].linkId)]);
             }
           } else {
-            let questionToRemove = aRQL.find(function(element) {
+            let questionToRemove = aRQL.find(function (element) {
               return element.linkId === qr[i].linkId;
             });
             if (questionToRemove) {

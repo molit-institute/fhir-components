@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <label :for="localId" v-if="label">{{ label }}</label>
-    <input :type="type" class="form-control" v-bind:class="{'is-invalid': (invalid === true)}" :id="localId" :placeholder="localPlaceholder" v-model="localValue" v-if="edit" :max="max" :min="min" />
+    <input :type="type" class="form-control" v-bind:class="{ 'is-invalid': invalid === true }" :id="localId" :placeholder="localPlaceholder" v-model="localValue" v-if="edit" :max="max" :min="min" />
     <div v-if="!edit && localValue">{{ localValue }}</div>
     <div v-if="!edit && !localValue">-</div>
   </div>
@@ -61,11 +61,7 @@ export default {
     if (this.id) {
       this.localId = this.id;
     } else {
-      this.localId =
-        "id-" +
-        Math.random()
-          .toString(36)
-          .substr(2, 16);
+      this.localId = "id-" + Math.random().toString(36).substr(2, 16);
     }
   }
 };

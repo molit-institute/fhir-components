@@ -130,7 +130,7 @@ function addItemToList(answersList, itemList, newItemList) {
     if (itemList[i].enableWhen) {
       let results = [];
       for (let x = 0; x < itemList[i].enableWhen.length; x++) {
-        let item = answersList.find(function(element) {
+        let item = answersList.find(function (element) {
           return element.linkId === itemList[i].enableWhen[x].question;
         });
         if (item.answer && item.answer.length !== 0) {

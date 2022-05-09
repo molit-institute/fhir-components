@@ -49,12 +49,7 @@
       </div>-->
       <div class="button-container" v-if="language">
         <!-- Button Back -->
-        <button
-          type="button"
-          class="btn button btn-outline-primary btn-lg"
-          v-on:click="countDown"
-          v-if="(!this.editMode && this.count !== 0) || (!this.editMode && this.enableReturn && this.count === 0)"
-        >
+        <button type="button" class="btn button btn-outline-primary btn-lg" v-on:click="countDown" v-if="(!this.editMode && this.count !== 0) || (!this.editMode && this.enableReturn && this.count === 0)">
           {{ language.back }}
         </button>
         <button type="button" class="btn button btn-outline-secondary btn-lg" disabled v-if="this.editMode || (this.count === 0 && !this.enablereturn)">
@@ -526,7 +521,7 @@ export default {
     },
     filteredList: {
       deep: true,
-      handler: function() {
+      handler: function () {
         this.setDisabled();
       }
     },

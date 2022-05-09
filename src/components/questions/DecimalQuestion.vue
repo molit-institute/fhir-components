@@ -59,7 +59,7 @@
  */
 import questionnaireResponseController from "./../../util/questionnaireResponseController";
 export default {
-  data: function() {
+  data: function () {
     return {
       /**
        * Variable to store the value of the input
@@ -113,7 +113,7 @@ export default {
     handleKeyPress() {
       let input = document.getElementById("decimal" + this.question.linkId);
       let object = this;
-      input.addEventListener("keyup", function(event) {
+      input.addEventListener("keyup", function (event) {
         event.preventDefault();
         if (event.keyCode === 13) {
           object.$emit("next");
