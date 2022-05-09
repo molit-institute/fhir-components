@@ -166,6 +166,7 @@ export default {
     params() {
       let params = {
         ...this.searchParams,
+        _total: "accurate",
         _getpagesoffset: this.getpagesoffset,
         _count: this.count
       };
