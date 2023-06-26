@@ -1,107 +1,10 @@
 {
   "name": "@molit/fhir-components",
-  "version": "1.0.43",
-  "private": false,
-  "description": "Components for FHIR resources",
-  "author": "MOLIT Insitut gGmbH",
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint",
-    "build:lib": "vue-cli-service build --target lib --name @molit/fhir-components src/library-entry.js",
-    "test:e2e:docker": "vue-cli-service test:e2e --headless",
-    "check-dependencies": "npm audit --production"
-  },
-  "main": "./dist/@molit/fhir-components.umd.min.js",
-  "module": "dist/@molit/fhir-components.common.js",
+  "version": "2.0.0",
+  "type": "module",
+  "author": "MOLIT Institut gGmbH",
   "files": [
-    "/dist/*",
-    "/LICENSE",
-    "/README.md"
-  ],
-  "dependencies": {
-    "@molit/fhir-api": "^1.0.42",
-    "@molit/fhir-util": "^1.0.23",
-    "debounce": "^1.2.1",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.3",
-    "moment-timezone": "^0.5.34",
-    "vue": "^2.6.14",
-    "vue-router": "^3.5.1",
-    "vue-simple-spinner": "^1.2.10"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "^5.0.4",
-    "@vue/cli-plugin-e2e-cypress": "^5.0.4",
-    "@vue/cli-plugin-eslint": "^5.0.4",
-    "@vue/cli-plugin-pwa": "^5.0.4",
-    "@vue/cli-plugin-router": "^5.0.4",
-    "@vue/cli-plugin-unit-jest": "^5.0.4",
-    "@vue/cli-service": "^5.0.4",
-    "@vue/test-utils": "^1.3.0",
-    "@vue/vue2-jest": "^27.0.0-alpha.3",
-    "babel-jest": "^27.0.6",
-    "bootstrap": "^5.1.3",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "jest": "^27.1.0",
-    "prettier": "^2.4.1",
-    "sass": "^1.32.7",
-    "sass-loader": "^12.0.0",
-    "vue-template-compiler": "^2.6.14"
-  },
-  "prettier": {
-    "printWidth": 240,
-    "endOfLine": "auto",
-    "trailingComma": "none",
-    "arrowParens": "avoid"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "plugin:prettier/recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {
-      "vue/multi-word-component-names": "warn",
-      "no-unused-vars": "warn",
-      "vue/no-unused-components": "warn"
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
-    ]
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
-  "jest": {
-    "preset": "@vue/cli-plugin-unit-jest"
-  },
-  "eslintIgnore": [
-    "/src/assets/js"
+    "dist"
   ],
   "homepage": "https://docs.molit.eu/fhir-components/",
   "keywords": [
@@ -110,5 +13,40 @@
     "Vue"
   ],
   "license": "Apache-2.0",
-  "repository": "github:molitinstitute/fhir-components"
+  "repository": "github:molitinstitute/fhir-components",
+  "main": "./dist/fhir-components.umd.cjs",
+  "module": "./dist/fhir-components.js",
+  "exports": {
+    ".": {
+      "import": "./dist/fhir-components.js",
+      "require": "./dist/fhir-components.umd.cjs"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "@vue/test-utils": "^2.3.2",
+    "eslint": "^8.39.0",
+    "eslint-plugin-vue": "^9.11.0",
+    "jsdom": "^22.1.0",
+    "prettier": "^2.8.8",
+    "vite": "^4.3.9",
+    "vitest": "^0.32.0"
+  },
+  "dependencies": {
+    "@molit/fhir-api": "^1.0.42",
+    "debounce": "^1.2.1"
+  }
 }

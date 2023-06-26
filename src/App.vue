@@ -1,12 +1,9 @@
+<script setup>
+import PaginatedList from "./components/PaginatedList.vue";
+</script>
+
 <template>
-  <div>
-    <nav class="navbar navbar-light bg-light">
-      <span class="navbar-brand mb-0 h1">@molit/fhir-components</span>
-    </nav>
-    <router-view />
-  </div>
+  <PaginatedList fhirBaseUrl="https://fhir.molit.eu/fhir" resourceName="Patient" />
 </template>
 
-<style lang="scss">
-@import "~bootstrap/scss/bootstrap";
-</style>
+<style scoped></style>
