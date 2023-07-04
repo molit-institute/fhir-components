@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import { resolve } from 'node:path'
+import { resolve, dirname } from 'node:path'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/lib-entry.js'),
+      entry: resolve(dirname(fileURLToPath(import.meta.url)), 'src/lib-entry.js'),
       name: 'Fhir Components',
       fileName: 'fhir-components'
     },
