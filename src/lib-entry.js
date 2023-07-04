@@ -1,3 +1,3 @@
-import PaginatedList from "./components/PaginatedList.vue";
+import PaginatedList from './components/PaginatedList.vue'
 
-export { PaginatedList };
+export { PaginatedList }

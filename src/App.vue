@@ -1,5 +1,5 @@
 <script setup>
-import PaginatedList from "./components/PaginatedList.vue";
+import PaginatedList from './components/PaginatedList.vue'
 </script>
 
 <template>

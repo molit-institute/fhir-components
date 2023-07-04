@@ -37,7 +37,7 @@ jobs:
       - name: Install and Build 🔧
         run: |
           npm ci
-          npm run build:lib
+          npm run build
 
       - name: ESLint
         run: npm run lint
