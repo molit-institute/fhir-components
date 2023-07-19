@@ -1,6 +1,6 @@
 {
   "name": "@molit/fhir-components",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "type": "module",
   "author": "MOLIT Institut gGmbH",
   "files": [
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@molit/fhir-api": "^1.0.42",
-    "debounce": "^1.2.1"
+    "debounce": "^1.2.1",
+    "moment": "^2.29.4"
   }
 }
