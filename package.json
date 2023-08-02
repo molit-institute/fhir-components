@@ -20,6 +20,10 @@
     ".": {
       "import": "./dist/fhir-components.js",
       "require": "./dist/fhir-components.umd.cjs"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
     }
   },
   "scripts": {
