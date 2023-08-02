@@ -8,8 +8,8 @@ const date = ref(null)
 </script>
 
 <template>
-  <DtDate v-model="date" :edit="true" :minValue="Date.now()" />
-  <PaginatedList fhirBaseUrl="https://fhir.molit.eu/fhir" resourceName="Patient" />
+  <DtDate v-model="date" :edit="true" :minValue="Date.now()" label="date" />
+  <PaginatedList fhirBaseUrl="https://fhir.molit.eu/fhir" resourceName="Task" :pageCount="2" />
 </template>
 
 <style scoped></style>

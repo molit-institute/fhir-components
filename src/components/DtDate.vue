@@ -24,11 +24,11 @@ const props = defineProps({
     default: false
   },
   maxValue: {
-    type: String,
+    type: [String, Number],
     default: null
   },
   minValue: {
-    type: String,
+    type: [String, Number],
     default: null
   }
 })
