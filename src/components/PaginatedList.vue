@@ -206,9 +206,9 @@ const keyup = (event) => {
 const emit = defineEmits(['error', 'updateStart', 'update'])
 
 onMounted(() => {
+  count.value = props.pageCount
   initializeView()
   window.addEventListener('keyup', keyup)
-  count.value = props.pageCount
 })
 
 onUnmounted(() => {
