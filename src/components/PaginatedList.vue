@@ -200,11 +200,11 @@ watch(() => props.searchParams, () => initializeView, { deep: true })
       <div class="text-muted results-description"></div>
       <ul class="pagination">
         <li :class="['page-item ', { disabled: currentPage === 1 }]">
-          <a href="javascript:void(0);" class="page-link" @click="navigateToFirstPage"><slot name="firstPage">&lt;&lt;</slot></a>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToFirstPage"><slot name="firstPage">&laquo;</slot></a>
         </li>
 
         <li :class="['page-item ', { disabled: currentPage === 1 }]">
-          <a href="javascript:void(0);" class="page-link" @click="navigateToPrevPage"><slot name="previousPage">&lt;</slot></a>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToPrevPage"><slot name="previousPage">&lsaquo;</slot></a>
         </li>
 
         <li class="page-item disabled" v-if="currentPage > paginationSize">
@@ -220,11 +220,11 @@ watch(() => props.searchParams, () => initializeView, { deep: true })
         </li>
 
         <li :class="['page-item ', { disabled: currentPage === lastPage }]">
-          <a href="javascript:void(0);" class="page-link" @click="navigateToNextPage"><slot name="nextPage">&gt;</slot></a>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToNextPage"><slot name="nextPage">&rsaquo;</slot></a>
         </li>
 
         <li :class="['page-item ', { disabled: currentPage === lastPage }]">
-          <a href="javascript:void(0);" class="page-link" @click="navigateToLastPage"><slot name="lastPage">&gt;&gt;</slot></a>
+          <a href="javascript:void(0);" class="page-link" @click="navigateToLastPage"><slot name="lastPage">&raquo;</slot></a>
         </li>
       </ul>
     </nav>
