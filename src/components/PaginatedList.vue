@@ -28,7 +28,6 @@ const props = defineProps({
   // Parameters used in fhir query
   searchParams: {
     type: Object,
-    // {}
     default() {
       return {}
     }
@@ -43,6 +42,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  // The attributes that will be used for the search
   searchAttributes: {
     type: Array,
     default() {
@@ -54,21 +54,17 @@ const props = defineProps({
       ]
     }
   },
+  // Debounce time for search input
   searchDebounceTime: {
     type: Number,
     default: 500
   },
-  detailPageName: {
-    type: String
-  },
-  viewBehavior: {
-    type: String,
-    default: 'href'
-  },
+  // Placeholder for search input
   searchInputPlaceholder: {
     type: String,
     default: 'Search..'
   },
+  // Whether to use POST for the query instead of GET
   usePostForQuery: {
     type: Boolean,
     default: false
@@ -82,8 +78,6 @@ const paginationSize = ref(5)
 const searchTerm = ref(null)
 
 const currentPage = computed(() => getpagesoffset.value / count.value + 1)
-// const currentLower = computed(() => Math.min(getpagesoffset.value + 1, bundle.value.total))
-// const currentUpper = computed(() => Math.min(getpagesoffset.value + count.value, bundle.value.total))
 const lastPage = computed(() => Math.ceil(bundle.value.total / count.value))
 const params = computed(() => {
   let params = {
@@ -103,34 +97,11 @@ const params = computed(() => {
 
   return params
 })
-// const firstPageOffset = computed(() => 0)
+const firstPageOffset = computed(() => 0)
 const prevPageOffset = computed(() => Math.max(getpagesoffset.value - count.value, 0))
 const nextPageOffset = computed(() => Math.min(getpagesoffset.value + count.value, bundle.value.total))
 const lastPageOffset = computed(() => (lastPage.value - 1) * count.value)
-// const firstPageParams = computed(() => {
-//   return {
-//     ...params.value,
-//     _getpagesoffset: firstPageOffset.value
-//   }
-// })
-// const prevPageParams = computed(() => {
-//   return {
-//     ...params.value,
-//     _getpagesoffset: prevPageOffset.value
-//   }
-// })
-// const nextPageParams = computed(() => {
-//   return {
-//     ...params.value,
-//     _getpagesoffset: nextPageOffset.value
-//   }
-// })
-// const lastPageParams = computed(() => {
-//   return {
-//     ...params.value,
-//     _getpagesoffset: lastPageOffset.value
-//   }
-// })
+
 const paginationArray = computed(() => {
   let paginationArray = []
 
@@ -161,15 +132,8 @@ const fetchResources = async () => {
   }
 }
 
-// const getQueryParamsForPage = (pageNumber, count) => {
-//   return {
-//     ...params.value,
-//     _getpagesoffset: (pageNumber - 1) * count
-//   }
-// }
-
 const navigateToFirstPage = () => {
-  getpagesoffset.value = 0
+  getpagesoffset.value = firstPageOffset.value
   initializeView()
 }
 
@@ -221,11 +185,11 @@ const updateSearch = debounce((e) => {
 
 watch(searchTerm, () => navigateToFirstPage())
 watch(bundle, (value) => emit('update', value))
-watch(props.pageCount, () => {
+watch(() => props.pageCount, () => {
   count.value = props.pageCount
   initializeView()
 })
-watch(props.searchParams, () => initializeView, { deep: true })
+watch(() => props.searchParams, () => initializeView, { deep: true })
 </script>
 
 <template>
