@@ -35,7 +35,7 @@
     "format": "prettier --write src/"
   },
   "peerDependencies": {
-    "vue": "^3.3.4"
+    "vue": "3.x"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
