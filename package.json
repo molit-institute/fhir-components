@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@molit/fhir-api": "^1.0.42",
-    "debounce": "^1.2.1",
-    "moment": "^2.29.4"
+    "dayjs": "^1.11.9",
+    "debounce": "^1.2.1"
   }
 }

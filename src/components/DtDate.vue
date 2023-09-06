@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 const props = defineProps({
   label: {
@@ -47,14 +47,14 @@ const min = computed(() => {
   if (!props.minValue) {
     return null
   }
-  return moment(props.minValue).format('YYYY-MM-DD')
+  return dayjs(props.minValue).format('YYYY-MM-DD')
 })
 
 const max = computed(() => {
   if (!props.maxValue) {
     return null
   }
-  return moment(props.maxValue).format('YYYY-MM-DD')
+  return dayjs(props.maxValue).format('YYYY-MM-DD')
 })
 
 onMounted(() => {
