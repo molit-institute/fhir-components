@@ -13,7 +13,10 @@
     "Vue"
   ],
   "license": "Apache-2.0",
-  "repository": "github:molitinstitute/fhir-components",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/molitinstitute/fhir-components.git"
+  },
   "main": "./dist/fhir-components.umd.cjs",
   "module": "./dist/fhir-components.js",
   "exports": {
