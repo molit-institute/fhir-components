@@ -187,7 +187,7 @@ const updateSearch = debounce((e) => {
 
 watch(searchTerm, () => navigateToFirstPage())
 watch(bundle, (value) => emit('update', value))
-watch(() => props.searchParams, () => initializeView, { deep: true })
+watch(() => props.searchParams, () => initializeView(), { deep: true })
 </script>
 
 <template>
